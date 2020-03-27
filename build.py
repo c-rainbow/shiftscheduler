@@ -2,7 +2,7 @@
 
 import datetime
 
-import data
+import data 
 import functools
 
 from ortools.linear_solver import pywraplp
@@ -169,6 +169,6 @@ def BuildSolverFromSchedule(schedule):
         pass #print(co)
 
 
-    return solver        
+    return (solver, var_dict)
             
             
