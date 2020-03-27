@@ -1,0 +1,51 @@
+
+{
+    "start_date": "2020-07-01",
+    "end_date": "2020-07-31",
+    "constraints": [
+        {
+            "name": "nurse1",
+            "max_consecutive_workdays": 5,
+            "max_consecutive_nights": 3,
+            "min_total_workdays": 1,
+            "max_total_workdays": 28,
+            "fixed_shifts": [
+                "2020-07-01-NIGHT"
+            ],
+            "off_shifts": [
+                "2020-07-02-DAY", "2020-07-02-EVENING", "2020-07-02-NIGHT", "2020-07-03-DAY"
+            ]
+        },
+        {
+            "name": "nurse2",
+            "max_consecutive_workdays": 4,
+            "max_consecutive_nights": 2,
+            "min_total_workdays": 1,
+            "max_total_workdays": 29,
+            "fixed_shifts": [],
+            "off_shifts": ["2020-07-15-EVENING"]
+        },
+        {
+            "name": "nurse3",
+            "max_consecutive_workdays": 5,
+            "max_consecutive_nights": 3,
+            "min_total_workdays": 1,
+            "max_total_workdays": 27,
+            "fixed_shifts": ["2020-07-07-NIGHT"],
+            "off_shifts": [
+                "2020-07-03-DAY", "2020-07-03-EVENING", "2020-07-03-NIGHT", "2020-07-04-DAY"
+            ]
+        },
+        {
+            "name": "nurse4",
+            "max_consecutive_workdays": 5,
+            "max_consecutive_nights": 3,
+            "min_total_workdays": 1,
+            "max_total_workdays": 30,
+            "fixed_shifts": [],
+            "off_shifts": [
+
+            ]
+        }
+    ]
+}
