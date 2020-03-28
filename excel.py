@@ -11,6 +11,7 @@ from openpyxl.formatting.rule import ColorScaleRule, CellIsRule, FormulaRule
 COLOR_MELON = 'fdbcb4'  # Peach-like soft red
 COLOR_PASTEL_YELLOW = 'fdfd96'
 COLOR_AERO_BLUE = 'c9ffe5'
+COLOR_LIGHT_GRAY = '333333'
 
 wb = openpyxl.Workbook()
 
@@ -38,9 +39,9 @@ c.fill = fff3  # styles.PatternFill(patternType=fills.FILL_SOLID, start_color="f
 
 
 
-ws.conditional_formatting.add('D3', CellIsRule(operator='==', formula=['"D"'], fill=fff1))
-ws.conditional_formatting.add('D3', CellIsRule(operator='==', formula=['"E"'], fill=fff2))
-ws.conditional_formatting.add('D3', CellIsRule(operator='==', formula=['"N"'], fill=fff3))
+ws.conditional_formatting.add('D3:E7', CellIsRule(operator='==', formula=['"D"'], fill=fff1))
+ws.conditional_formatting.add('D3:E7', CellIsRule(operator='==', formula=['"E"'], fill=fff2))
+ws.conditional_formatting.add('D3:E7', CellIsRule(operator='==', formula=['"N"'], fill=fff3))
 
 
 
