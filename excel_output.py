@@ -221,5 +221,5 @@ if __name__ == '__main__':
         ['간호사1', '간호사4', '간호사2', '간호사3'],
         datetime.date.fromisoformat('2020-02-04'),
         datetime.date.fromisoformat('2020-03-16'),
-        'sample.xlsx'
+        'tmp/sample.xlsx'
     )
