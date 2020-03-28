@@ -29,6 +29,9 @@ class ShiftType(enum.Enum):
         items = cls.Items()
         return [name for name, _ in items]
 
+    def ShortName(self):
+        return self.name[0]
+
 
 class Shift(object):
     def __init__(self, date, shift_type):
@@ -75,14 +78,38 @@ class Constraint(object):
         return constraint
 
 
+class DateConstraint(object):
+    def __init__(self, work_date, num_workers_day, num_workers_evening, num_workers_night):
+        self.work_date = work_date
+        self.num_workers_day = num_workers_day
+        self.num_workers_evening = num_workers_evening
+        self.num_workers_night = num_workers_night
+
+
 class Schedule(object):
     def __init__(self, start_date, end_date):        
         self.start_date = start_date  # datetime.date 
         self.end_date = end_date  # datetime.date
         self.constraints = []
+        self.date_constraints = []
 
     def AddConstraint(self, constraint):
         self.constraints.append(constraint)
+
+    def AddDateConstraint(self, date_constraint):
+        self.date_constraints.append(date_constraints)
+
+    def GetConstraintByName(self, name):
+        for constraint in self.constraints:
+            if constraint.name == name:
+                return constraint
+        return None
+
+    def GetDateConstraint(self, work_date):
+        for date_constraint in self.date_constraints:
+            if date_constraint.work_date == work_date:
+                return date_constraint
+        return None
 
     # Convert JSON string to Schedule object
     @staticmethod
@@ -106,10 +133,13 @@ class Schedule(object):
 class Assignment(object):
 
     def __init__(self, assignment_dict, schedule, dates, names):
-        self._assignment_dict = assignment_dict  # Key is tuple of (datetime.date, name)
+        self._assignment_dict = assignment_dict  # tuple of (datetime.date, name) -> data.ShiftType
         self._schedule = schedule  # Schedule object
         self._dates = sorted(dates)  # Sorted dates
         self._names = sorted(names)  # Sorted names
+
+    def GetAssignment(self, work_date, name):
+        return self._assignment_dict.get((work_date, name))
 
     # Get list of (work date, shift) of a person, sorted by date
     def GetAssignmentsByPerson(self, name):
@@ -131,6 +161,9 @@ class Assignment(object):
         
         return assignments     
 
+    # Get names of people. Returns copy of the original list
+    def GetNames(self):
+        return list(self._names)
 
     # Check if this assignment is valid. Used when an existing solution is modified
     # Check constraint 1-8

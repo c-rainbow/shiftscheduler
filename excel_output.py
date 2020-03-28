@@ -1,16 +1,4 @@
 
-
-"""
-
-
-
-TODO: This can be merged with excel_output.py
-
-
-"""
-
-
-
 import pandas
 import openpyxl  
 
@@ -64,10 +52,13 @@ def AllNamesUnique(names):
 
 
 # ws: Excel sheet
-# names: names of people. Must be all unique
-# start_date: datetime.date. First date to write to Excel file
-# end_date: datetime.date. Last date to write to Excel file
-def CreateBareboneTimetable(ws, names, start_date, end_date, row_offset=0, col_offset=0):
+# schedule: data.Schedule, for start_date and end_date
+# assignment: data.Assignment, for assignment
+def CreateOutputTimetable(ws, schedule, assignments, row_offset=0, col_offset=0, default_shift_code=None):
+    
+    names = assignments.GetNames()
+    start_date = schedule.start_date
+    end_date = schedule.end_date
     
     # TODO: Create custom exceptions
     if not AllNamesUnique(names):
@@ -91,11 +82,32 @@ def CreateBareboneTimetable(ws, names, start_date, end_date, row_offset=0, col_o
         # Adjust width
         ws.column_dimensions[xlcell.get_column_letter(i+2+col_offset)].width = 12  # 10 for date
 
-    # Add conditional formatting to cells
+    
     start_row = 2 + row_offset
     start_col = 2 + col_offset
     end_row = start_row + len(names) - 1
     end_col = start_col + len(all_dates) - 1
+
+
+    # Fill shifts from assignments
+    for row_index in range(start_row, end_row+1):
+        name = ws.cell(row=row_index, column=1+col_offset).value
+        for col_index in range(start_col, end_col+1):
+            work_date = ws.cell(row=1+row_offset, column=col_index).value
+            cell = ws.cell(row=row_index, column=col_index)
+            print(type(work_date))
+            shift_type = assignments.GetAssignment(work_date, name)
+            
+            # If shift exists, write the short name
+            if shift_type is not None:
+                cell.value = shift_type.ShortName()
+            # If shift does not exist for the person and the date, write default.
+            # The default is None (for barebone) or 'O' (for solution output)
+            elif default_shift_code is not None:
+                cell.value = default_shift_code
+            
+
+    # Add conditional formatting to cells
     cell_range = '%s%d:%s%d' % (
         xlcell.get_column_letter(start_col), start_row,
         xlcell.get_column_letter(end_col), end_row
@@ -113,10 +125,10 @@ def CreateBareboneTimetable(ws, names, start_date, end_date, row_offset=0, col_o
 
 
 
-def CreateBarebonePersonConfig(ws, names, row_offset=0, col_offset=0):
+def CreateOutputPersonConfig(ws, schedule, assignments, row_offset=0, col_offset=0):
     # Fill the head rows with people's names
     # Note that row/col indexes are 1-based in Excel    
-    names = sorted(names)
+    names = assignments.GetNames()
     for i, name in enumerate(names):
         c = ws.cell(row=i+2+row_offset, column=1+col_offset)
         c.value = name
@@ -127,9 +139,32 @@ def CreateBarebonePersonConfig(ws, names, row_offset=0, col_offset=0):
         c.value = config_display_name
         # Adjust width
         ws.column_dimensions[xlcell.get_column_letter(i+2+col_offset)].width = len(config_display_name)*1.7
+
+    # Fill config values from schedule
+    start_row = 2 + row_offset
+    start_col = 2 + col_offset
+    end_row = start_row + len(names) - 1
+
+    for row_index in range(start_row, end_row+1):
+        name = ws.cell(row=row_index, column=col_offset+1).value
+        constraint = schedule.GetConstraintByName(name)
+        
+        # Write config values
+        cell = ws.cell(row=row_index, column=start_col)
+        cell.value = constraint.max_consecutive_workdays
+
+        cell = ws.cell(row=row_index, column=start_col+1)
+        cell.value = constraint.max_consecutive_nights
+
+        cell = ws.cell(row=row_index, column=start_col+2)
+        cell.value = constraint.min_total_workdays
+
+        cell = ws.cell(row=row_index, column=start_col+3)
+        cell.value = constraint.max_total_workdays
+
         
 
-def CreateBareboneDateConfig(ws, start_date, end_date, row_offset=0, col_offset=0):
+def CreateOutputDateConfig(ws, schedule, start_date, end_date, row_offset=0, col_offset=0):
     # Fill the head rows with dates
     # Note that row/col indexes are 1-based in Excel    
     all_dates = list(date_util.GenerateAllDates(start_date, end_date))
@@ -145,25 +180,44 @@ def CreateBareboneDateConfig(ws, start_date, end_date, row_offset=0, col_offset=
         # Adjust width
         ws.column_dimensions[xlcell.get_column_letter(i+2+col_offset)].width = len(config_display_name)*2
     
+    # Fill date configs
+    start_row = 2 + row_offset
+    start_col = 2 + col_offset
+    end_row = start_row + len(all_dates) - 1
 
-# Create Barebone Excel file
-def GenerateBareboneExcelFile(names, start_date, end_date, filename):
+    for row_index in range(start_row, end_row+1):
+        work_date = ws.cell(row=row_index, column=col_offset+1).value
+        date_constraint = schedule.GetDateConstraint(date_constraint)
+        
+        # Write config values
+        cell = ws.cell(row=row_index, column=start_col)
+        cell.value = date_constraint.num_workers_day
+
+        cell = ws.cell(row=row_index, column=start_col+1)
+        cell.value = date_constraint.num_workers_evening
+
+        cell = ws.cell(row=row_index, column=start_col+2)
+        cell.value = date_constraint.num_workers_night
+
+
+# Create Output Excel file
+def GenerateOutputExcelFile(schedule, assignments, filename):
     wb = openpyxl.Workbook()
     
     ws = wb.active
     ws.title = '일정표'
-    CreateBareboneTimetable(wb.active, names, start_date, end_date, row_offset=0, col_offset=0)
+    CreateOutputTimetable(wb.active, schedule, assignments)
 
     ws = wb.create_sheet(title='간호사별 설정')
-    CreateBarebonePersonConfig(ws, names, row_offset=0, col_offset=0)
+    CreateOutputPersonConfig(ws, schedule, assignments)
 
     ws = wb.create_sheet(title='날짜별 설정')
-    CreateBareboneDateConfig(ws, start_date, end_date, row_offset=0, col_offset=0)
+    CreateOutputDateConfig(ws, schedule, assignments)
 
     wb.save(filename)
 
 if __name__ == '__main__':
-    GenerateBareboneExcelFile(
+    GenerateOutputExcelFile(
         ['간호사1', '간호사4', '간호사2', '간호사3'],
         datetime.date.fromisoformat('2020-02-04'),
         datetime.date.fromisoformat('2020-03-16'),
