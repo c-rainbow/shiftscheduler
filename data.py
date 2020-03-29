@@ -99,7 +99,8 @@ PersonConstraint = collections.namedtuple(
         'max_consecutive_nights',
         'min_total_workdays',
         'max_total_workdays',
-        'fixed_shifts',  # list of Shift. Includes fixed "OFF"s
+        # Where should this be put?
+        # 'fixed_shifts',  # list of Shift. Includes fixed "OFF"s
     ]
 )
 

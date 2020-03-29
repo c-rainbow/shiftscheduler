@@ -32,6 +32,55 @@ class ExcelOutputTest(unittest.TestCase):
     def test_empty(self):
         self.assertIsNone(None)
 
+    # Test WritePersonConfig() with empty constraints. Needed for barebone output
+    def testWritePersonConfigEmptyConstraints(self):
+        ws = self.ws
+        pc1 = data.PersonConstraint('간호사1', None, None, None, None)
+        excel_output.WritePersonConfig(ws, [pc1])
+
+        # Check header columns
+        self.assertEqual(ws.cell(row=1, column=2).value, '최대 근무일 (연속)')
+        self.assertEqual(ws.cell(row=1, column=3).value, '최대 나이트 (연속)')
+        self.assertEqual(ws.cell(row=1, column=4).value, '최소 근무일 (전체)')
+        self.assertEqual(ws.cell(row=1, column=5).value, '최대 근무일 (전체)')
+
+        # Check header rows
+        self.assertEqual(ws.cell(row=2, column=1).value, '간호사1')
+
+        # Check all person constraint values are empty
+        self.assertIsNone(ws.cell(row=2, column=2).value)
+        self.assertIsNone(ws.cell(row=2, column=3).value)
+        self.assertIsNone(ws.cell(row=2, column=4).value)
+        self.assertIsNone(ws.cell(row=2, column=5).value)
+
+    # Test WritePersonConfig() with empty constraints. Needed for barebone output
+    def testWritePersonConfig(self):
+        ws = self.ws
+        pc1 = data.PersonConstraint('간호사1', 5, 3, 25, 28)
+        pc2 = data.PersonConstraint('간호사2', 6, 4, 22, 26)
+        excel_output.WritePersonConfig(ws, [pc1, pc2])
+
+        # Check header columns
+        self.assertEqual(ws.cell(row=1, column=2).value, '최대 근무일 (연속)')
+        self.assertEqual(ws.cell(row=1, column=3).value, '최대 나이트 (연속)')
+        self.assertEqual(ws.cell(row=1, column=4).value, '최소 근무일 (전체)')
+        self.assertEqual(ws.cell(row=1, column=5).value, '최대 근무일 (전체)')
+
+        # Check header rows
+        self.assertEqual(ws.cell(row=2, column=1).value, '간호사1')
+        self.assertEqual(ws.cell(row=3, column=1).value, '간호사2')
+
+        # Check all person constraint values are correct
+        self.assertEqual(ws.cell(row=2, column=2).value, 5)
+        self.assertEqual(ws.cell(row=2, column=3).value, 3)
+        self.assertEqual(ws.cell(row=2, column=4).value, 25)
+        self.assertEqual(ws.cell(row=2, column=5).value, 28)
+        self.assertEqual(ws.cell(row=3, column=2).value, 6)
+        self.assertEqual(ws.cell(row=3, column=3).value, 4)
+        self.assertEqual(ws.cell(row=3, column=4).value, 22)
+        self.assertEqual(ws.cell(row=3, column=5).value, 26)
+        
+
     # Test WriteDateConfig() with empty date constraints. Needed for barebone output
     def testWriteDateConfigEmptyConstraints(self):
         ws = self.ws

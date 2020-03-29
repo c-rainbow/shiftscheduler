@@ -61,11 +61,14 @@ def AllNamesUnique(names):
 # ws: Excel sheet
 # schedule: data.Schedule, for start_date and end_date
 # assignment: data.Assignment, for assignment
-def CreateOutputTimetable(ws, schedule, assignments, row_offset=0, col_offset=0):
-    
+def CreateOutputTimetable(ws, config, assignments, start_row=1, start_col=1):
+    start_date = config.start_date
+    end_date = config.end_date
     names = assignments.GetNames()
-    start_date = schedule.start_date
-    end_date = schedule.end_date
+    all_dates = list(date_util.GenerateAllDates(start_date, end_date))
+
+    end_row = start_row + len(names) - 1  # inclusive
+    end_col = start_col + len(all_dates) - 1  # inclusive
     
     # TODO: Create custom exceptions
     if not AllNamesUnique(names):
@@ -77,45 +80,28 @@ def CreateOutputTimetable(ws, schedule, assignments, row_offset=0, col_offset=0)
     # Note that row/col indexes are 1-based in Excel    
     names = sorted(names)
     for i, name in enumerate(names):
-        c = ws.cell(row=i+2+row_offset, column=1+col_offset)
+        c = ws.cell(row=start_row+1+i, column=start_col)
         c.value = name
     
     # Fill the head columns with dates
-    all_dates = list(date_util.GenerateAllDates(start_date, end_date))
     for i, work_date in enumerate(all_dates):
-        c = ws.cell(row=1+row_offset, column=i+2+col_offset)
-        # TODO: How to format the date?
+        c = ws.cell(row=start_row, column=start_col+1+i)
         c.value = work_date
         # Adjust width
-        ws.column_dimensions[xlcell.get_column_letter(i+2+col_offset)].width = 12  # 10 for date
-
-    
-    start_row = 2 + row_offset
-    start_col = 2 + col_offset
-    end_row = start_row + len(names) - 1
-    end_col = start_col + len(all_dates) - 1
-
+        ws.column_dimensions[xlcell.get_column_letter(start_col+1+i)].width = 12  # 10 for date
 
     # Fill shifts from assignments
     for row_index in range(start_row, end_row+1):
-        name = ws.cell(row=row_index, column=1+col_offset).value
+        name = ws.cell(row=row_index, column=start_col).value
         for col_index in range(start_col, end_col+1):
-            work_date = ws.cell(row=1+row_offset, column=col_index).value
+            work_date = ws.cell(row=start_row, column=col_index).value
             cell = ws.cell(row=row_index, column=col_index)
-            print(type(work_date))
             shift_type = assignments.GetAssignment(work_date, name)
             
-            # If shift exists, write the short name.
-            # Note that this does not write Off-shift to Excel
+            # If shift (including OFF) exists, write the short name.
             if shift_type is not None:
                 cell.value = shift_type.ShortName()         
 
-    # Fill the rest cells with 'Off' shifts
-    for row_index in range(start_row, end_row+1):
-        for col_index in range(start_col, end_col+1):
-            cell = ws.cell(row=row_index, column=col_index)
-            if cell.value is None:
-                cell.value = data.ShiftType.Off.ShortName()
 
     # Add conditional formatting to cells
     cell_range = '%s%d:%s%d' % (
@@ -135,43 +121,32 @@ def CreateOutputTimetable(ws, schedule, assignments, row_offset=0, col_offset=0)
 
 
 
-def CreateOutputPersonConfig(ws, schedule, assignments, row_offset=0, col_offset=0):
+def WritePersonConfig(ws, person_constraints, start_row=1, start_col=1):
     # Fill the head rows with people's names
     # Note that row/col indexes are 1-based in Excel    
-    names = assignments.GetNames()
-    for i, name in enumerate(names):
-        c = ws.cell(row=i+2+row_offset, column=1+col_offset)
-        c.value = name
+    for i, person_constraint in enumerate(person_constraints):
+        c = ws.cell(row=start_row+1+i, column=start_col)
+        c.value = person_constraint.name
 
     # Fill the head columns with config names
     for i, config_display_name in enumerate(CONFIG_PERSON_HEADER_NAMES):
-        c = ws.cell(row=1+row_offset, column=i+2+col_offset)
+        c = ws.cell(row=start_row, column=start_col+1+i)
         c.value = config_display_name
         # Adjust width
-        ws.column_dimensions[xlcell.get_column_letter(i+2+col_offset)].width = len(config_display_name)*1.7
+        ws.column_dimensions[xlcell.get_column_letter(start_col+1+i)].width = len(config_display_name)*1.7
 
     # Fill config values from schedule
-    start_row = 2 + row_offset
-    start_col = 2 + col_offset
-    end_row = start_row + len(names) - 1
-
-    for row_index in range(start_row, end_row+1):
-        name = ws.cell(row=row_index, column=col_offset+1).value
-        constraint = schedule.GetConstraintByName(name)
+    name_constraint_map = {c.name: c for c in person_constraints}
+    for row_index in range(start_row+1, start_row+1+len(person_constraints)):
+        name = ws.cell(row=row_index, column=start_col).value
+        constraint = name_constraint_map.get(name)
         
-        # Write config values
-        cell = ws.cell(row=row_index, column=start_col)
-        cell.value = constraint.max_consecutive_workdays
-
-        cell = ws.cell(row=row_index, column=start_col+1)
-        cell.value = constraint.max_consecutive_nights
-
-        cell = ws.cell(row=row_index, column=start_col+2)
-        cell.value = constraint.min_total_workdays
-
-        cell = ws.cell(row=row_index, column=start_col+3)
-        cell.value = constraint.max_total_workdays
-
+        # Constraint can be none for barebone outputs
+        if constraint is not None:
+            # Write config values.
+            for col_offset, value in enumerate(constraint._asdict().values()):
+                cell = ws.cell(row=row_index, column=start_col+col_offset)
+                cell.value = value   
         
 
 def WriteDateConfig(ws, date_constraints, config, start_row=1, start_col=1):
@@ -233,7 +208,7 @@ def GenerateOutputExcelFile(schedule, assignments, filename):
     CreateOutputTimetable(wb.active, schedule, assignments)
 
     ws = wb.create_sheet(title='간호사별 설정')
-    CreateOutputPersonConfig(ws, schedule, assignments)
+    WritePersonConfig(ws, schedule, assignments)
 
     ws = wb.create_sheet(title='날짜별 설정')
     WriteDateConfig(ws, schedule, sconfig)
