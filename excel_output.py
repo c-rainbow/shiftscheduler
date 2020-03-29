@@ -61,14 +61,14 @@ def AllNamesUnique(names):
 # ws: Excel sheet
 # schedule: data.Schedule, for start_date and end_date
 # assignment: data.Assignment, for assignment
-def CreateOutputTimetable(ws, config, assignments, start_row=1, start_col=1):
+def WriteTimetable(ws, config, assignments, start_row=1, start_col=1):
     start_date = config.start_date
     end_date = config.end_date
     names = assignments.GetNames()
     all_dates = list(date_util.GenerateAllDates(start_date, end_date))
 
-    end_row = start_row + len(names) - 1  # inclusive
-    end_col = start_col + len(all_dates) - 1  # inclusive
+    end_row = start_row + len(names)  # inclusive
+    end_col = start_col + len(all_dates)  # inclusive
     
     # TODO: Create custom exceptions
     if not AllNamesUnique(names):
@@ -77,8 +77,6 @@ def CreateOutputTimetable(ws, config, assignments, start_row=1, start_col=1):
         raise Exception('Start date is later than end date')
     
     # Fill the head rows with people's names
-    # Note that row/col indexes are 1-based in Excel    
-    names = sorted(names)
     for i, name in enumerate(names):
         c = ws.cell(row=start_row+1+i, column=start_col)
         c.value = name
@@ -91,9 +89,9 @@ def CreateOutputTimetable(ws, config, assignments, start_row=1, start_col=1):
         ws.column_dimensions[xlcell.get_column_letter(start_col+1+i)].width = 12  # 10 for date
 
     # Fill shifts from assignments
-    for row_index in range(start_row, end_row+1):
+    for row_index in range(start_row+1, end_row+1):
         name = ws.cell(row=row_index, column=start_col).value
-        for col_index in range(start_col, end_col+1):
+        for col_index in range(start_col+1, end_col+1):
             work_date = ws.cell(row=start_row, column=col_index).value
             cell = ws.cell(row=row_index, column=col_index)
             shift_type = assignments.GetAssignment(work_date, name)
@@ -193,24 +191,31 @@ def WriteSoftwareConfig(ws, config, start_row=1, start_col=1):
 
 
 # Create Output Excel file
-def GenerateOutputExcelFile(schedule, assignments, filename):
+def CreateWorkbook(schedule, assignments):
     wb = openpyxl.Workbook()
-    
-    ws = wb.create_sheet(title='Config')
     sconfig = SoftwareConfig(
         start_date=schedule.start_date,
         end_date=schedule.end_date,
         num_person=len(assignments.GetNames())
     )
-    WriteSoftwareConfig(ws, sconfig)
-
-    ws = wb.create_sheet(title='일정표')
-    CreateOutputTimetable(wb.active, schedule, assignments)
+    
+    ws = wb.active
+    ws.title = '일정표'
+    #ws = wb.create_sheet(title='일정표')
+    WriteTimetable(wb.active, sconfig, assignments)
 
     ws = wb.create_sheet(title='간호사별 설정')
-    WritePersonConfig(ws, schedule, assignments)
+    WritePersonConfig(ws, schedule.GetPersonConstraints())
 
     ws = wb.create_sheet(title='날짜별 설정')
-    WriteDateConfig(ws, schedule, sconfig)
+    WriteDateConfig(ws, schedule.GetPersonConstraints(), sconfig)
 
-    wb.save(filename)
+    ws = wb.create_sheet(title='Config')
+    WriteSoftwareConfig(ws, sconfig)
+
+    return wb
+
+
+def CreateExcelFile(schedule, assignments, filepath):
+    wb = CreateWorkbook(schedule, assignments)
+    wb.save(filepath)

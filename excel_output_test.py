@@ -19,7 +19,6 @@ class ExcelOutputTest(unittest.TestCase):
 
     def setUp(self):
         self.ws = ExcelOutputTest.wb.create_sheet()
-
         self.test_start_date = datetime.date(2020, 1, 31)
         self.test_end_date = datetime.date(2020, 2, 1)
         self.test_config = excel_output.SoftwareConfig(
@@ -29,8 +28,71 @@ class ExcelOutputTest(unittest.TestCase):
         ExcelOutputTest.wb.remove(self.ws)
         self.ws = None  # Is this line necessary?
 
-    def test_empty(self):
-        self.assertIsNone(None)
+    # Test WriteTimetable() with empty shift values. Needed for barebone output
+    def testWriteTimetableEmpty(self):
+        ws = self.ws
+        test_assignments = data.Assignment(
+            dict(), None, [self.test_start_date, self.test_end_date], ['간호사1', '간호사2'])
+        excel_output.WriteTimetable(ws, self.test_config, test_assignments)
+        
+        # Check header columns
+        self.assertEqual(ws.cell(row=1, column=2).value, self.test_start_date)
+        self.assertEqual(ws.cell(row=1, column=3).value, self.test_end_date)
+
+        # Check header rows
+        self.assertEqual(ws.cell(row=2, column=1).value, '간호사1')
+        self.assertEqual(ws.cell(row=3, column=1).value, '간호사2')
+        
+        # Check the timetable is empty
+        self.assertIsNone(ws.cell(row=2, column=2).value)
+        self.assertIsNone(ws.cell(row=2, column=3).value)
+        self.assertIsNone(ws.cell(row=3, column=2).value)
+        self.assertIsNone(ws.cell(row=3, column=3).value)
+
+    # Test WriteTimetable()
+    def testWriteTimetable(self):
+        ws = self.ws
+        names = ['간호사1', '간호사2', '간호사3']
+        assignment_dict = {
+            (self.test_start_date, '간호사1'): data.ShiftType.DAY,
+            (self.test_end_date, '간호사1'): data.ShiftType.DAY,
+            (self.test_start_date, '간호사2'): data.ShiftType.EVENING,
+            (self.test_end_date, '간호사2'): data.ShiftType.OFF,
+            # Shift of 간호사3 is undecided on the start date.
+            (self.test_end_date, '간호사3'): data.ShiftType.NIGHT,
+        }
+        test_assignments = data.Assignment(
+            assignment_dict, None, [self.test_start_date, self.test_end_date], names)
+        excel_output.WriteTimetable(ws, self.test_config, test_assignments)
+        
+        # Check header columns
+        self.assertEqual(ws.cell(row=1, column=2).value, self.test_start_date)
+        self.assertEqual(ws.cell(row=1, column=3).value, self.test_end_date)
+        self.assertIsNone(ws.cell(row=1, column=4).value)  # Header columns should end here
+
+        # Check header rows
+        self.assertEqual(ws.cell(row=2, column=1).value, '간호사1')
+        self.assertEqual(ws.cell(row=3, column=1).value, '간호사2')
+        self.assertEqual(ws.cell(row=4, column=1).value, '간호사3')
+        self.assertIsNone(ws.cell(row=5, column=1).value)  # Header rows should end here
+        
+        # Check timetable of person 1
+        self.assertEqual(ws.cell(row=2, column=2).value, 'D')
+        self.assertEqual(ws.cell(row=2, column=3).value, 'D')
+        self.assertIsNone(ws.cell(row=2, column=4).value)
+
+        # Check timetable of person 2
+        self.assertEqual(ws.cell(row=3, column=2).value, 'E')
+        self.assertEqual(ws.cell(row=3, column=3).value, 'O')
+        self.assertIsNone(ws.cell(row=3, column=4).value)
+
+        # Check timetable of person 3
+        self.assertIsNone(ws.cell(row=4, column=2).value)
+        self.assertEqual(ws.cell(row=4, column=3).value, 'N')
+        self.assertIsNone(ws.cell(row=4, column=4).value)
+
+        # Nothing should be written after person 3
+        self.assertIsNone(ws.cell(row=5, column=2).value)
 
     # Test WritePersonConfig() with empty constraints. Needed for barebone output
     def testWritePersonConfigEmptyConstraints(self):
@@ -43,9 +105,11 @@ class ExcelOutputTest(unittest.TestCase):
         self.assertEqual(ws.cell(row=1, column=3).value, '최대 나이트 (연속)')
         self.assertEqual(ws.cell(row=1, column=4).value, '최소 근무일 (전체)')
         self.assertEqual(ws.cell(row=1, column=5).value, '최대 근무일 (전체)')
+        self.assertIsNone(ws.cell(row=1, column=6).value)  # Header columns should end here
 
         # Check header rows
         self.assertEqual(ws.cell(row=2, column=1).value, '간호사1')
+        self.assertIsNone(ws.cell(row=3, column=1).value)  # Header rows should end here
 
         # Check all person constraint values are empty
         self.assertIsNone(ws.cell(row=2, column=2).value)
@@ -65,22 +129,28 @@ class ExcelOutputTest(unittest.TestCase):
         self.assertEqual(ws.cell(row=1, column=3).value, '최대 나이트 (연속)')
         self.assertEqual(ws.cell(row=1, column=4).value, '최소 근무일 (전체)')
         self.assertEqual(ws.cell(row=1, column=5).value, '최대 근무일 (전체)')
+        self.assertIsNone(ws.cell(row=1, column=6).value)  # Header columns should end here
 
         # Check header rows
         self.assertEqual(ws.cell(row=2, column=1).value, '간호사1')
         self.assertEqual(ws.cell(row=3, column=1).value, '간호사2')
+        self.assertIsNone(ws.cell(row=4, column=1).value)  # Header rows should end here
 
         # Check all person constraint values are correct
         self.assertEqual(ws.cell(row=2, column=2).value, 5)
         self.assertEqual(ws.cell(row=2, column=3).value, 3)
         self.assertEqual(ws.cell(row=2, column=4).value, 25)
         self.assertEqual(ws.cell(row=2, column=5).value, 28)
+        self.assertIsNone(ws.cell(row=2, column=6).value)
+
         self.assertEqual(ws.cell(row=3, column=2).value, 6)
         self.assertEqual(ws.cell(row=3, column=3).value, 4)
         self.assertEqual(ws.cell(row=3, column=4).value, 22)
         self.assertEqual(ws.cell(row=3, column=5).value, 26)
-        
+        self.assertIsNone(ws.cell(row=3, column=6).value)
 
+        self.assertIsNone(ws.cell(row=4, column=2).value)
+        
     # Test WriteDateConfig() with empty date constraints. Needed for barebone output
     def testWriteDateConfigEmptyConstraints(self):
         ws = self.ws
@@ -127,7 +197,6 @@ class ExcelOutputTest(unittest.TestCase):
         self.assertEqual(ws.cell(row=3, column=3).value, 5)
         self.assertEqual(ws.cell(row=3, column=4).value, 4)
 
-
     # Test WriteSoftwareConfig()
     def testWriteSoftwareConfig(self):
         ws = self.ws
@@ -142,7 +211,6 @@ class ExcelOutputTest(unittest.TestCase):
         # This is to ensure that only the required fields were written.
         # This should be modified when there are more config values
         self.assertIsNone(self.ws.cell(row=4, column=1).value)
-
 
 
 if __name__ == '__main__':

@@ -134,6 +134,12 @@ class Schedule(object):
             if date_constraint.work_date == work_date:
                 return date_constraint
         return None
+    
+    def GetDateConstraints(self):
+        return list(self.date_constraints)
+
+    def GetPersonConstraints(self):
+        return list(self.person_constraints)
 
     # Convert JSON string to Schedule object
     @staticmethod
@@ -160,7 +166,7 @@ class Assignment(object):
         self._assignment_dict = assignment_dict  # tuple of (datetime.date, name) -> data.ShiftType
         self._schedule = schedule  # Schedule object
         self._dates = sorted(dates)  # Sorted dates
-        self._names = sorted(names)  # Sorted names
+        self._names = names  # Names, not necessarily sorted
 
     def GetAssignment(self, work_date, name):
         return self._assignment_dict.get((work_date, name))
