@@ -22,3 +22,10 @@ COLOR_MELON = 'fdbcb4'  # Peach-like soft red
 COLOR_PASTEL_YELLOW = 'fdfd96'
 COLOR_AERO_BLUE = 'c9ffe5'
 COLOR_LIGHT_GRAY = 'bbbbbb'
+
+
+# Sheet names in Excel files
+SHEET_TIMETABLE = '일정표'
+SHEET_PERSON_CONFIG = '간호사별 설정'
+SHEET_DATE_CONFIG = '날짜별 설정'
+SHEET_SOFTWARE_CONFIG = 'Config'

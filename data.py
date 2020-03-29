@@ -1,4 +1,5 @@
 
+import collections
 import datetime
 import enum
 import json
@@ -32,6 +33,18 @@ class ShiftType(enum.Enum):
 
     def ShortName(self):
         return self.name[0]
+
+    @classmethod
+    def FromShortName(cls, code):
+        if code in ('D', 'd'):
+            return cls.DAY
+        elif code in ('E', 'e'):
+            return cls.EVENING
+        elif code in ('N', 'n'):
+            return cls.NIGHT
+        elif code in ('O', 'o'):
+            return cls.OFF
+        return None
 
 
 class Shift(object):
@@ -79,12 +92,20 @@ class Constraint(object):
         return constraint
 
 
-class DateConstraint(object):
-    def __init__(self, work_date, num_workers_day, num_workers_evening, num_workers_night):
-        self.work_date = work_date
-        self.num_workers_day = num_workers_day
-        self.num_workers_evening = num_workers_evening
-        self.num_workers_night = num_workers_night
+PersonConstraint = collections.namedtuple(
+    'PersonConstraint', [
+        'name',  # Person's name. Must be unique
+        'max_consecutive_workdays',
+        'max_consecutive_nights',
+        'min_total_workdays',
+        'max_total_workdays',
+        'fixed_shifts',  # list of Shift. Includes fixed "OFF"s
+    ]
+)
+
+
+DateConstraint = collections.namedtuple(
+    'DateConstraint', ['work_date', 'num_workers_day', 'num_workers_evening', 'num_workers_night'])
 
 
 # TODO: Break this into two constraint classes : person and date

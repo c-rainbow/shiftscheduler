@@ -9,6 +9,14 @@ from openpyxl.formatting.rule import ColorScaleRule, CellIsRule, FormulaRule
 from openpyxl.utils import cell as xlcell
 import date_util
 import datetime
+import data
+import collections
+
+
+
+SoftwareConfig = collections.namedtuple(
+    'SoftwareConfig', ['start_date', 'end_date', 'num_person'])
+
 
 # Config values for each person. The order must be preserved
 CONFIG_PERSON_HEADER_NAMES = (
@@ -97,9 +105,17 @@ def CreateOutputTimetable(ws, schedule, assignments, row_offset=0, col_offset=0)
             print(type(work_date))
             shift_type = assignments.GetAssignment(work_date, name)
             
-            # If shift exists, write the short name
+            # If shift exists, write the short name.
+            # Note that this does not write Off-shift to Excel
             if shift_type is not None:
-                cell.value = shift_type.ShortName()            
+                cell.value = shift_type.ShortName()         
+
+    # Fill the rest cells with 'Off' shifts
+    for row_index in range(start_row, end_row+1):
+        for col_index in range(start_col, end_col+1):
+            cell = ws.cell(row=row_index, column=col_index)
+            if cell.value is None:
+                cell.value = data.ShiftType.Off.ShortName()
 
     # Add conditional formatting to cells
     cell_range = '%s%d:%s%d' % (
@@ -158,70 +174,68 @@ def CreateOutputPersonConfig(ws, schedule, assignments, row_offset=0, col_offset
 
         
 
-def CreateOutputDateConfig(ws, schedule, start_date, end_date, row_offset=0, col_offset=0):
+def WriteDateConfig(ws, date_constraints, config, start_row=1, start_col=1):
+    date_constraint_dict = {c.work_date: c for c in date_constraints}
+
     # Fill the head rows with dates
     # Note that row/col indexes are 1-based in Excel    
-    all_dates = list(date_util.GenerateAllDates(start_date, end_date))
+    all_dates = list(date_util.GenerateAllDates(config.start_date, config.end_date))
     for i, work_date in enumerate(all_dates):
-        c = ws.cell(row=i+2+row_offset, column=1+col_offset)
-        # TODO: How to format the date?
+        c = ws.cell(row=start_row+1+i, column=start_col)
         c.value = work_date
 
     # Fill the head columns with config names
     for i, config_display_name in enumerate(CONFIG_DATE_HEADER_NAMES):
-        c = ws.cell(row=1+row_offset, column=i+2+col_offset)
+        c = ws.cell(row=start_row, column=start_col+1+i)
         c.value = config_display_name
         # Adjust width
-        ws.column_dimensions[xlcell.get_column_letter(i+2+col_offset)].width = len(config_display_name)*2
+        ws.column_dimensions[xlcell.get_column_letter(start_col+1+i)].width = len(config_display_name)*2
     
     # Fill date configs
-    start_row = 2 + row_offset
-    start_col = 2 + col_offset
-    end_row = start_row + len(all_dates) - 1
-
-    for row_index in range(start_row, end_row+1):
-        work_date = ws.cell(row=row_index, column=col_offset+1).value
-        date_constraint = schedule.GetDateConstraint(date_constraint)
+    for row_index in range(start_row+1, start_row+1+len(all_dates)):
+        work_date = ws.cell(row=row_index, column=start_col).value
+        date_constraint = date_constraint_dict.get(work_date)
         
-        # Write config values
-        cell = ws.cell(row=row_index, column=start_col)
-        cell.value = date_constraint.num_workers_day
-
-        cell = ws.cell(row=row_index, column=start_col+1)
-        cell.value = date_constraint.num_workers_evening
-
-        cell = ws.cell(row=row_index, column=start_col+2)
-        cell.value = date_constraint.num_workers_night
+        if date_constraint is not None:
+            # Write config values.
+            # This loop overwrites the work date cell with the same date. Ok for code simplicity
+            for col_offset, value in enumerate(date_constraint._asdict().values()):
+                cell = ws.cell(row=row_index, column=start_col+col_offset)
+                cell.value = value
 
 
-def CreateSoftwareConfig(ws, start_date, end_date):
-    ws['A1'].value = start_date
-    ws['B1'].value = end_date
+def WriteSoftwareConfig(ws, config, start_row=1, start_col=1):
+    row_offset = 0
+    # Iterate fields and values in namedtuple in order
+    for name, value in config._asdict().items():
+        # First column is config name
+        name_cell = ws.cell(row=start_row+row_offset, column=start_col)
+        name_cell.value = name
+        # Second column is config value
+        value_cell = ws.cell(row=start_row+row_offset, column=start_col+1)
+        value_cell.value = value
+        row_offset += 1
 
 
 # Create Output Excel file
 def GenerateOutputExcelFile(schedule, assignments, filename):
     wb = openpyxl.Workbook()
     
-    ws = wb.active
-    ws.title = '일정표'
+    ws = wb.create_sheet(title='Config')
+    sconfig = SoftwareConfig(
+        start_date=schedule.start_date,
+        end_date=schedule.end_date,
+        num_person=len(assignments.GetNames())
+    )
+    WriteSoftwareConfig(ws, sconfig)
+
+    ws = wb.create_sheet(title='일정표')
     CreateOutputTimetable(wb.active, schedule, assignments)
 
     ws = wb.create_sheet(title='간호사별 설정')
     CreateOutputPersonConfig(ws, schedule, assignments)
 
     ws = wb.create_sheet(title='날짜별 설정')
-    CreateOutputDateConfig(ws, schedule, assignments)
-
-    ws = wb.create_sheet(title='Config')
-    CreateSoftwareConfig(ws, schedule.start_date, schedule.end_date)
+    WriteDateConfig(ws, schedule, sconfig)
 
     wb.save(filename)
-
-if __name__ == '__main__':
-    GenerateOutputExcelFile(
-        ['간호사1', '간호사4', '간호사2', '간호사3'],
-        datetime.date.fromisoformat('2020-02-04'),
-        datetime.date.fromisoformat('2020-03-16'),
-        'tmp/sample.xlsx'
-    )

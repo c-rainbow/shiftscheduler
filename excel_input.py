@@ -17,19 +17,6 @@ Config = collections.namedtuple('Config', ['start_date', 'end_date', 'num_person
 
 
 
-def GetShiftType(code):
-    if code in ('D', 'd'):
-        return data.ShiftType.DAY
-    elif code in ('E', 'e'):
-        return data.ShiftType.EVENING
-    elif code in ('N', 'n'):
-        return data.ShiftType.NIGHT
-    elif code in ('O', 'o'):
-        return data.ShiftType.OFF
-    return None
-
-
-
 # Returns dict of (datetime.date, str) -> data.ShiftType. assignment dict
 def ReadTimetable(ws, config, constraints, start_row=1, start_col=1):
    
@@ -47,9 +34,9 @@ def ReadTimetable(ws, config, constraints, start_row=1, start_col=1):
             work_date = date_cell.value
             
             shift_cell = ws.cell(row=row_index, column=col_index)
-            shift_type = GetShiftType(shift_cell.value)
+            shift_type = data.GetShiftType(shift_cell.value)
             
-            if shift_type is not None:
+            if shift_type is not None:  # If the cell is not empty
                 assignment_dict[(work_date, name)] = shift_type
 
     return assignment_dict
