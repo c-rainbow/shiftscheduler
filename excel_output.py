@@ -14,10 +14,6 @@ import collections
 
 
 
-SoftwareConfig = collections.namedtuple(
-    'SoftwareConfig', ['start_date', 'end_date', 'num_person'])
-
-
 # Config values for each person. The order must be preserved
 CONFIG_PERSON_HEADER_NAMES = (
     '최대 근무일 (연속)',
@@ -193,7 +189,7 @@ def WriteSoftwareConfig(ws, config, start_row=1, start_col=1):
 # Create Output Excel file
 def CreateWorkbook(schedule, assignments):
     wb = openpyxl.Workbook()
-    sconfig = SoftwareConfig(
+    sconfig = data.SoftwareConfig(
         start_date=schedule.start_date,
         end_date=schedule.end_date,
         num_person=len(assignments.GetNames())

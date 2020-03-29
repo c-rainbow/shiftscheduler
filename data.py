@@ -20,11 +20,16 @@ KEY_FIXED_SHIFTS = 'fixed_shifts'
 KEY_OFF_SHIFTS = 'off_shifts'
 
 
+SoftwareConfig = collections.namedtuple(
+    'SoftwareConfig', ['start_date', 'end_date', 'num_person'])
+
+
 class ShiftType(enum.Enum):
-    OFF = 0
+    UNKNOWN = 0  # Used for conversion from unrecognized short name
     DAY = 1
     EVENING = 2
     NIGHT = 3
+    OFF = 4
 
     # Name of all work shifts. OFF is not included
     @classmethod
@@ -36,7 +41,9 @@ class ShiftType(enum.Enum):
 
     @classmethod
     def FromShortName(cls, code):
-        if code in ('D', 'd'):
+        if code is None:
+            return None
+        elif code in ('D', 'd'):
             return cls.DAY
         elif code in ('E', 'e'):
             return cls.EVENING
@@ -44,7 +51,7 @@ class ShiftType(enum.Enum):
             return cls.NIGHT
         elif code in ('O', 'o'):
             return cls.OFF
-        return None
+        return cls.UNKNOWN
 
 
 class Shift(object):
@@ -174,7 +181,7 @@ class Assignment(object):
     # Get list of (work date, shift) of a person, sorted by date
     def GetAssignmentsByPerson(self, name):
         assignments = []
-        for work_date in self._dates:
+        for work_date in self._dates: 
             shift = self._assignment_dict.get((work_date, name))
             if shift is not None:
                 assignments.append((work_date, shift))

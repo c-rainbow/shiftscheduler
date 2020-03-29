@@ -21,7 +21,7 @@ class ExcelOutputTest(unittest.TestCase):
         self.ws = ExcelOutputTest.wb.create_sheet()
         self.test_start_date = datetime.date(2020, 1, 31)
         self.test_end_date = datetime.date(2020, 2, 1)
-        self.test_config = excel_output.SoftwareConfig(
+        self.test_config = data.SoftwareConfig(
             start_date=self.test_start_date, end_date=self.test_end_date, num_person=6)
 
     def tearDown(self):

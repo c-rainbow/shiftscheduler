@@ -10,93 +10,83 @@ from openpyxl.utils import cell as xlcell
 import date_util
 import datetime
 import data
+# from nurse_scheduling.excel import constants
 
 
-# Config data from Excel file
-Config = collections.namedtuple('Config', ['start_date', 'end_date', 'num_person'])
+# Note: This module does not validate values.
 
 
-
-# Returns dict of (datetime.date, str) -> data.ShiftType. assignment dict
-def ReadTimetable(ws, config, constraints, start_row=1, start_col=1):
-   
+# Returns assignment dict, dict of (datetime.date, str) -> data.ShiftType
+def ReadTimetable(ws, config, start_row=1, start_col=1):
     total_dates = (config.end_date - config.start_date).days + 1
-    num_person = config.num_person
-
     assignment_dict = dict()
 
-    for row_index in range(start_row+1, start_row+num_person+1):
+    for row_index in range(start_row+1, start_row+config.num_person+1):
+        # TODO: Check that the name is not None
         name_cell = ws.cell(row=row_index, column=start_col)
-        name = name_cell.value
-
         for col_index in range(start_col+1, start_col+total_dates+1):
-            date_cell = ws.cell(row=start_row, column=col_index)
-            work_date = date_cell.value
-            
+            # TODO: Check that the date is not None
+            date_cell = ws.cell(row=start_row, column=col_index)            
             shift_cell = ws.cell(row=row_index, column=col_index)
-            shift_type = data.GetShiftType(shift_cell.value)
+            shift_type = data.ShiftType.FromShortName(shift_cell.value)
             
             if shift_type is not None:  # If the cell is not empty
-                assignment_dict[(work_date, name)] = shift_type
+                assignment_dict[(date_cell.value, name_cell.value)] = shift_type
 
     return assignment_dict
     
 
-# Returns list of data.Constraint
-def ReadPersonConstraints(ws, config, start_row=1, start_col=1):
-    constraints = []
+# Returns list of data.PersonConstraint
+def ReadPersonConfig(ws, config, start_row=1, start_col=1):
+    person_constraints = []
     for row_index in range(start_row+1, start_row+config.num_person+1):
         name_cell = ws.cell(row=row_index, column=start_col)
-        constraint = data.Constraint(name_cell.value)
+        mcw_cell = ws.cell(row=row_index, column=start_col+1)  # Max consecutive workdays
+        mcn_cell = ws.cell(row=row_index, column=start_col+2)  # Max consecutive nights
+        min_tw_cell = ws.cell(row=row_index, column=start_col+3)  # Min total workdays
+        max_tw_cell = ws.cell(row=row_index, column=start_col+4)  # Max total workdays
 
-        mcw_cell = ws.cell(row=row_index, column=start_col+1)
-        constraint.max_consecutive_workdays = mcw_cell.value
-
-        mcn_cell = ws.cell(row=row_index, column=start_col+2)
-        constraint.max_consecutive_nights = mcn_cell.value
-
-        min_tw_cell = ws.cell(row=row_index, column=start_col+3)
-        constraint.min_total_workdays = min_tw_cell.value
-
-        max_tw_cell = ws.cell(row=row_index, column=start_col+4)
-        constraint.max_total_workdays = max_tw_cell.value
-
-        constraints.append(constraint)
+        person_constraint = data.PersonConstraint(
+            name_cell.value, mcw_cell.value, mcn_cell.value, min_tw_cell.value, max_tw_cell.value)
+        person_constraints.append(person_constraint)
     
-    return constraints
+    return person_constraints
     
-
 
 # Returns list of data.DateConstraint
-def ReadDateConstraint(ws, config, start_row=1, start_col=1):
+def ReadDateConfig(ws, config, start_row=1, start_col=1):
     date_constraints = []
 
     total_dates = (config.end_date - config.start_date).days + 1
     for row_index in range(start_row+1, start_row+total_dates+1):
         date_cell = ws.cell(row=row_index, column=start_col)
-        work_date = date_cell.value
-
-        day_cell = ws.cell(row=row_index, column=start_col+1)
-        num_workers_day = day_cell.value
-
-        evening_cell = ws.cell(row=row_index, column=start_col+2)
-        num_workers_evening = evening_cell.value
-
-        night_cell = ws.cell(row=row_index, column=start_col+3)
-        num_workers_night = night_cell.value
+        day_cell = ws.cell(row=row_index, column=start_col+1)  # Number of day shift workers
+        evening_cell = ws.cell(row=row_index, column=start_col+2)  # Number of evening shift workers
+        night_cell = ws.cell(row=row_index, column=start_col+3)  # Number of night shift workers
 
         date_constraint = data.DateConstraint(
-            work_date, num_workers_day, num_workers_evening, num_workers_night)
+            date_cell.value, day_cell.value, evening_cell.value, night_cell.value)
         date_constraints.append(date_constraint)
     
     return date_constraints
 
 
-
 # Returns Config
-def ReadSoftwareConfig(ws):
-    # TODO: Do not hardcode the cell indexes
-    return Config(start_date=ws['B1'].value, end_date=ws['B2'].value, num_person=ws['B3'].value)
+def ReadSoftwareConfig(ws, start_row=1, start_col=1):
+    row_index = start_row
+    config_dict = dict()
+    while True:
+        name = ws.cell(row=row_index, column=start_col).value
+        if name is None:  # Reached the end of configs
+            break
+        value = ws.cell(row=row_index, column=start_col+1).value        
+
+        config_dict[name] = value
+        row_index += 1 
+
+    # TODO: This raises error when the Excel sheet has extra config names.
+    # Should this be the default behavior?
+    return data.SoftwareConfig(**config_dict)
     
 
 # Read Excel file and convert to (data.Schedule, data.Assignment) objects
@@ -107,13 +97,13 @@ def ReadFromExcelFile(filepath):
     config = ReadSoftwareConfig(ws)
     
     ws= wb['간호사별 설정']
-    constraints = ReadPersonConstraints(ws, config)
+    constraints = ReadPersonConfig(ws, config)
     
-    ws = wb['날짜별 설정']
-    date_constraints = ReadDateConstraint(ws, config)
+    ws = wb['날짜별 설정'] 
+    date_constraints = ReadDateConfig(ws, config)
 
     ws = wb['일정표']
-    assignment_dict = ReadTimetable(ws, config, constraints)
+    assignment_dict = ReadTimetable(ws, config)
 
     # Crate schedule object
     schedule = data.Schedule(config.start_date, config.end_date)
