@@ -57,7 +57,7 @@ def BuildCosntraint3(solver, constraint, all_date_strs, var_dict):
     for from_index in range(len(all_date_strs) - max_days):
         vars = []
         for i in range(max_days):
-            for shift_type_str in data.ShiftType.Names():
+            for shift_type_str in data.ShiftType.WorkShiftNames():
                 var_name = GetVariableName(
                         constraint.name, all_date_strs[from_index + i], shift_type_str)
                 vars.append(var_dict[var_name])
@@ -82,7 +82,7 @@ def BuildConstraint4(solver, constraint, all_date_strs, var_dict):
 def BuildConstraint5(solver, constraint, all_date_strs, var_dict):
     vars = []
     for date_str in all_date_strs:
-        for shift_type_str in data.ShiftType.Names():
+        for shift_type_str in data.ShiftType.WorkShiftWorkShiftNames():
             var_name = GetVariableName(constraint.name, date_str, shift_type_str)
             vars.append(var_dict[var_name])
 
@@ -108,7 +108,7 @@ def BuildConstraint7(solver, constraint, all_date_strs, var_dict):
 
 # 8. Exactly 1 person should work in each shift
 def BuildConstraint8(solver, constraints, date_str, var_dict):
-    for shift_type_str in data.ShiftType.Names():
+    for shift_type_str in data.ShiftType.WorkShiftNames():
         vars = []
         for constraint in constraints:
             var_name = GetVariableName(constraint.name, date_str, shift_type_str)
@@ -128,7 +128,7 @@ def BuildSolverFromSchedule(schedule):
     # Create variables
     for date_str in all_date_strs:
         for constraint in schedule.constraints:
-            for shift_type_str in data.ShiftType.Names():
+            for shift_type_str in data.ShiftType.WorkShiftNames():
                 var_name = GetVariableName(constraint.name, date_str, shift_type_str)
                 var_dict[var_name] = solver.BoolVar(var_name)
             

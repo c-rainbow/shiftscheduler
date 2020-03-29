@@ -20,14 +20,15 @@ KEY_OFF_SHIFTS = 'off_shifts'
 
 
 class ShiftType(enum.Enum):
+    OFF = 0
     DAY = 1
     EVENING = 2
     NIGHT = 3
 
+    # Name of all work shifts. OFF is not included
     @classmethod
-    def Names(cls):
-        items = cls.Items()
-        return [name for name, _ in items]
+    def WorkShiftNames(cls):
+        return (cls.DAY.name, cls.EVENING.name, cls.NIGHT.name)
 
     def ShortName(self):
         return self.name[0]
@@ -86,6 +87,7 @@ class DateConstraint(object):
         self.num_workers_night = num_workers_night
 
 
+# TODO: Break this into two constraint classes : person and date
 class Schedule(object):
     def __init__(self, start_date, end_date):        
         self.start_date = start_date  # datetime.date 
@@ -97,7 +99,7 @@ class Schedule(object):
         self.constraints.append(constraint)
 
     def AddDateConstraint(self, date_constraint):
-        self.date_constraints.append(date_constraints)
+        self.date_constraints.append(date_constraint)
 
     def GetConstraintByName(self, name):
         for constraint in self.constraints:

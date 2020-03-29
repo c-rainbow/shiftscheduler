@@ -169,3 +169,4 @@ if __name__ == '__main__':
         datetime.date.fromisoformat('2020-03-16'),
         'tmp/sample.xlsx'
     )
+

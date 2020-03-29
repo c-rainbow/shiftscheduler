@@ -1,5 +1,4 @@
 
-import pandas
 import openpyxl  
 
 from openpyxl import styles
@@ -54,7 +53,7 @@ def AllNamesUnique(names):
 # ws: Excel sheet
 # schedule: data.Schedule, for start_date and end_date
 # assignment: data.Assignment, for assignment
-def CreateOutputTimetable(ws, schedule, assignments, row_offset=0, col_offset=0, default_shift_code=None):
+def CreateOutputTimetable(ws, schedule, assignments, row_offset=0, col_offset=0):
     
     names = assignments.GetNames()
     start_date = schedule.start_date
@@ -100,12 +99,7 @@ def CreateOutputTimetable(ws, schedule, assignments, row_offset=0, col_offset=0,
             
             # If shift exists, write the short name
             if shift_type is not None:
-                cell.value = shift_type.ShortName()
-            # If shift does not exist for the person and the date, write default.
-            # The default is None (for barebone) or 'O' (for solution output)
-            elif default_shift_code is not None:
-                cell.value = default_shift_code
-            
+                cell.value = shift_type.ShortName()            
 
     # Add conditional formatting to cells
     cell_range = '%s%d:%s%d' % (
@@ -200,6 +194,11 @@ def CreateOutputDateConfig(ws, schedule, start_date, end_date, row_offset=0, col
         cell.value = date_constraint.num_workers_night
 
 
+def CreateSoftwareConfig(ws, start_date, end_date):
+    ws['A1'].value = start_date
+    ws['B1'].value = end_date
+
+
 # Create Output Excel file
 def GenerateOutputExcelFile(schedule, assignments, filename):
     wb = openpyxl.Workbook()
@@ -213,6 +212,9 @@ def GenerateOutputExcelFile(schedule, assignments, filename):
 
     ws = wb.create_sheet(title='날짜별 설정')
     CreateOutputDateConfig(ws, schedule, assignments)
+
+    ws = wb.create_sheet(title='Config')
+    CreateSoftwareConfig(ws, schedule.start_date, schedule.end_date)
 
     wb.save(filename)
 
