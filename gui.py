@@ -6,66 +6,148 @@
 import tkinter as tk
 from tkinter import messagebox
 
+from tkinter import font
 
 
-def buttonCallback():
-    messagebox.showinfo(title='this is title', message='hello this is a message')
 
 
+
+class CustomWindow(tk.Tk):
+    
+    # self = C++ this
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._frames = dict()
+        
+    def AddFrame(self, name, frame):
+        self._frames[name] = frame
+    
+    def ShowFrame(self, name):
+        frame = self._frames.get(name)
+        if frame is not None:
+            frame.tkraise()
+            
 
 def CreateBareboneExcel(root, row_index, col_index):
-    frame = tk.LabelFrame(root, text='빈 엑셀 파일')
-    frame.grid(row=row_index, column=col_index, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+    frame = tk.Frame(root)
 
-    button_label = tk.Button(frame, text='빈 엑셀 파일')
-    button_label.grid(row=0, column=0, sticky=tk.E)
+    # 뭔가 일어남....
+
+
+
+    frame.grid(row=row_index, column=col_index, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+ 
+    button_label = tk.Button(frame, text='기본 엑셀 파일 받기')
+    button_label.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S)
     button_label.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
 
-def CreateNewSchedule(root, row_index, col_index):
-    frame = tk.LabelFrame(root, text='새 일정 만들기')
+def CreateNewSchedule(root, lower_frame, row_index, col_index):
+    frame = tk.Frame(root)
     frame.grid(row=row_index, column=col_index, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
 
-    button_label = tk.Button(frame, text='새 일정 만들기')
-    button_label.grid(row=0, column=0, sticky=tk.E)
+    def callback_func(): 
+        #root.master.master.ShowFrame('new_excel')
+        new_excel_frame = CreateNewExcelFrame(lower_frame)
+        new_excel_frame.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+
+
+
+    button_label = tk.Button(frame, text='New Schedule', bg='#fccc00', fg='#000000', command=callback_func)
+    
+    button_font = font.Font(name='아무 이름', size=15)
+    button_label['font'] = button_font
+    
+    
+    
+    button_label.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S)
+    button_label.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+
 
 
 def UpdateExistingSchedule(root, row_index, col_index):
-    frame = tk.LabelFrame(root, text='기존 일정 수정하기')
+    frame = tk.Frame(root)
     frame.grid(row=row_index, column=col_index, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
 
-    button_label = tk.Button(frame, text='기존 일정 수정하기')
-    button_label.grid(row=0, column=0, sticky=tk.E)
+    button_label = tk.Button(frame, text='기존 일정 수정하기',)
+    button_label.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S)
+    button_label.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
 
-def DoNothing(root, row_index, col_index):
-    frame = tk.LabelFrame(root, text='그냥 있는 버튼')
-    frame.grid(row=row_index, column=col_index, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+def CreateMainFrame(root, lower_frame):
+    main_frame = tk.Frame(root)
+    #main_frame.pack(fill=tk.BOTH, expand=True)
 
-    button_label = tk.Button(frame, text='그냥 있는 버튼')
-    button_label.grid(row=0, column=0, sticky=tk.E)
+    main_frame.grid_columnconfigure(0, weight=1, uniform='group1')
+    main_frame.grid_columnconfigure(1, weight=2, uniform='group1')
+    main_frame.grid_columnconfigure(2, weight=2, uniform='group1')
+    main_frame.grid_columnconfigure(3, weight=2, uniform='group1')
+    main_frame.grid_columnconfigure(4, weight=1, uniform='group1')
+    main_frame.grid_rowconfigure(0, weight=1, uniform='group2')
+    #main_frame.grid_rowconfigure(1, weight=3, uniform='group2')
+    #main_frame.grid_rowconfigure(2, weight=2, uniform='group2')
+    # main_frame.grid_rowconfigure(2, weight=1, uniform='group2')
+
+    CreateBareboneExcel(main_frame, 0, 1)
+    CreateNewSchedule(main_frame, lower_frame, 0, 2)
+    UpdateExistingSchedule(main_frame, 0, 3)
+
+
+
+    
+    
+    return main_frame
+
+
+def CreateNewExcelFrame(root):
+    frame = tk.Frame(root)
+    #frame.pack(fill=tk.BOTH, expand=True)
+
+    label = tk.Label(frame, text='테스트 텍스트111 '*10)
+    label.pack(fill=tk.BOTH, expand=True)
+
+    return frame
+    
 
 
 def CreateGUI():
-    root = tk.Tk()
-    root.minsize(400, 400)
+    root = CustomWindow()
+    root.minsize(800, 600)
+    root.maxsize(800, 600)
+    root.title('테스트 타이틀')
 
-    main_frame = tk.Frame(root)
-    main_frame.pack(fill=tk.BOTH, expand=True)
+    #container_frame = tk.Frame(root)
+    # container_frame.pack(fill=tk.BOTH, expand=True)
 
-    main_frame.grid_columnconfigure(0, weight=1, uniform='group1')
-    main_frame.grid_columnconfigure(1, weight=1, uniform='group1')
-    main_frame.grid_rowconfigure(0, weight=1, uniform='group2')
-    main_frame.grid_rowconfigure(1, weight=1, uniform='group2')
-    # main_frame.grid_rowconfigure(2, weight=1, uniform='group2')
+    #container_frame.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S)
 
-    CreateBareboneExcel(main_frame, 0, 0)
-    CreateNewSchedule(main_frame, 0, 1)
-    UpdateExistingSchedule(main_frame, 1, 0)
-    DoNothing(main_frame, 1, 1)    
+    #container_frame.grid_columnconfigure(4, weight=1, uniform='group1')
+    root.grid_rowconfigure(0, weight=1, uniform='group2')
+    root.grid_rowconfigure(1, weight=4, uniform='group2')
+    root.grid_columnconfigure(0, weight=1, uniform='group1')
+
+    
+    lower_frame = tk.LabelFrame(root, text='내용')
+    lower_frame.grid(row=1, column=0, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+
+    upper_frame = CreateMainFrame(root, lower_frame)
+    upper_frame.grid(row=0, column=0)
+    
+    # lower_frame.pack(fill=tk.BOTH, expand=True)
+    #new_excel_frame = CreateNewExcelFrame(root)
+    #main_frame.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S)
+    #new_excel_frame.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S)
+
+    # new_excel_frame.tkraise()
+
+    #root.AddFrame('main', main_frame)
+    #root.AddFrame('new_excel', new_excel_frame)
 
     return root
+
 
 if __name__ == '__main__':
     root = CreateGUI()
     root.mainloop()
+    
