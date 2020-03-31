@@ -70,9 +70,23 @@ def UpdateExistingSchedule(root, row_index, col_index):
     frame = tk.Frame(root)
     frame.grid(row=row_index, column=col_index, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
 
-    button_label = tk.Button(frame, text='기존 일정 수정하기',)
-    button_label.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S)
-    button_label.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+    
+
+    #canvas = tk.Canvas(frame, width=200, height=200)
+    #canvas.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+    #canvas.pack()
+    img = tk.PhotoImage(file='photo.png')
+    #canvas.create_image(50, 50, image=image)
+
+    label = tk.Label(frame, image=img)
+    label.image = img
+    #label.place(x=0, y=0)
+    label.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+    
+
+    #button_label = tk.Button(frame, text='기존 일정 수정하기',)
+    #button_label.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S)
+    #button_label.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
 
 def CreateMainFrame(root, lower_frame):
@@ -111,6 +125,24 @@ def CreateNewExcelFrame(root):
     
 
 
+def CreateMenuBar(root):
+    
+    
+
+    menu = tk.Menu(root)
+    
+    filemenu = tk.Menu(menu, tearoff=0)
+    filemenu.add_command(
+        label='아무것도 안하는 버튼',
+        command=lambda: tk.messagebox.showinfo(message='사실 이거 보여주기 위해 어그로 끌었다'))
+    filemenu.add_command(label='무언가 할 것 같은 버튼')
+    filemenu.add_command(label='종료')
+
+    menu.add_cascade(label='파일', menu=filemenu)
+
+    root.config(menu=menu)
+
+
 def CreateGUI():
     root = CustomWindow()
     root.minsize(800, 600)
@@ -143,6 +175,8 @@ def CreateGUI():
 
     #root.AddFrame('main', main_frame)
     #root.AddFrame('new_excel', new_excel_frame)
+
+    CreateMenuBar(root)
 
     return root
 
