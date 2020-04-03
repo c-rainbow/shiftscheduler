@@ -1,17 +1,12 @@
 
 
 import datetime
+import date_util
 
 import data 
 import functools
 
 from ortools.linear_solver import pywraplp
-
-
-# Generate all dates in string form of 2020-05-31
-def GenerateAllDateStrs(start_date, end_date):
-    for n in range((end_date - start_date).days + 1):
-        yield str(start_date + datetime.timedelta(n))
 
 
 # Variable name from nurse name, work date, and shift type name
@@ -123,7 +118,7 @@ def BuildSolverFromSchedule(schedule):
             'scheduling_program', pywraplp.Solver.CBC_MIXED_INTEGER_PROGRAMMING)
 
     var_dict = dict()         
-    all_date_strs = list(GenerateAllDateStrs(schedule.start_date, schedule.end_date))   
+    all_date_strs = list(date_util.GenerateAllDateStrs(schedule.start_date, schedule.end_date))   
 
     # Create variables
     for date_str in all_date_strs:

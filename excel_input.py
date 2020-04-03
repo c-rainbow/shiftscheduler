@@ -26,12 +26,12 @@ def ReadTimetable(ws, config, start_row=1, start_col=1):
         name_cell = ws.cell(row=row_index, column=start_col)
         for col_index in range(start_col+1, start_col+total_dates+1):
             # TODO: Check that the date is not None
-            date_cell = ws.cell(row=start_row, column=col_index)            
+            date_cell = ws.cell(row=start_row, column=col_index) 
             shift_cell = ws.cell(row=row_index, column=col_index)
             shift_type = data.ShiftType.FromShortName(shift_cell.value)
             
             if shift_type is not None:  # If the cell is not empty
-                assignment_dict[(date_cell.value, name_cell.value)] = shift_type
+                assignment_dict[(datetime.date.fromisoformat(date_cell.value), name_cell.value)] = shift_type
 
     return assignment_dict
     
@@ -65,7 +65,7 @@ def ReadDateConfig(ws, config, start_row=1, start_col=1):
         night_cell = ws.cell(row=row_index, column=start_col+3)  # Number of night shift workers
 
         date_constraint = data.DateConfig(
-            date_cell.value, day_cell.value, evening_cell.value, night_cell.value)
+            datetime.date.fromisoformat(date_cell.value), day_cell.value, evening_cell.value, night_cell.value)
         date_constraints.append(date_constraint)
     
     return date_constraints
@@ -79,7 +79,10 @@ def ReadSoftwareConfig(ws, start_row=1, start_col=1):
         name = ws.cell(row=row_index, column=start_col).value
         if name is None:  # Reached the end of configs
             break
-        value = ws.cell(row=row_index, column=start_col+1).value        
+        value = ws.cell(row=row_index, column=start_col+1).value
+
+        if type(value) is datetime.datetime:
+            value = value.date()
 
         config_dict[name] = value
         row_index += 1 
@@ -91,32 +94,29 @@ def ReadSoftwareConfig(ws, start_row=1, start_col=1):
 
 # Read Excel file and convert to (data.Schedule, data.Assignment) objects
 def ReadFromExcelFile(filepath):
-    wb = openpyxl.load_workbook(filepath, keep_vba=False) 
+    wb = openpyxl.load_workbook(filepath, read_only=True) 
 
     ws = wb['Config']
-    config = ReadSoftwareConfig(ws)
+    software_config = ReadSoftwareConfig(ws)
     
     ws= wb['간호사별 설정']
-    constraints = ReadPersonConfig(ws, config)
+    person_configs = ReadPersonConfig(ws, software_config)
     
     ws = wb['날짜별 설정'] 
-    date_constraints = ReadDateConfig(ws, config)
+    date_configs = ReadDateConfig(ws, software_config)
 
     ws = wb['일정표']
-    assignment_dict = ReadTimetable(ws, config)
+    assignment_dict = ReadTimetable(ws, software_config)
 
     # Crate schedule object
-    schedule = data.Schedule(config.start_date, config.end_date)
-    for constraint in constraints:
-        schedule.AddConstraint(constraint)
-    for date_constraint in date_constraints:
-        schedule.AddDateConstraint(date_constraint)
+    total_schedule = data.TotalSchedule(
+        software_config=software_config,
+        person_configs=person_configs,
+        date_configs=date_configs,
+        assignment_dict=assignment_dict,
+    )
 
-    all_dates = date_util.GenerateAllDates(config.start_date, config.end_date)
-    all_names = [constraint.name for constraint in constraints]
-    assignments = data.Assignment(assignment_dict, schedule, all_dates, all_names)
-
-    return (schedule, assignments)
+    return total_schedule
 
 
 

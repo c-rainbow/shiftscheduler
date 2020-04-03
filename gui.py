@@ -4,6 +4,7 @@
 
 
 import tkinter as tk
+from tkinter import ttk
 from tkinter import messagebox
 
 from tkinter import font
@@ -37,7 +38,7 @@ def CreateBareboneExcel(root, row_index, col_index):
 
     frame.grid(row=row_index, column=col_index, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
  
-    button_label = tk.Button(frame, text='기본 엑셀 파일 받기')
+    button_label = ttk.Button(frame, text='기본 엑셀 파일 받기')
     button_label.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S)
     button_label.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
@@ -53,10 +54,10 @@ def CreateNewSchedule(root, lower_frame, row_index, col_index):
 
 
 
-    button_label = tk.Button(frame, text='New Schedule', bg='#fccc00', fg='#000000', command=callback_func)
+    button_label = ttk.Button(frame, text='New Schedule', command=callback_func)
     
-    button_font = font.Font(name='아무 이름', size=15)
-    button_label['font'] = button_font
+    button_font = font.Font(name='궁서체', size=15)
+    #button_label['font'] = button_font
     
     
     
@@ -75,16 +76,16 @@ def UpdateExistingSchedule(root, row_index, col_index):
     #canvas = tk.Canvas(frame, width=200, height=200)
     #canvas.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
     #canvas.pack()
-    img = tk.PhotoImage(file='photo.png')
+    #img = tk.PhotoImage(file='photo.png')
     #canvas.create_image(50, 50, image=image)
 
-    label = tk.Label(frame, image=img)
-    label.image = img
+    #label = tk.Label(frame, image=img)
+    #label.image = img
     #label.place(x=0, y=0)
-    label.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+    #label.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
     
 
-    #button_label = tk.Button(frame, text='기존 일정 수정하기',)
+    #button_label = ttk.Button(frame, text='기존 일정 수정하기',)
     #button_label.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S)
     #button_label.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
@@ -182,6 +183,16 @@ def CreateGUI():
 
 
 if __name__ == '__main__':
+    s = ttk.Style()
+    #print(s.theme_names())
+    s.theme_use('xpnative')
+    #s.configure(, foreground='blue')
     root = CreateGUI()
+
+    s = ttk.Style()
+    s.theme_use('vista')
+    #s.configure(root.winfo_class(), foreground='red')
+    
     root.mainloop()
+    
     

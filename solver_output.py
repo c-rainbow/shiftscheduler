@@ -5,11 +5,6 @@ import date_util
 
 from ortools.linear_solver import pywraplp
 
-# Generate all dates in string form of 2020-05-31
-def GenerateAllDates(start_date, end_date):
-    for n in range((end_date - start_date).days + 1):
-        yield start_date + datetime.timedelta(n)
-
 
 # Variable name from nurse name, work date, and shift type name
 def GetVariableName(name, date_str, shift_type_str):
@@ -24,7 +19,7 @@ def ToAssignmentDict(all_dates, names, var_dict):
     for name in names:
         for work_date in all_dates:
             has_work = False
-            for work_shift_type in data.ShiftType.WorkShifts():
+            for work_shift_type in data.ShiftType.WorkShiftTypes():
                 variable = var_dict[GetVariableName(name, str(work_date), work_shift_type.name)]
                 # A work shift is assigned to the person on this date.
                 if variable.solution_value() == 1:

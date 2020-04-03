@@ -5,17 +5,11 @@ import datetime
 
 import data 
 import functools
-
+import date_util
 
 _DAY_NAME = data.ShiftType.DAY.name
 _EVENING_NAME = data.ShiftType.EVENING.name
 _NIGHT_NAME = data.ShiftType.NIGHT.name
-
-
-# Generate all dates in string form of 2020-05-31
-def GenerateAllDateStrs(start_date, end_date):
-    for n in range((end_date - start_date).days + 1):
-        yield str(start_date + datetime.timedelta(n))
 
 
 # Variable name from nurse name, work date, and shift type name
@@ -98,7 +92,9 @@ def BuildConstraint6(solver, assignment_dict, var_dict):
         var_name = GetVariableName(name, str(work_date), fixed_shift.name)
         
         if fixed_shift == data.ShiftType.OFF:
-            solver.Add(var_dict[var_name] == 0)
+            for work_shift_type in data.ShiftType.WorkShiftNames():
+                work_var_name = GetVariableName(name, str(work_date), work_shift_type)
+                solver.Add(var_dict[work_var_name] == 0)
         else:
             solver.Add(var_dict[var_name] == 1)
 
@@ -136,7 +132,7 @@ def Build(software_config, person_configs, date_configs, assignment_dict):
             'scheduling_program', pywraplp.Solver.CBC_MIXED_INTEGER_PROGRAMMING)
 
     var_dict = dict()         
-    all_date_strs = list(GenerateAllDateStrs(software_config.start_date, software_config.end_date))   
+    all_date_strs = list(date_util.GenerateAllDateStrs(software_config.start_date, software_config.end_date))   
 
     # Create variables
     for work_date in all_date_strs:

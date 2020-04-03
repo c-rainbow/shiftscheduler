@@ -184,7 +184,7 @@ def WriteSoftwareConfig(ws, software_config, start_row=1, start_col=1):
 
 
 # Create Output Excel file
-def CreateWorkbook(schedule, software_config, person_configs, date_configs, assignment_dict):
+def CreateWorkbook(software_config, person_configs, date_configs, assignment_dict):
     wb = openpyxl.Workbook()
     
     ws = wb.active
@@ -203,7 +203,10 @@ def CreateWorkbook(schedule, software_config, person_configs, date_configs, assi
 
     return wb
 
-
-def CreateExcelFile(schedule, assignments, filepath):
-    wb = CreateWorkbook(schedule, assignments)
+def FromTotalSchedule(total_schedule, filepath):
+    wb = CreateWorkbook(
+        total_schedule.software_config,
+        total_schedule.person_configs,
+        total_schedule.date_configs,
+        total_schedule.assignment_dict)
     wb.save(filepath)

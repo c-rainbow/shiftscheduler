@@ -59,7 +59,7 @@ class ShiftType(enum.Enum):
     # Name of all work shifts. OFF is not included
     @classmethod
     def WorkShiftNames(cls):
-        return [shift.name for shift in cls.WorkShift()]
+        return [shift.name for shift in cls.WorkShiftTypes()]
 
     def ShortName(self):
         return self.name[0]

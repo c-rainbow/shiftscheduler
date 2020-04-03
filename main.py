@@ -22,9 +22,6 @@ class VarArraySolutionPrinter(cp_model.CpSolverSolutionCallback):
     def solution_count(self):
         return self._solution_count
 
-def GenerateAllDateStrs(start_date, end_date):
-    for n in range((end_date - start_date).days + 1):
-        yield str(start_date + datetime.timedelta(n))
 
 def PrintShifts(nurse_name, var_dict):
     shift_dict = dict()
