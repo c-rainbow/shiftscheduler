@@ -9,6 +9,7 @@ from tkinter import messagebox
 
 from tkinter import font
 
+from excel import constants
 
 
 
@@ -149,6 +150,8 @@ def CreateGUI():
     root.minsize(800, 600)
     root.maxsize(800, 600)
     root.title('테스트 타이틀')
+
+    
 
     #container_frame = tk.Frame(root)
     # container_frame.pack(fill=tk.BOTH, expand=True)

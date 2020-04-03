@@ -16,12 +16,15 @@ _DAY_NAME = data.ShiftType.DAY.name
 _EVENING_NAME = data.ShiftType.EVENING.name
 _NIGHT_NAME = data.ShiftType.NIGHT.name
 
-def GetAllWorkShifts(assignment_dict, expected_date, expected_shift_type):
+def GetAllWorkerNames(assignment_dict, expected_date, expected_shift_type):
     names = []
+    stored = []
     for (work_date, name), shift_type in assignment_dict.items():
         if work_date == expected_date and shift_type == expected_shift_type:
             names.append(name)
+            stored.append((work_date, name, shift_type))
 
+    _ = stored
     return names
 
 
@@ -180,13 +183,15 @@ def ValidateTimetable(software_config, date_configs, person_configs, assignment_
 
     # 2. Basic checks on names 
     all_names_set = set(c.name for c in person_configs)
-    all_timetable_names = set()
-    for _, name in assignment_dict.values():
+    assigned_names_set = set()
+    for _, name in assignment_dict.keys():
         if name not in all_names_set:
             errors.append('Cannot find person config for %s' % name)
-        if name in all_timetable_names:
-            errors.append('Name %s is duplicate in timetable' % name)
-        all_timetable_names.add(name)
+        assigned_names_set.add(name)
+    
+    extra_names = list(all_names_set - assigned_names_set)
+    if extra_names:
+        errors.append('Timetable does not have following names: %s', sorted(all_names_set))
     
     # Value error prevents further validation
     if errors:
@@ -197,36 +202,36 @@ def ValidateTimetable(software_config, date_configs, person_configs, assignment_
     for date_config in date_configs:
         work_date = date_config.work_date
         if barebone:  # For barebone config, empty cells can be filled, so only check for <=
-            worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.DAY))
+            worker_count = len(GetAllWorkerNames(assignment_dict, work_date, data.ShiftType.DAY))
             util.ErrorIfGreater(
                 worker_count, date_config.num_workers_day, errors,
-                '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
+                '%d workers are assigned for %s on %s, when there should be %d workers', worker_count,
                 _DAY_NAME, date_config.work_date, date_config.num_workers_day)
-            worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.EVENING))
+            worker_count = len(GetAllWorkerNames(assignment_dict, work_date, data.ShiftType.EVENING))
             util.ErrorIfGreater(
                 worker_count, date_config.num_workers_evening, errors,
-                '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
+                '%d workers are assigned for %s on %s, when there should be %d workers', worker_count,
                 _EVENING_NAME, date_config.work_date, date_config.num_workers_evening)
-            worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.NIGHT))
+            worker_count = len(GetAllWorkerNames(assignment_dict, work_date, data.ShiftType.NIGHT))
             util.ErrorIfGreater(
                 worker_count, date_config.num_workers_night, errors, 
-                '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
+                '%d workers are assigned for %s on %s, when there should be %d workers', worker_count,
                 _NIGHT_NAME, date_config.work_date, date_config.num_workers_night)
         else:  # For non-barebone complete assignment, the values must match.
-            worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.DAY))
+            worker_count = len(GetAllWorkerNames(assignment_dict, work_date, data.ShiftType.DAY))
             util.ErrorIfNotEqual(
                 worker_count, date_config.num_workers_day, errors,
-                '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
+                '%d workers are assigned for %s on %s, when there should be %d workers', worker_count,
                 _DAY_NAME, date_config.work_date, date_config.num_workers_day)
-            worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.EVENING))
+            worker_count = len(GetAllWorkerNames(assignment_dict, work_date, data.ShiftType.EVENING))
             util.ErrorIfNotEqual(
                 worker_count, date_config.num_workers_evening, errors,
-                '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
+                '%d workers are assigned for %s on %s, when there should be %d workers', worker_count,
                 _EVENING_NAME, date_config.work_date, date_config.num_workers_evening)
-            worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.NIGHT))
+            worker_count = len(GetAllWorkerNames(assignment_dict, work_date, data.ShiftType.NIGHT))
             util.ErrorIfNotEqual(
                 worker_count, date_config.num_workers_night, errors,
-                '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
+                '%d workers are assigned for %s on %s, when there should be %d workers', worker_count,
                 _NIGHT_NAME, date_config.work_date, date_config.num_workers_night)
 
 
@@ -314,7 +319,7 @@ def ValidateTimetable(software_config, date_configs, person_configs, assignment_
     num_person = software_config.num_person
     for date_config in date_configs:
         total_required = date_config.num_workers_day + date_config.num_workers_evening + date_config.num_workers_night
-        off_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.OFF))
+        off_count = len(GetAllWorkerNames(assignment_dict, date_config.work_date, data.ShiftType.OFF))
         available_workers = num_person - off_count
 
         util.ErrorIfGreater(

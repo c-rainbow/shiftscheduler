@@ -10,6 +10,7 @@ from openpyxl.utils import cell as xlcell
 import date_util
 import datetime
 import data
+import excel_util
 # from nurse_scheduling.excel import constants
 
 
@@ -30,9 +31,8 @@ def ReadTimetable(ws, config, start_row=1, start_col=1):
             shift_cell = ws.cell(row=row_index, column=col_index)
             shift_type = data.ShiftType.FromShortName(shift_cell.value)
             
-            date_value = datetime.date.fromisoformat(date_cell.value) if type(date_cell.value) is str else date_cell.value
             if shift_type is not None:  # If the cell is not empty
-                assignment_dict[(date_value, name_cell.value)] = shift_type
+                assignment_dict[(excel_util.CellToDate(date_cell), name_cell.value)] = shift_type
 
     return assignment_dict
     
@@ -65,10 +65,8 @@ def ReadDateConfig(ws, config, start_row=1, start_col=1):
         evening_cell = ws.cell(row=row_index, column=start_col+2)  # Number of evening shift workers
         night_cell = ws.cell(row=row_index, column=start_col+3)  # Number of night shift workers
 
-
-        date_value = datetime.date.fromisoformat(date_cell.value) if type(date_cell.value) is str else date_cell.value
         date_constraint = data.DateConfig(
-            date_value, day_cell.value, evening_cell.value, night_cell.value)
+            excel_util.CellToDate(date_cell), day_cell.value, evening_cell.value, night_cell.value)
         date_constraints.append(date_constraint)
     
     return date_constraints

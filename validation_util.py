@@ -1,5 +1,5 @@
 """Utility functions for validation."""
-
+import datetime
 
 def ToInt(cell_value):
     try:
@@ -65,3 +65,15 @@ def ErrorIfNotEqual(value, to_compare, errors, message, *args):
         errors.append(message % args)
         return True
     return False
+
+
+
+def SanitizeDate(obj):
+    obj_type = type(obj)
+    if obj_type is str:
+        return datetime.date.fromisoformat(obj)
+    elif obj_type is datetime.datetime:
+        return obj.date()
+    elif obj_type is datetime.date:
+        return obj
+    raise TypeError('%s is not a valid type for date' % obj_type)
