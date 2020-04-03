@@ -191,7 +191,7 @@ def ValidateTimetable(software_config, date_configs, person_configs, assignment_
     
     extra_names = list(all_names_set - assigned_names_set)
     if extra_names:
-        errors.append('Timetable does not have following names: %s', sorted(all_names_set))
+        errors.append('Timetable does not have following names: %s' % sorted(all_names_set))
     
     # Value error prevents further validation
     if errors:

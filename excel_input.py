@@ -31,8 +31,9 @@ def ReadTimetable(ws, config, start_row=1, start_col=1):
             shift_cell = ws.cell(row=row_index, column=col_index)
             shift_type = data.ShiftType.FromShortName(shift_cell.value)
             
-            if shift_type is not None:  # If the cell is not empty
-                assignment_dict[(excel_util.CellToDate(date_cell), name_cell.value)] = shift_type
+            # if shift_type is not None:  # If the cell is not empty
+            # Assign None shift type if not exists.
+            assignment_dict[(excel_util.CellToDate(date_cell), name_cell.value)] = shift_type
 
     return assignment_dict
     
