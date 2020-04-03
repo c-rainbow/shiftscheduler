@@ -42,8 +42,20 @@ def ErrorIfNaNOrNegative(value, errors, message, *args):
     return False
 
 
-# Error if 'value' is greater than 'to_compare.
-# Not an error if at least one of them are None.
+
+# Error if 'value' is less than 'to_compare'
+# Not an error if at least one of them are None
+def ErrorIfLess(value, to_compare, errors, message, *args):
+    if value is None or to_compare is None:
+        return False
+    if value < to_compare:
+        errors.append(message % args)
+        return True
+    return False
+
+
+# Error if 'value' is greater than 'to_compare'
+# Not an error if at least one of them are None
 def ErrorIfGreater(value, to_compare, errors, message, *args):
     if value is None or to_compare is None:
         return False
@@ -302,6 +314,28 @@ def ValidateTimetable(assignment_dict, software_config, date_configs, person_con
                 consecutive_nights = 0
                 start_work_date = None       
     
+    # 5-5. min_total_workdays <= total schedule <= max_total_workdays
+    for person_config in person_configs:
+        name = person_config.name
+        fixed_total_workdays = 0
+        off_count = 0
+        
+        for work_date in all_dates:
+            shift_type = assignment_dict.get((work_date, name))
+            if shift_type in data.ShiftType.WorkShiftTypes():
+                fixed_total_workdays += 1
+            elif shift_type == data.ShiftType.OFF:
+                off_count += 1
+        
+        ErrorIfLess( 
+            len(all_dates) - off_count, person_config.min_total_workdays, errors,
+            'Worker %s should work at least %s days, but is already scheduled off %d days out of %d days',
+            name, person_config.min_total_workdays, off_count, len(all_dates))
+
+        ErrorIfGreater(
+            fixed_total_workdays, person_config.max_total_workdays, errors,
+            'Worker %s should work no more than %d days, but is already scheduled to work for %d days',
+            name, person_config.max_total_workdays, fixed_total_workdays)
 
     # 6. Total required workers in the day <= number of non-off workers that day (except barebone)
     num_person = software_config.num_person
@@ -353,4 +387,3 @@ def ValidateTotalScheduleFormat(total_schedule, barebone=False):
         total_schedule.assignment_dict, barebone=barebone)
     return tt_errors
     
-
