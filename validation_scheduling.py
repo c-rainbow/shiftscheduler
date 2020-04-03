@@ -7,7 +7,7 @@ import date_util
 import functools
 
 
-from . import util as util
+import validation_util as util
 
 # TODO: For now, errors are simply string messages.
 # In the future, change these messages to structured error objects
@@ -75,22 +75,22 @@ def ValidateDateConfigs(software_config, date_configs, barebone=False):
         if not barebone:
             # Check for empty values
             util.ErrorIfNone(
-                work_date.num_workers_day, errors, 'No number of %s workers on %s', _DAY_NAME, work_date)
+                date_config.num_workers_day, errors, 'No number of %s workers on %s', _DAY_NAME, work_date)
             util.ErrorIfNone(
-                work_date.num_workers_evening, errors, 'No number of %s workers on %s', _EVENING_NAME, work_date)
+                date_config.num_workers_evening, errors, 'No number of %s workers on %s', _EVENING_NAME, work_date)
             util.ErrorIfNone(
-                work_date.num_workers_night, errors, 'No number of %s workers on %s', _NIGHT_NAME, work_date)
+                date_config.num_workers_night, errors, 'No number of %s workers on %s', _NIGHT_NAME, work_date)
 
         # Check for invalid values
         util.ErrorIfNaNOrNegative(
-            work_date.num_workers_day, errors, '"%s" is invalid number of %s workers on %s',
-            work_date.num_workers_day, _DAY_NAME, work_date)
+            date_config.num_workers_day, errors, '"%s" is invalid number of %s workers on %s',
+            date_config.num_workers_day, _DAY_NAME, work_date)
         util.ErrorIfNaNOrNegative(
-            work_date.num_workers_evening, errors, '"%s" is invalid number of %s workers on %s',
-            work_date.num_workers_evening, _EVENING_NAME, work_date)
+            date_config.num_workers_evening, errors, '"%s" is invalid number of %s workers on %s',
+            date_config.num_workers_evening, _EVENING_NAME, work_date)
         util.ErrorIfNaNOrNegative(
-            work_date.num_workers_night, errors, '"%s" is invalid number of %s workers on %s',
-            work_date.num_workers_night, _NIGHT_NAME, work_date)
+            date_config.num_workers_night, errors, '"%s" is invalid number of %s workers on %s',
+            date_config.num_workers_night, _NIGHT_NAME, work_date)
 
     if all_dates:  # Some dates do not have config
         errors.append('%d dates do not have date configs, %s' % (len(all_dates), all_dates))
@@ -154,7 +154,7 @@ def ValidatePersonConfigs(software_config, person_configs, barebone=False):
     return errors
 
 
-def ValidateTimetable(assignment_dict, software_config, date_configs, person_configs, barebone=False):
+def ValidateTimetable(software_config, date_configs, person_configs, assignment_dict, barebone=False):
     # Timetable validation
     # 1. Has all dates between start_date and end_date, consecutive
     # 2. Has exactly the names in person configs
@@ -195,31 +195,32 @@ def ValidateTimetable(assignment_dict, software_config, date_configs, person_con
     # 4. If there is any overassigned cell for barebone (more than assigned workers as configured in date_configs)
     # Also check for underassigned cell for complete assignment.
     for date_config in date_configs:
+        work_date = date_config.work_date
         if barebone:  # For barebone config, empty cells can be filled, so only check for <=
             worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.DAY))
             util.ErrorIfGreater(
-                worker_count, date_config.num_workers_day,
+                worker_count, date_config.num_workers_day, errors,
                 '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
                 _DAY_NAME, date_config.work_date, date_config.num_workers_day)
             worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.EVENING))
             util.ErrorIfGreater(
-                worker_count, date_config.num_workers_evening,
+                worker_count, date_config.num_workers_evening, errors,
                 '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
                 _EVENING_NAME, date_config.work_date, date_config.num_workers_evening)
             worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.NIGHT))
             util.ErrorIfGreater(
-                worker_count, date_config.num_workers_night, errors,
+                worker_count, date_config.num_workers_night, errors, 
                 '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
                 _NIGHT_NAME, date_config.work_date, date_config.num_workers_night)
         else:  # For non-barebone complete assignment, the values must match.
             worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.DAY))
             util.ErrorIfNotEqual(
-                worker_count, date_config.num_workers_day,
+                worker_count, date_config.num_workers_day, errors,
                 '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
                 _DAY_NAME, date_config.work_date, date_config.num_workers_day)
             worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.EVENING))
             util.ErrorIfNotEqual(
-                worker_count, date_config.num_workers_evening,
+                worker_count, date_config.num_workers_evening, errors,
                 '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
                 _EVENING_NAME, date_config.work_date, date_config.num_workers_evening)
             worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.NIGHT))
@@ -322,7 +323,7 @@ def ValidateTimetable(assignment_dict, software_config, date_configs, person_con
             total_required, date_config.work_date, off_count, num_person)
     
     # 7. Make sure that sum of minimum total workdays <= Number of non-off cells
-    sum_min_workdays = functools.reduce(lambda sum, pc: sum + pc.min_total_workdays, person_configs, initializer=0)
+    sum_min_workdays = functools.reduce(lambda sum, pc: sum + pc.min_total_workdays, person_configs, 0)
     off_count = len([c for c in assignment_dict.values() if c == data.ShiftType.OFF])
     non_off_count = len(person_configs) * len(date_configs) - off_count
     util.ErrorIfGreater(
@@ -331,7 +332,7 @@ def ValidateTimetable(assignment_dict, software_config, date_configs, person_con
         sum_min_workdays, non_off_count)
     
     # 8. Make sure number of non-off cells <= Sum of maximum total workdays
-    sum_max_workdays = functools.reduce(lambda sum, pc: sum + pc.max_total_workdays, person_configs, initializer=0)
+    sum_max_workdays = functools.reduce(lambda sum, pc: sum + pc.max_total_workdays, person_configs, 0)
     util.ErrorIfGreater(
         non_off_count, sum_max_workdays, errors,
         'There are %d slots to fill, but the sum of total maximum workdays of all people are %d',
@@ -342,13 +343,13 @@ def ValidateTimetable(assignment_dict, software_config, date_configs, person_con
 
 def ValidateTotalScheduleFormat(total_schedule, barebone=False):
     # Any error in software config will block further process
-    errors = ValidateSoftwareConfig(total_schedule.software_configs)
+    errors = ValidateSoftwareConfig(total_schedule.software_config)
     if errors:
         return errors
 
     # Person configs validation and date configs validation can be done in parallel
     dc_errors = ValidateDateConfigs(
-        total_schedule.software_config, total_schedule.software_configs, barebone=barebone)
+        total_schedule.software_config, total_schedule.date_configs, barebone=barebone)
     pc_errors = ValidatePersonConfigs(
         total_schedule.software_config, total_schedule.person_configs, barebone=barebone)
     if dc_errors or pc_errors:

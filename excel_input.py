@@ -30,8 +30,9 @@ def ReadTimetable(ws, config, start_row=1, start_col=1):
             shift_cell = ws.cell(row=row_index, column=col_index)
             shift_type = data.ShiftType.FromShortName(shift_cell.value)
             
+            date_value = datetime.date.fromisoformat(date_cell.value) if type(date_cell.value) is str else date_cell.value
             if shift_type is not None:  # If the cell is not empty
-                assignment_dict[(datetime.date.fromisoformat(date_cell.value), name_cell.value)] = shift_type
+                assignment_dict[(date_value, name_cell.value)] = shift_type
 
     return assignment_dict
     
@@ -64,8 +65,10 @@ def ReadDateConfig(ws, config, start_row=1, start_col=1):
         evening_cell = ws.cell(row=row_index, column=start_col+2)  # Number of evening shift workers
         night_cell = ws.cell(row=row_index, column=start_col+3)  # Number of night shift workers
 
+
+        date_value = datetime.date.fromisoformat(date_cell.value) if type(date_cell.value) is str else date_cell.value
         date_constraint = data.DateConfig(
-            datetime.date.fromisoformat(date_cell.value), day_cell.value, evening_cell.value, night_cell.value)
+            date_value, day_cell.value, evening_cell.value, night_cell.value)
         date_constraints.append(date_constraint)
     
     return date_constraints
@@ -118,9 +121,3 @@ def ReadFromExcelFile(filepath):
 
     return total_schedule
 
-
-
-if __name__ == '__main__':
-    schedule, assignments = ReadFromExcelFile('tmp/sample.xlsx')
-    print(schedule)
-    print(assignments)

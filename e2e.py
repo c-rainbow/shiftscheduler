@@ -4,6 +4,8 @@ import excel_output
 import solver_input
 import solver_output
 
+import validation.validation as validation
+
 
 if __name__ == '__main__':
     base_schedule = excel_input.ReadFromExcelFile('tmp/sample.xlsx')
