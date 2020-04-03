@@ -46,7 +46,7 @@ def ReadPersonConfig(ws, config, start_row=1, start_col=1):
         min_tw_cell = ws.cell(row=row_index, column=start_col+3)  # Min total workdays
         max_tw_cell = ws.cell(row=row_index, column=start_col+4)  # Max total workdays
 
-        person_constraint = data.PersonConstraint(
+        person_constraint = data.PersonConfig(
             name_cell.value, mcw_cell.value, mcn_cell.value, min_tw_cell.value, max_tw_cell.value)
         person_constraints.append(person_constraint)
     
@@ -64,7 +64,7 @@ def ReadDateConfig(ws, config, start_row=1, start_col=1):
         evening_cell = ws.cell(row=row_index, column=start_col+2)  # Number of evening shift workers
         night_cell = ws.cell(row=row_index, column=start_col+3)  # Number of night shift workers
 
-        date_constraint = data.DateConstraint(
+        date_constraint = data.DateConfig(
             date_cell.value, day_cell.value, evening_cell.value, night_cell.value)
         date_constraints.append(date_constraint)
     

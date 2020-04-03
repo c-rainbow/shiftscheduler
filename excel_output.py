@@ -57,10 +57,9 @@ def AllNamesUnique(names):
 # ws: Excel sheet
 # schedule: data.Schedule, for start_date and end_date
 # assignment: data.Assignment, for assignment
-def WriteTimetable(ws, config, assignments, start_row=1, start_col=1):
-    start_date = config.start_date
-    end_date = config.end_date
-    names = assignments.GetNames()
+def WriteTimetable(ws, software_config, names, assignment_dict, start_row=1, start_col=1):
+    start_date = software_config.start_date
+    end_date = software_config.end_date
     all_dates = list(date_util.GenerateAllDates(start_date, end_date))
 
     end_row = start_row + len(names)  # inclusive
@@ -90,7 +89,7 @@ def WriteTimetable(ws, config, assignments, start_row=1, start_col=1):
         for col_index in range(start_col+1, end_col+1):
             work_date = ws.cell(row=start_row, column=col_index).value
             cell = ws.cell(row=row_index, column=col_index)
-            shift_type = assignments.GetAssignment(work_date, name)
+            shift_type = assignment_dict.get((work_date, name))
             
             # If shift (including OFF) exists, write the short name.
             if shift_type is not None:
@@ -115,12 +114,12 @@ def WriteTimetable(ws, config, assignments, start_row=1, start_col=1):
 
 
 
-def WritePersonConfig(ws, person_constraints, start_row=1, start_col=1):
+def WritePersonConfigs(ws, person_configs, start_row=1, start_col=1):
     # Fill the head rows with people's names
     # Note that row/col indexes are 1-based in Excel    
-    for i, person_constraint in enumerate(person_constraints):
+    for i, person_config in enumerate(person_configs):
         c = ws.cell(row=start_row+1+i, column=start_col)
-        c.value = person_constraint.name
+        c.value = person_config.name
 
     # Fill the head columns with config names
     for i, config_display_name in enumerate(CONFIG_PERSON_HEADER_NAMES):
@@ -130,21 +129,21 @@ def WritePersonConfig(ws, person_constraints, start_row=1, start_col=1):
         ws.column_dimensions[xlcell.get_column_letter(start_col+1+i)].width = len(config_display_name)*1.7
 
     # Fill config values from schedule
-    name_constraint_map = {c.name: c for c in person_constraints}
-    for row_index in range(start_row+1, start_row+1+len(person_constraints)):
+    name_to_config = {c.name: c for c in person_configs}
+    for row_index in range(start_row+1, start_row+1+len(person_configs)):
         name = ws.cell(row=row_index, column=start_col).value
-        constraint = name_constraint_map.get(name)
+        person_config = name_to_config.get(name)
         
-        # Constraint can be none for barebone outputs
-        if constraint is not None:
-            # Write config values.
-            for col_offset, value in enumerate(constraint._asdict().values()):
+        # Config can be None for barebone outputs
+        if person_config is not None:
+            # Write config values. Iterate fields of PersonConfig namedtuple.
+            for col_offset, value in enumerate(person_config._asdict().values()):
                 cell = ws.cell(row=row_index, column=start_col+col_offset)
                 cell.value = value   
         
 
-def WriteDateConfig(ws, date_constraints, config, start_row=1, start_col=1):
-    date_constraint_dict = {c.work_date: c for c in date_constraints}
+def WriteDateConfigs(ws, date_configs, config, start_row=1, start_col=1):
+    date_to_config = {c.work_date: c for c in date_configs}
 
     # Fill the head rows with dates
     # Note that row/col indexes are 1-based in Excel    
@@ -163,51 +162,44 @@ def WriteDateConfig(ws, date_constraints, config, start_row=1, start_col=1):
     # Fill date configs
     for row_index in range(start_row+1, start_row+1+len(all_dates)):
         work_date = ws.cell(row=row_index, column=start_col).value
-        date_constraint = date_constraint_dict.get(work_date)
+        date_config = date_to_config.get(work_date)
         
-        if date_constraint is not None:
-            # Write config values.
-            # This loop overwrites the work date cell with the same date. Ok for code simplicity
-            for col_offset, value in enumerate(date_constraint._asdict().values()):
+        # Config can be None for barebone outputs
+        if date_config is not None:
+            # Write config values. Iterate fields of DateConfig namedtuple.
+            for col_offset, value in enumerate(date_config._asdict().values()):
                 cell = ws.cell(row=row_index, column=start_col+col_offset)
                 cell.value = value
 
 
-def WriteSoftwareConfig(ws, config, start_row=1, start_col=1):
-    row_offset = 0
+def WriteSoftwareConfig(ws, software_config, start_row=1, start_col=1):
     # Iterate fields and values in namedtuple in order
-    for name, value in config._asdict().items():
+    for row_offset, (name, value) in enumerate(software_config._asdict().items()):
         # First column is config name
         name_cell = ws.cell(row=start_row+row_offset, column=start_col)
         name_cell.value = name
         # Second column is config value
         value_cell = ws.cell(row=start_row+row_offset, column=start_col+1)
         value_cell.value = value
-        row_offset += 1
 
 
 # Create Output Excel file
-def CreateWorkbook(schedule, assignments):
+def CreateWorkbook(schedule, software_config, person_configs, date_configs, assignment_dict):
     wb = openpyxl.Workbook()
-    sconfig = data.SoftwareConfig(
-        start_date=schedule.start_date,
-        end_date=schedule.end_date,
-        num_person=len(assignments.GetNames())
-    )
     
     ws = wb.active
     ws.title = '일정표'
-    #ws = wb.create_sheet(title='일정표')
-    WriteTimetable(wb.active, sconfig, assignments)
+    names = [c.name for c in person_configs]
+    WriteTimetable(wb.active, software_config, names, assignment_dict)
 
     ws = wb.create_sheet(title='간호사별 설정')
-    WritePersonConfig(ws, schedule.GetPersonConstraints())
+    WritePersonConfigs(ws, person_configs)
 
     ws = wb.create_sheet(title='날짜별 설정')
-    WriteDateConfig(ws, schedule.GetPersonConstraints(), sconfig)
+    WriteDateConfigs(ws, date_configs, software_config)
 
     ws = wb.create_sheet(title='Config')
-    WriteSoftwareConfig(ws, sconfig)
+    WriteSoftwareConfig(ws, software_config)
 
     return wb
 

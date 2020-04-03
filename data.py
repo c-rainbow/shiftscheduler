@@ -24,6 +24,27 @@ SoftwareConfig = collections.namedtuple(
     'SoftwareConfig', ['start_date', 'end_date', 'num_person'])
 
 
+PersonConfig = collections.namedtuple(
+    'PersonConfig', [
+        'name',  # Person's name. Must be unique
+        'max_consecutive_workdays',
+        'max_consecutive_nights',
+        'min_total_workdays',
+        'max_total_workdays',
+    ]
+)
+
+
+DateConfig = collections.namedtuple(
+    'DateConfig', ['work_date', 'num_workers_day', 'num_workers_evening', 'num_workers_night'])
+
+
+# All data needed to run the solver, or write to Excel file
+# TODO: Find a better name for the data type name
+TotalSchedule = collections.namedtuple(
+    'TotalSchedule', ['software_config', 'person_configs', 'date_configs', 'assignment_dict'])
+
+
 class ShiftType(enum.Enum):
     UNKNOWN = 0  # Used for conversion from unrecognized short name
     DAY = 1
@@ -31,10 +52,14 @@ class ShiftType(enum.Enum):
     NIGHT = 3
     OFF = 4
 
+    @classmethod
+    def WorkShiftTypes(cls):
+        return (cls.DAY, cls.EVENING, cls.NIGHT)
+    
     # Name of all work shifts. OFF is not included
     @classmethod
     def WorkShiftNames(cls):
-        return (cls.DAY.name, cls.EVENING.name, cls.NIGHT.name)
+        return [shift.name for shift in cls.WorkShift()]
 
     def ShortName(self):
         return self.name[0]
@@ -97,23 +122,6 @@ class Constraint(object):
             constraint.off_shifts.append(off_shift)
 
         return constraint
-
-
-PersonConstraint = collections.namedtuple(
-    'PersonConstraint', [
-        'name',  # Person's name. Must be unique
-        'max_consecutive_workdays',
-        'max_consecutive_nights',
-        'min_total_workdays',
-        'max_total_workdays',
-        # Where should this be put?
-        # 'fixed_shifts',  # list of Shift. Includes fixed "OFF"s
-    ]
-)
-
-
-DateConstraint = collections.namedtuple(
-    'DateConstraint', ['work_date', 'num_workers_day', 'num_workers_evening', 'num_workers_night'])
 
 
 # TODO: Break this into two constraint classes : person and date

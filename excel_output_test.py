@@ -31,9 +31,7 @@ class ExcelOutputTest(unittest.TestCase):
     # Test WriteTimetable() with empty shift values. Needed for barebone output
     def testWriteTimetableEmpty(self):
         ws = self.ws
-        test_assignments = data.Assignment(
-            dict(), None, [self.test_start_date, self.test_end_date], ['간호사1', '간호사2'])
-        excel_output.WriteTimetable(ws, self.test_config, test_assignments)
+        excel_output.WriteTimetable(ws, self.test_config, ('간호사1', '간호사2'), dict())
         
         # Check header columns
         self.assertEqual(ws.cell(row=1, column=2).value, self.test_start_date)
@@ -52,7 +50,7 @@ class ExcelOutputTest(unittest.TestCase):
     # Test WriteTimetable()
     def testWriteTimetable(self):
         ws = self.ws
-        names = ['간호사1', '간호사2', '간호사3']
+        names = ('간호사1', '간호사2', '간호사3')
         assignment_dict = {
             (self.test_start_date, '간호사1'): data.ShiftType.DAY,
             (self.test_end_date, '간호사1'): data.ShiftType.DAY,
@@ -61,9 +59,7 @@ class ExcelOutputTest(unittest.TestCase):
             # Shift of 간호사3 is undecided on the start date.
             (self.test_end_date, '간호사3'): data.ShiftType.NIGHT,
         }
-        test_assignments = data.Assignment(
-            assignment_dict, None, [self.test_start_date, self.test_end_date], names)
-        excel_output.WriteTimetable(ws, self.test_config, test_assignments)
+        excel_output.WriteTimetable(ws, self.test_config, names, assignment_dict)
         
         # Check header columns
         self.assertEqual(ws.cell(row=1, column=2).value, self.test_start_date)
@@ -97,8 +93,8 @@ class ExcelOutputTest(unittest.TestCase):
     # Test WritePersonConfig() with empty constraints. Needed for barebone output
     def testWritePersonConfigEmptyConstraints(self):
         ws = self.ws
-        pc1 = data.PersonConstraint('간호사1', None, None, None, None)
-        excel_output.WritePersonConfig(ws, [pc1])
+        pc1 = data.PersonConfig('간호사1', None, None, None, None)
+        excel_output.WritePersonConfigs(ws, [pc1])
 
         # Check header columns
         self.assertEqual(ws.cell(row=1, column=2).value, '최대 근무일 (연속)')
@@ -120,9 +116,9 @@ class ExcelOutputTest(unittest.TestCase):
     # Test WritePersonConfig() with empty constraints. Needed for barebone output
     def testWritePersonConfig(self):
         ws = self.ws
-        pc1 = data.PersonConstraint('간호사1', 5, 3, 25, 28)
-        pc2 = data.PersonConstraint('간호사2', 6, 4, 22, 26)
-        excel_output.WritePersonConfig(ws, [pc1, pc2])
+        pc1 = data.PersonConfig('간호사1', 5, 3, 25, 28)
+        pc2 = data.PersonConfig('간호사2', 6, 4, 22, 26)
+        excel_output.WritePersonConfigs(ws, [pc1, pc2])
 
         # Check header columns
         self.assertEqual(ws.cell(row=1, column=2).value, '최대 근무일 (연속)')
@@ -154,7 +150,7 @@ class ExcelOutputTest(unittest.TestCase):
     # Test WriteDateConfig() with empty date constraints. Needed for barebone output
     def testWriteDateConfigEmptyConstraints(self):
         ws = self.ws
-        excel_output.WriteDateConfig(ws, [], self.test_config)
+        excel_output.WriteDateConfigs(ws, [], self.test_config)
 
         # Check header columns
         self.assertEqual(ws.cell(row=1, column=2).value, '데이 근무자 수')
@@ -176,9 +172,9 @@ class ExcelOutputTest(unittest.TestCase):
      # Test WriteDateConfig()
     def testWriteDateConfig(self):
         ws = self.ws
-        dc1 = data.DateConstraint(self.test_start_date, 3, 2, 1)
-        dc2 = data.DateConstraint(self.test_end_date, 6, 5, 4)
-        excel_output.WriteDateConfig(ws, [dc1, dc2], self.test_config)
+        dc1 = data.DateConfig(self.test_start_date, 3, 2, 1)
+        dc2 = data.DateConfig(self.test_end_date, 6, 5, 4)
+        excel_output.WriteDateConfigs(ws, [dc1, dc2], self.test_config)
 
         # Check header columns
         self.assertEqual(ws.cell(row=1, column=2).value, '데이 근무자 수')
