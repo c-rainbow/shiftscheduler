@@ -6,65 +6,15 @@ import date_util
 
 import functools
 
+
+from . import util as util
+
 # TODO: For now, errors are simply string messages.
 # In the future, change these messages to structured error objects
 
 _DAY_NAME = data.ShiftType.DAY.name
 _EVENING_NAME = data.ShiftType.EVENING.name
 _NIGHT_NAME = data.ShiftType.NIGHT.name
-
-
-def ToInt(cell_value):
-    try:
-        s = int(cell_value)
-    except ValueError:
-        s = None
-    return s
-
-
-def ErrorIfNone(value, errors, message, *args):
-    if value is None:
-        errors.append(message % args)
-        return True
-    return False
-
-
-# Error if not a number or negative.
-# Not an error if None.
-# Returns True if error is found, False otherwise
-def ErrorIfNaNOrNegative(value, errors, message, *args):
-    if value is None:
-        return False
-    int_value = ToInt(value)
-    if int_value is None or int_value < 0:
-        errors.append(message % args)
-        return True
-    return False
-
-
-
-# Error if 'value' is less than 'to_compare'
-# Not an error if at least one of them are None
-def ErrorIfLess(value, to_compare, errors, message, *args):
-    if value is None or to_compare is None:
-        return False
-    if value < to_compare:
-        errors.append(message % args)
-        return True
-    return False
-
-
-# Error if 'value' is greater than 'to_compare'
-# Not an error if at least one of them are None
-def ErrorIfGreater(value, to_compare, errors, message, *args):
-    if value is None or to_compare is None:
-        return False
-    if value > to_compare:
-        errors.append(message % args)
-        return True
-    return False
-
-
 
 def GetAllWorkShifts(assignment_dict, expected_date, expected_shift_type):
     names = []
@@ -80,6 +30,7 @@ def ValidateSoftwareConfig(software_config):
     # 1. start_date is valid datetime.date
     # 2. end_date is valid datetime.date
     # 3. num_person is non-empty, number, int, and non-negative
+    # 4. Make sure that start_date <= end_date
     start_date = software_config.start_date
     end_date = software_config.end_date
 
@@ -87,12 +38,12 @@ def ValidateSoftwareConfig(software_config):
     if start_date is None:
         errors.append('Start date is empty')
     elif type(start_date) is not datetime.date:
-        errors.append('Start date is not a valid date')
+        errors.append('Start date %s is not a valid date' % start_date)
 
     if end_date is None:
         errors.append('End date is empty')   
     elif type(end_date) is not datetime.date:
-        errors.append('End date is not a valid date')
+        errors.append('End date %s is not a valid date' % end_date)
     
     if errors:
         return errors
@@ -105,7 +56,7 @@ def ValidateSoftwareConfig(software_config):
 
 def ValidateDateConfigs(software_config, date_configs, barebone=False):
     # Date config sheet
-    # 1. Has all dates between start_date and end_date, consecutive
+    # 1. Has all dates between start_date and end_date
     # 2. All cell values are non-empty, number, int, and non-negative (except barebone)
     all_dates = set(date_util.GenerateAllDates(software_config.start_date, software_config.end_date))
 
@@ -113,7 +64,7 @@ def ValidateDateConfigs(software_config, date_configs, barebone=False):
     missing_dates = []
     for date_config in date_configs:
         work_date = date_config.work_date
-        if ErrorIfNone(work_date, errors, 'Empty work date is found'):
+        if util.ErrorIfNone(work_date, errors, 'Empty work date is found'):
             continue
 
         if work_date not in all_dates:
@@ -121,29 +72,30 @@ def ValidateDateConfigs(software_config, date_configs, barebone=False):
             continue
         all_dates.remove(work_date)
 
-        # Check for empty values
-        ErrorIfNone(
-            work_date.num_workers_day, errors, 'No number of %s workers on %s', _DAY_NAME, work_date)
-        ErrorIfNone(
-            work_date.num_workers_evening, errors, 'No number of %s workers on %s', _EVENING_NAME, work_date)
-        ErrorIfNone(
-            work_date.num_workers_night, errors, 'No number of %s workers on %s', _NIGHT_NAME, work_date)
+        if not barebone:
+            # Check for empty values
+            util.ErrorIfNone(
+                work_date.num_workers_day, errors, 'No number of %s workers on %s', _DAY_NAME, work_date)
+            util.ErrorIfNone(
+                work_date.num_workers_evening, errors, 'No number of %s workers on %s', _EVENING_NAME, work_date)
+            util.ErrorIfNone(
+                work_date.num_workers_night, errors, 'No number of %s workers on %s', _NIGHT_NAME, work_date)
 
         # Check for invalid values
-        ErrorIfNaNOrNegative(
+        util.ErrorIfNaNOrNegative(
             work_date.num_workers_day, errors, '"%s" is invalid number of %s workers on %s',
             work_date.num_workers_day, _DAY_NAME, work_date)
-        ErrorIfNaNOrNegative(
+        util.ErrorIfNaNOrNegative(
             work_date.num_workers_evening, errors, '"%s" is invalid number of %s workers on %s',
             work_date.num_workers_evening, _EVENING_NAME, work_date)
-        ErrorIfNaNOrNegative(
+        util.ErrorIfNaNOrNegative(
             work_date.num_workers_night, errors, '"%s" is invalid number of %s workers on %s',
             work_date.num_workers_night, _NIGHT_NAME, work_date)
 
-    if all_dates:  # Some dates fo not have config
-        errors.append('%d dates do not have date configs, %s', len(all_dates), all_dates)
+    if all_dates:  # Some dates do not have config
+        errors.append('%d dates do not have date configs, %s' % (len(all_dates), all_dates))
     if missing_dates:  # Some date configs are out of range
-        errors.append('%d dates are missing in date configs, %s', len(missing_dates), missing_dates)
+        errors.append('%d dates are missing in date configs, %s' % (len(missing_dates), missing_dates))
     
     return errors
     
@@ -164,35 +116,38 @@ def ValidatePersonConfigs(software_config, person_configs, barebone=False):
         return errors
 
     if len(person_configs) != software_config.num_person:
-        errors.append('There should be %d people, but only have data for %s people in Persons sheet')
+        errors.append(
+            'There should be %d people, but there are rows for %s people in Persons sheet',
+            software_config.num_person, len(person_configs))
 
+    # Check for empty config values. Skipped for barebone Excel file
+    if not barebone:
+        for pc in person_configs:
+            util.ErrorIfNone(
+                pc.max_consecutive_workdays, errors, 'No number for max consecutive workdays for %s',
+                pc.name)
+            util.ErrorIfNone(
+                pc.max_consecutive_nights, errors, 'No number for max consecutive nights for %s',
+                pc.name)
+            util.ErrorIfNone(
+                pc.min_total_workdays, errors, 'No number for min total workdays for %s',
+                pc.name)
+            util.ErrorIfNone(
+                pc.max_total_workdays, errors, 'No number for max total workdays for %s',
+                pc.name)
+
+    # Check for invalid config values 
     for pc in person_configs:
-        # Check errors in max consecutive workdays
-        ErrorIfNone(
-            pc.max_consecutive_workdays, errors, 'No number for max consecutive workdays for %s',
-            pc.name)
-        ErrorIfNaNOrNegative(
+        util.ErrorIfNaNOrNegative(
             pc.max_consecutive_workdays, errors, '"%s" is invalid number for %s',
             pc.max_consecutive_workdays, pc.name)
-        # Check errors in max consecutive nights
-        ErrorIfNone(
-            pc.max_consecutive_nights, errors, 'No number for max consecutive nights for %s',
-            pc.name)
-        ErrorIfNaNOrNegative(
+        util.ErrorIfNaNOrNegative(
             pc.max_consecutive_nights, errors, '"%s" is invalid number for %s',
             pc.max_consecutive_nights, pc.name)
-        # Check errors in min total workdays
-        ErrorIfNone(
-            pc.min_total_workdays, errors, 'No number for min total workdays for %s',
-            pc.name)
-        ErrorIfNaNOrNegative(
+        util.ErrorIfNaNOrNegative(
             pc.min_total_workdays, errors, '"%s" is invalid number for %s',
             pc.min_total_workdays, pc.name)
-        # Check errors in max total workdays
-        ErrorIfNone(
-            pc.max_total_workdays, errors, 'No number for max total workdays for %s',
-            pc.name)
-        ErrorIfNaNOrNegative(
+        util.ErrorIfNaNOrNegative(
             pc.max_total_workdays, errors, '"%s" is invalid number for %s',
             pc.max_total_workdays, pc.name)
 
@@ -211,54 +166,71 @@ def ValidateTimetable(assignment_dict, software_config, date_configs, person_con
     # 7. Make sure sum of minimum total workdays <= Number of non-off cells
     # 8. Make sure number of non-off cells <= Sum of maximum total workdays
     errors = []
-    # Basic checks on work dates
+    # 1. Basic checks on work dates
     for (work_date, name), shift_type in assignment_dict.items():
         if type(work_date) is not datetime.date:
-            errors.append('%s is not a valid date', work_date)
-        elif software_config.start_date > work_date:
-            errors.append('Work date %s is before the start date', work_date)
-        elif work_date < software_config.end_date:
-            errors.append('Work date %s is after the end date', work_date)
+            errors.append('%s is not a valid date' % work_date)
+        elif work_date< software_config.start_date:
+            errors.append('Work date %s is before the start date' % work_date)
+        elif software_config.end_date < work_date:
+            errors.append('Work date %s is after the end date' % work_date)
         # Should it give error on invalid shift on invalid date?
         if not errors and shift_type == data.ShiftType.UNKNOWN:
-            errors.append('Invalid shift code for %s on %s', name, work_date)
+            errors.append('Invalid shift code for %s on %s' % (name, work_date))
 
-    # Basic checks on names 
+    # 2. Basic checks on names 
     all_names_set = set(c.name for c in person_configs)
+    all_timetable_names = set()
     for _, name in assignment_dict.values():
         if name not in all_names_set:
-            errors.append('Cannot find person config for %s', name)
+            errors.append('Cannot find person config for %s' % name)
+        if name in all_timetable_names:
+            errors.append('Name %s is duplicate in timetable' % name)
+        all_timetable_names.add(name)
     
     # Value error prevents further validation
     if errors:
         return errors
 
-    # No more check for barebone for now.
-    if barebone:
-        return errors
-
-    # 4. If there is any overassigned cell (more than assigned workers as configured in date_configs) (except barebone)
+    # 4. If there is any overassigned cell for barebone (more than assigned workers as configured in date_configs)
+    # Also check for underassigned cell for complete assignment.
     for date_config in date_configs:
-        worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.DAY))
-        ErrorIfGreater(
-            worker_count, date_config.num_workers_day,
-            '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
-            _DAY_NAME, date_config.work_date, date_config.num_workers_day)
+        if barebone:  # For barebone config, empty cells can be filled, so only check for <=
+            worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.DAY))
+            util.ErrorIfGreater(
+                worker_count, date_config.num_workers_day,
+                '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
+                _DAY_NAME, date_config.work_date, date_config.num_workers_day)
+            worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.EVENING))
+            util.ErrorIfGreater(
+                worker_count, date_config.num_workers_evening,
+                '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
+                _EVENING_NAME, date_config.work_date, date_config.num_workers_evening)
+            worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.NIGHT))
+            util.ErrorIfGreater(
+                worker_count, date_config.num_workers_night, errors,
+                '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
+                _NIGHT_NAME, date_config.work_date, date_config.num_workers_night)
+        else:  # For non-barebone complete assignment, the values must match.
+            worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.DAY))
+            util.ErrorIfNotEqual(
+                worker_count, date_config.num_workers_day,
+                '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
+                _DAY_NAME, date_config.work_date, date_config.num_workers_day)
+            worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.EVENING))
+            util.ErrorIfNotEqual(
+                worker_count, date_config.num_workers_evening,
+                '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
+                _EVENING_NAME, date_config.work_date, date_config.num_workers_evening)
+            worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.NIGHT))
+            util.ErrorIfNotEqual(
+                worker_count, date_config.num_workers_night, errors,
+                '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
+                _NIGHT_NAME, date_config.work_date, date_config.num_workers_night)
 
-        worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.EVENING))
-        ErrorIfGreater(
-            worker_count, date_config.num_workers_evening,
-            '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
-            _EVENING_NAME, date_config.work_date, date_config.num_workers_evening)
 
-        worker_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.NIGHT))
-        ErrorIfGreater(
-            worker_count, date_config.num_workers_night, errors,
-            '%d workers are assigned for %s on %s, when there can be only %d workers', worker_count,
-            _NIGHT_NAME, date_config.work_date, date_config.num_workers_night)
-
-
-    # 5. If a person's shifts violate any of constraint 1-6 (except barebone)
+    # 5. If a person's shifts violate any of constraint 2-5. (except barebone)
+    # Constraint 1, 6, 7 are not part of validation.
     all_dates = date_util.GenerateAllDates(software_config.start_date, software_config.end_date)
     
     # 5-2. No day/evening work after night shift
@@ -282,11 +254,11 @@ def ValidateTimetable(assignment_dict, software_config, date_configs, person_con
         for work_date in all_dates + [None]: 
             shift_type = assignment_dict.get((work_date, name))
             if shift_type in data.ShiftType.WorkShiftTypes():
-                if consecutive_workdays is None:
+                if start_work_date is None:  # Starting a new consecutive workdays
                     start_work_date = work_date
                 consecutive_workdays += 1
             elif shift_type is None or shift_type == data.ShiftType.OFF:
-                ErrorIfGreater(
+                util.ErrorIfGreater(
                     consecutive_workdays, person_config.max_consecutive_workdays, errors,
                     'Worker %s should work no more than %d consecutive days, but worked for %d days from %s',
                     name, person_config.max_consecutive_workdays, consecutive_workdays, start_work_date)
@@ -303,11 +275,11 @@ def ValidateTimetable(assignment_dict, software_config, date_configs, person_con
         for work_date in all_dates + [None]: 
             shift_type = assignment_dict.get((work_date, name))
             if shift_type == data.ShiftType.NIGHT:
-                if consecutive_nights is None:
+                if start_work_date is None:  # Starting a new consecutive nights
                     start_work_date = work_date
                 consecutive_nights += 1 
             else:
-                ErrorIfGreater(
+                util.ErrorIfGreater(
                     consecutive_nights, person_config.max_consecutive_nights, errors,
                     'Worker %s should work no more than %d consecutive nights, but worked for %d nights from %s',
                     name, person_config.max_consecutive_nights, consecutive_nights, start_work_date)
@@ -327,12 +299,12 @@ def ValidateTimetable(assignment_dict, software_config, date_configs, person_con
             elif shift_type == data.ShiftType.OFF:
                 off_count += 1
         
-        ErrorIfLess( 
+        util.ErrorIfLess( 
             len(all_dates) - off_count, person_config.min_total_workdays, errors,
-            'Worker %s should work at least %s days, but is already scheduled off %d days out of %d days',
+            'Worker %s should work for at least %s days, but is already scheduled to off for %d days out of %d days',
             name, person_config.min_total_workdays, off_count, len(all_dates))
 
-        ErrorIfGreater(
+        util.ErrorIfGreater(
             fixed_total_workdays, person_config.max_total_workdays, errors,
             'Worker %s should work no more than %d days, but is already scheduled to work for %d days',
             name, person_config.max_total_workdays, fixed_total_workdays)
@@ -344,25 +316,26 @@ def ValidateTimetable(assignment_dict, software_config, date_configs, person_con
         off_count = len(GetAllWorkShifts(assignment_dict, work_date, data.ShiftType.OFF))
         available_workers = num_person - off_count
 
-        ErrorIfGreater(
+        util.ErrorIfGreater(
             total_required, available_workers, errors,
-            '%d workers are required on %s, but only %d people can work that day',
-            total_required, date_config.work_date, available_workers)
+            '%d workers are required on %s, but %d out of %d people scheduled to off that day',
+            total_required, date_config.work_date, off_count, num_person)
     
     # 7. Make sure that sum of minimum total workdays <= Number of non-off cells
     sum_min_workdays = functools.reduce(lambda sum, pc: sum + pc.min_total_workdays, person_configs, initializer=0)
     off_count = len([c for c in assignment_dict.values() if c == data.ShiftType.OFF])
     non_off_count = len(person_configs) * len(date_configs) - off_count
-    ErrorIfGreater(
+    util.ErrorIfGreater(
         sum_min_workdays, non_off_count, errors,
-        'Sum of total minimum workdays are %d, but there are only %d available slots to work',
+        'Sum of total minimum workdays of all people are %d, but there are only %d available slots to work',
         sum_min_workdays, non_off_count)
     
     # 8. Make sure number of non-off cells <= Sum of maximum total workdays
     sum_max_workdays = functools.reduce(lambda sum, pc: sum + pc.max_total_workdays, person_configs, initializer=0)
-    ErrorIfGreater(
+    util.ErrorIfGreater(
         non_off_count, sum_max_workdays, errors,
-        'There are %d slots to fill, but the sum of total maximum workdays are %d', non_off_count, sum_max_workdays)
+        'There are %d slots to fill, but the sum of total maximum workdays of all people are %d',
+        non_off_count, sum_max_workdays)
 
     return errors
 
