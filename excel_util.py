@@ -1,5 +1,8 @@
 import datetime
 
+
+# Dates in Excel can be str, datetime.date, or datetime.datetime in Python.
+# Convert them to datetime.date
 def CellToDate(cell):
     value = cell.value
     value_type = type(value)

@@ -23,7 +23,7 @@ def ErrorIfNaNOrNegative(value, errors, message, *args):
     if value is None:
         return False
 
-    int_value = ToInt(value)
+    int_value = ToInt(value) 
     if int_value is None or int_value < 0:
         errors.append(message % args)
         return True
@@ -34,13 +34,7 @@ def ErrorIfNaNOrNegative(value, errors, message, *args):
 # Error if 'value' is less than 'to_compare'
 # Not an error if at least one of them are None
 def ErrorIfLess(value, to_compare, errors, message, *args):
-    if value is None or to_compare is None:
-        return False
-
-    if value < to_compare:
-        errors.append(message % args)
-        return True
-    return False
+    return ErrorIfGreater(to_compare, value, errors, message, *args)
 
 
 # Error if 'value' is greater than 'to_compare'
@@ -67,7 +61,8 @@ def ErrorIfNotEqual(value, to_compare, errors, message, *args):
     return False
 
 
-
+# Date objects are sometimes represented as datetime.datetime, which breaks the code.
+# Convert to datetime.date here.
 def SanitizeDate(obj):
     obj_type = type(obj)
     if obj_type is str:
@@ -79,6 +74,7 @@ def SanitizeDate(obj):
     raise TypeError('%s is not a valid type for date' % obj_type)
 
 
+# Get number of confirmed workers on the specific date in the specific shift
 def GetWorkerCount(assignment_dict, expected_date, expected_shift_type):
     count = 0
     for (work_date, name), shift_type in assignment_dict.items():
