@@ -3,7 +3,6 @@ import collections
 import datetime
 import enum
 import json
-import build
 
 
 # JSON keys
@@ -66,7 +65,7 @@ class ShiftType(enum.Enum):
 
     @classmethod
     def FromShortName(cls, code):
-        if code is None:
+        if code is None or code == '':
             return None
         elif code in ('D', 'd'):
             return cls.DAY
