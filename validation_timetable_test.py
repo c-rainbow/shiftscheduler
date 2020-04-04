@@ -15,20 +15,25 @@ _EVENING_SHIFT = data.ShiftType.EVENING
 _NIGHT_SHIFT = data.ShiftType.NIGHT
 _OFF_SHIFT = data.ShiftType.OFF
 
+_DAY1 = datetime.date(2020, 4, 1)
+_DAY2 = datetime.date(2020, 4, 2)
+_DAY3 = datetime.date(2020, 4, 3)
+_DAY4 = datetime.date(2020, 4, 4)
+_DAY5 = datetime.date(2020, 4, 5)
+_DAY6 = datetime.date(2020, 4, 6)
+
 
 class BaseTestClass(unittest.TestCase):
 
     def setUp(self):
         self.assignment_dict = {
             (_START_DATE, 'name1'): _DAY_SHIFT, (_END_DATE, 'name1'): _EVENING_SHIFT,
-            (_START_DATE, 'name2'): _OFF_SHIFT, (_END_DATE, 'name2'): _NIGHT_SHIFT,
-        }
+            (_START_DATE, 'name2'): _OFF_SHIFT, (_END_DATE, 'name2'): _NIGHT_SHIFT}
         self.person_configs = [
             data.PersonConfig('name1', 5, 3, 1, 30), data.PersonConfig('name2', 6, 4, 2, 20)]
-
         self.date_configs = [
-            data.DateConfig(_START_DATE, 1, 1, 1), data.DateConfig(_END_DATE, 1, 2, 1)
-        ]
+            data.DateConfig(_START_DATE, 1, 1, 1), data.DateConfig(_END_DATE, 1, 2, 1)]
+        self.all_dates = [_START_DATE, _END_DATE]
         self.errors = []
 
 # Test for validation 1, 2, 3
@@ -55,7 +60,7 @@ class BasicValidationTest(BaseTestClass):
 
         self.assertEqual(len(self.errors), 1)
         self.assertEqual(self.errors[0], 'Work date 2020-03-31 is before the start date')
-
+ 
     # Test of validation 1 with date after end date
     def testWorkDatesAfterEndDate(self):
         test_date = datetime.date(2020, 4, 3)
@@ -181,9 +186,143 @@ class OverAssignmentValidationTest(BaseTestClass):
 
 # Test of validation 5 (constraint 2, 3, 4, 5)
 class ConstraintsValidationTest(BaseTestClass):
-    def testEmpty(self):
-        pass
 
+    # 5-2. No day/evening work after night shift
+    def testConstraint2Normal(self):
+        # Normal case
+        config = self.person_configs[0]
+        vt.ValidateConstraint2(config, self.all_dates, self.assignment_dict, self.errors)
+        self.assertEqual(len(self.errors), 0)
+        
+    def testConstraint2DayAfterNight(self):
+        # Day after night
+        config = self.person_configs[0]
+        assignment_dict = {
+            (_START_DATE, 'name1'): _NIGHT_SHIFT, (_END_DATE, 'name1'): _DAY_SHIFT}
+        vt.ValidateConstraint2(config, self.all_dates, assignment_dict, self.errors)
+        self.assertEqual(len(self.errors), 1)
+        self.assertEqual(self.errors[0], 'Day/evening work after night shift for name1 on 2020-04-02')
+
+    def testConstraint2EveningAfterNight(self):
+        # Evening after night
+        config = self.person_configs[0]
+        assignment_dict = {
+            (_START_DATE, 'name1'): _NIGHT_SHIFT, (_END_DATE, 'name1'): _EVENING_SHIFT}
+        vt.ValidateConstraint2(config, self.all_dates, assignment_dict, self.errors)
+        self.assertEqual(len(self.errors), 1)
+        self.assertEqual(self.errors[0], 'Day/evening work after night shift for name1 on 2020-04-02')
+
+    # 5-3. No more than n consecutive workdays
+    def testConstraint3Normal(self):
+        config = self.person_configs[0]
+        vt.ValidateConstraint3(config, self.all_dates, self.assignment_dict, self.errors)
+        self.assertEqual(len(self.errors), 0)
+
+    def testConstraint3Exact(self):
+        # Working exactly n days
+        config = data.PersonConfig('name4', 3, 2, 5, 5)
+        assignment_dict = {
+            (_DAY1, 'name4'): _OFF_SHIFT, (_DAY2, 'name4'): _EVENING_SHIFT,
+            (_DAY3, 'name4'): _EVENING_SHIFT, (_DAY4, 'name4'): _DAY_SHIFT}
+        all_dates = [_DAY1, _DAY2, _DAY3, _DAY4]
+        vt.ValidateConstraint3(config, all_dates, assignment_dict, self.errors)
+        self.assertEqual(len(self.errors), 0)
+
+    def testConstraint3Error(self):
+        # Working more than n days
+        config = data.PersonConfig('name4', 3, 2, 5, 5)
+        assignment_dict = {
+            (_DAY1, 'name4'): _DAY_SHIFT, (_DAY2, 'name4'): _EVENING_SHIFT,
+            (_DAY3, 'name4'): _EVENING_SHIFT, (_DAY4, 'name4'): _DAY_SHIFT}
+        all_dates = [_DAY1, _DAY2, _DAY3, _DAY4]
+        vt.ValidateConstraint3(config, all_dates, assignment_dict, self.errors)
+        self.assertEqual(len(self.errors), 1)
+        self.assertEqual(
+            self.errors[0],
+            'Worker name4 should work no more than 3 consecutive days, but worked for 4 days from 2020-04-01')
+
+        # Working 4 consecutive days in the middle
+        assignment_dict = {
+            (_DAY1, 'name4'): _OFF_SHIFT, (_DAY2, 'name4'): _EVENING_SHIFT,
+            (_DAY3, 'name4'): _EVENING_SHIFT, (_DAY4, 'name4'): _DAY_SHIFT,
+            (_DAY5, 'name4'): _DAY_SHIFT, (_DAY6, 'name4'): _OFF_SHIFT}
+        all_dates = [_DAY1, _DAY2, _DAY3, _DAY4, _DAY5, _DAY6]
+        errors = []
+        vt.ValidateConstraint3(config, all_dates, assignment_dict, errors)
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(
+            errors[0],
+            'Worker name4 should work no more than 3 consecutive days, but worked for 4 days from 2020-04-02')
+
+    def testConstraint3OffInTheMiddle(self):
+        # Constraint3. Work not for more than n consecutive days, because OFF in the middle
+        config = data.PersonConfig('name4', 2, 2, 5, 5)
+        assignment_dict = {  # Person works on 1st & 2nd day, takes a break on 3rd day and works again
+            (_DAY1, 'name4'): _DAY_SHIFT, (_DAY2, 'name4'): _EVENING_SHIFT,
+            (_DAY3, 'name4'): _OFF_SHIFT, (_DAY4, 'name4'): _DAY_SHIFT}
+        all_dates = [_DAY1, _DAY2, _DAY3, _DAY4]
+        vt.ValidateConstraint3(config, all_dates, assignment_dict, self.errors)
+        self.assertEqual(len(self.errors), 0)
+
+    def testConstraint3MultipleViolations(self):
+        # Constraint3. Multiple errors
+        config = data.PersonConfig('name4', 1, 1, 5, 5)  # Can work max 1 day at a time
+        assignment_dict = {  # 2 days from 04-01, 3 days from 04-04
+            (_DAY1, 'name4'): _DAY_SHIFT, (_DAY2, 'name4'): _NIGHT_SHIFT,
+            (_DAY3, 'name4'): _OFF_SHIFT, (_DAY4, 'name4'): _DAY_SHIFT,
+            (_DAY5, 'name4'): _EVENING_SHIFT, (_DAY6, 'name4'): _EVENING_SHIFT}
+        all_dates = [_DAY1, _DAY2, _DAY3, _DAY4, _DAY5, _DAY6]
+        vt.ValidateConstraint3(config, all_dates, assignment_dict, self.errors)
+        self.assertEqual(len(self.errors), 2)
+
+        self.assertEqual(
+            self.errors[0],
+            'Worker name4 should work no more than 1 consecutive days, but worked for 2 days from 2020-04-01')
+        self.assertEqual(
+            self.errors[1],
+            'Worker name4 should work no more than 1 consecutive days, but worked for 3 days from 2020-04-04')
+
+    # 5-4. No more than n consecutive nights
+    def testConstraint4Normal(self):
+        config = self.person_configs[0]
+        vt.ValidateConstraint4(config, self.all_dates, self.assignment_dict, self.errors)
+        self.assertEqual(len(self.errors), 0)
+
+    def testConstraint4Exact(self):
+        # Working exactly n nights
+        config = data.PersonConfig('name4', 3, 2, 5, 5)
+        assignment_dict = {
+            (_DAY1, 'name4'): _DAY_SHIFT, (_DAY2, 'name4'): _NIGHT_SHIFT,
+            (_DAY3, 'name4'): _NIGHT_SHIFT, (_DAY4, 'name4'): _OFF_SHIFT}
+        all_dates = [_DAY1, _DAY2, _DAY3, _DAY4]
+        vt.ValidateConstraint4(config, all_dates, assignment_dict, self.errors)
+        self.assertEqual(len(self.errors), 0)
+
+    def testConstraint4Error(self):
+        # Working more than n nights
+        config = data.PersonConfig('name4', 3, 2, 5, 5)
+        assignment_dict = {
+            (_DAY1, 'name4'): _NIGHT_SHIFT, (_DAY2, 'name4'): _NIGHT_SHIFT,
+            (_DAY3, 'name4'): _NIGHT_SHIFT, (_DAY4, 'name4'): _NIGHT_SHIFT}
+        all_dates = [_DAY1, _DAY2, _DAY3, _DAY4]
+        vt.ValidateConstraint4(config, all_dates, assignment_dict, self.errors)
+        self.assertEqual(len(self.errors), 1)
+        self.assertEqual(
+            self.errors[0],
+            'Worker name4 should work no more than 2 consecutive nights, but worked for 4 nights from 2020-04-01')
+
+        # Working 3 consecutive nights in the middle
+        assignment_dict = {
+            (_DAY1, 'name4'): _DAY_SHIFT, (_DAY2, 'name4'): _DAY_SHIFT,
+            (_DAY3, 'name4'): _NIGHT_SHIFT, (_DAY4, 'name4'): _NIGHT_SHIFT,
+            (_DAY5, 'name4'): _NIGHT_SHIFT, (_DAY6, 'name4'): _OFF_SHIFT}
+        all_dates = [_DAY1, _DAY2, _DAY3, _DAY4, _DAY5, _DAY6]
+        errors = []
+        vt.ValidateConstraint4(config, all_dates, assignment_dict, errors)
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(
+            errors[0],
+            'Worker name4 should work no more than 2 consecutive nights, but worked for 3 nights from 2020-04-03')
 
 # Test of validation 6
 class MinRequiredWorkersTest(BaseTestClass):

@@ -126,7 +126,7 @@ def ValidateConstraint3(person_config, all_dates, assignment_dict, errors):
 
 
 # 5-4. No more than n consecutive nights
-def ValidateConstriant4(person_config, all_dates, assignment_dict, errors):
+def ValidateConstraint4(person_config, all_dates, assignment_dict, errors):
     name = person_config.name
     consecutive_nights = 0
     start_work_date = None        
@@ -243,7 +243,7 @@ def ValidateTimetable(software_config, date_configs, person_configs, assignment_
         # 5-3. No more than n consecutive workdays
         ValidateConstraint3(person_config, all_dates, assignment_dict, errors)   
         # 5-4. No more than n consecutive nights
-        ValidateConstriant4(person_config, all_dates, assignment_dict, errors)       
+        ValidateConstraint4(person_config, all_dates, assignment_dict, errors)       
         # 5-5. min_total_workdays <= total schedule <= max_total_workdays
         ValidateConstraint5(person_config, all_dates, assignment_dict, errors)
 
