@@ -77,3 +77,12 @@ def SanitizeDate(obj):
     elif obj_type is datetime.date:
         return obj
     raise TypeError('%s is not a valid type for date' % obj_type)
+
+
+def GetWorkerCount(assignment_dict, expected_date, expected_shift_type):
+    count = 0
+    for (work_date, name), shift_type in assignment_dict.items():
+        if work_date == expected_date and shift_type == expected_shift_type:
+            count += 1
+
+    return count

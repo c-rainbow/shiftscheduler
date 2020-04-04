@@ -34,8 +34,15 @@ class ExcelOutputTest(unittest.TestCase):
         ws['C1'] = self.test_end_date
         ws['A2'] = '간호사1'
         ws['A3'] = '간호사2'
+
         assignment_dict = excel_input.ReadTimetable(ws, self.test_config)
-        self.assertFalse(assignment_dict)  # Empty dict is False
+        self.assertEqual(len(assignment_dict), 4)
+        
+        self.assertIsNone(assignment_dict.get((self.test_start_date, '간호사1')))
+        self.assertIsNone(assignment_dict.get((self.test_start_date, '간호사2')))
+        self.assertIsNone(assignment_dict.get((self.test_end_date, '간호사1')))
+        self.assertIsNone(assignment_dict.get((self.test_end_date, '간호사2')))
+
 
     def testReadTimetablePartialEmpty(self):
         ws = self.ws
@@ -49,7 +56,7 @@ class ExcelOutputTest(unittest.TestCase):
         ws['C3'] = 'D'
 
         assignment_dict = excel_input.ReadTimetable(ws, self.test_config)
-        self.assertEqual(len(assignment_dict), 3)
+        self.assertEqual(len(assignment_dict), 4)
 
         self.assertEqual(assignment_dict.get((self.test_start_date, '간호사1')), data.ShiftType.EVENING)
         self.assertIsNone(assignment_dict.get((self.test_end_date, '간호사1')))  # None for empty cell
