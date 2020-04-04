@@ -89,8 +89,10 @@ def BuildConstraint5(solver, person_config, all_date_strs, var_dict):
 # 6. No work on off-shifts
 def BuildConstraint6(solver, assignment_dict, var_dict):
     for (work_date, name), fixed_shift in assignment_dict.items():
-        var_name = GetVariableName(name, str(work_date), fixed_shift.name)
+        if fixed_shift is None:
+            continue
         
+        var_name = GetVariableName(name, str(work_date), fixed_shift.name)
         if fixed_shift == data.ShiftType.OFF:
             for work_shift_type in data.ShiftType.WorkShiftNames():
                 work_var_name = GetVariableName(name, str(work_date), work_shift_type)
