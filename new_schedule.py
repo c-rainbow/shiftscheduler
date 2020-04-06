@@ -1,11 +1,24 @@
+import excel_input
+import excel_output
+
+import os
 import tkinter as tk
+from tkinter import filedialog
+from tkinter import messagebox
 import gui_util as util
+import solver_input
+import solver_output
+import validation_scheduling as validator
 
 
 class NewScheduleFrame(tk.Frame):
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         util.SetGridWeights(self, column_weights=(1, 2))
+
+        self.open_filename_strv = tk.StringVar(value='')
+        self.start_date_strv = tk.StringVar(value='')
+        self.end_date_strv = tk.StringVar(value='')
 
         self.createLeftFrame()
         self.createRightFrame()
@@ -16,16 +29,16 @@ class NewScheduleFrame(tk.Frame):
         util.SetGridWeights(left_frame, row_weights=(1, 1, 1, 1, 1, 2, 1, 2, 1))
        
         # Button to open partially filled barebone filed
-        open_file_button = tk.Button(left_frame, text='기본 엑셀 파일 불러오기')
+        open_file_button = tk.Button(left_frame, text='기본 엑셀 파일 불러오기', command=self.openBareboneExcel)
         util.SetGrid(open_file_button, 0, 0)
         # Opened file name. Empty label if no file is loaded
-        open_file_label = tk.Label(left_frame, text='현재 파일: sample.xlsx')
+        open_file_label = tk.Label(left_frame, textvariable=self.open_filename_strv)
         util.SetGrid(open_file_label, 1, 0)
 
         # Start date, end date of new schedule
-        start_date_label = tk.Label(left_frame, text='일정 시작 날짜: 2020년 5월 1일')
+        start_date_label = tk.Label(left_frame, textvariable=self.start_date_strv)
         util.SetGrid(start_date_label, 2, 0)
-        end_date_label = tk.Label(left_frame, text='일정 종료 날짜: 2020년 5월 31일')
+        end_date_label = tk.Label(left_frame, textvariable=self.end_date_strv)
         util.SetGrid(end_date_label, 3, 0)
 
         # How long should the solver run?
@@ -58,5 +71,69 @@ class NewScheduleFrame(tk.Frame):
         # Right side of the frame only displays status (of validation and solver run)
         label = tk.Label(right_frame, text='진행상황')
         util.SetGrid(label, 0, 0)
-        text_area = tk.Text(right_frame, state=tk.DISABLED)
-        util.SetGrid(text_area, 1, 0)
+        self.status_text_area = tk.Text(right_frame, state=tk.DISABLED)
+        util.SetGrid(self.status_text_area, 1, 0)
+
+    def clearFields(self):
+        self.open_filename_strv.set('')
+        self.start_date_strv.set('')
+        self.end_date_strv.set('')
+
+        self.status_text_area.configure(state=tk.NORMAL)
+        self.status_text_area.delete(1.0, tk.END)
+        self.status_text_area.configure(state=tk.DISABLED)
+
+    def updateLabels(self, filepath, start_date, end_date):
+        self.clearFields()
+        filename = os.path.basename(filepath)
+        self.open_filename_strv.set('선택한 파일: %s' % filename)
+        self.start_date_strv.set('일정 시작 날짜: %s' % start_date)
+        self.end_date_strv.set('일정 끝 날짜: %s' % end_date)
+
+    def addToTextArea(self, text_to_add):
+        self.status_text_area.configure(state=tk.NORMAL)
+        self.status_text_area.insert(tk.END, text_to_add)
+        self.status_text_area.configure(state=tk.DISABLED)
+
+    def openBareboneExcel(self):
+        filepath = filedialog.askopenfilename(title='기본 엑셀 파일 열기')
+        if not filepath:
+            return
+
+        base_schedule = excel_input.ReadFromExcelFile(filepath)
+
+        # Update labels
+        start_date = base_schedule.software_config.start_date
+        end_date = base_schedule.software_config.end_date
+        self.updateLabels(filepath, start_date, end_date)
+
+        # Validate
+        errors = validator.ValidateTotalScheduleFormat(base_schedule, barebone=True)
+        
+        if errors:
+            self.addToTextArea('\n'.join(errors))
+        else:
+            self.addToTextArea('시작합니다')
+            solver, var_dict = solver_input.FromTotalSchedule(base_schedule)
+            self.addToTextArea('solve 시작')
+            # TODO: Add total running time
+            status = solver.Solve()
+            self.addToTextArea('solve 끝. 결과: %s' % status)
+
+            if status == solver.INFEASIBLE:
+                messagebox.showerror('가능한 일정이 없습니다. 조건을 변경해 주세요')
+                return
+
+            new_schedule = solver_output.ToTotalSchedule(
+                base_schedule.software_config, base_schedule.person_configs, base_schedule.date_configs,
+                var_dict)
+
+            errors = validator.ValidateTotalScheduleFormat(new_schedule, barebone=False)
+            if errors:
+                self.addToTextArea('\n'.join(errors))
+                return
+      
+            # Save to Excel file
+            filepath = filedialog.asksaveasfilename(title='완성된 엑셀 파일 저장하기')
+            if filepath:
+                excel_output.FromTotalSchedule(new_schedule, filepath)

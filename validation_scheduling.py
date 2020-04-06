@@ -113,21 +113,20 @@ def ValidatePersonConfigs(software_config, person_configs, barebone=False):
             'There should be %d people, but there are rows for %s people in Persons sheet',
             software_config.num_person, len(person_configs))
 
-    # Check for empty config values. Skipped for barebone Excel file
-    if not barebone:
-        for pc in person_configs:
-            util.ErrorIfNone(
-                pc.max_consecutive_workdays, errors, 'No number for max consecutive workdays for %s',
-                pc.name)
-            util.ErrorIfNone(
-                pc.max_consecutive_nights, errors, 'No number for max consecutive nights for %s',
-                pc.name)
-            util.ErrorIfNone(
-                pc.min_total_workdays, errors, 'No number for min total workdays for %s',
-                pc.name)
-            util.ErrorIfNone(
-                pc.max_total_workdays, errors, 'No number for max total workdays for %s',
-                pc.name)
+    # Check for empty config values.
+    for pc in person_configs:
+        util.ErrorIfNone(
+            pc.max_consecutive_workdays, errors, 'No number for max consecutive workdays for %s',
+            pc.name)
+        util.ErrorIfNone(
+            pc.max_consecutive_nights, errors, 'No number for max consecutive nights for %s',
+            pc.name)
+        util.ErrorIfNone(
+            pc.min_total_workdays, errors, 'No number for min total workdays for %s',
+            pc.name)
+        util.ErrorIfNone(
+            pc.max_total_workdays, errors, 'No number for max total workdays for %s',
+            pc.name)
 
     # Check for invalid config values 
     for pc in person_configs:

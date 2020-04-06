@@ -96,7 +96,7 @@ def ReadSoftwareConfig(ws, start_row=1, start_col=1):
 
 # Read Excel file and convert to (data.Schedule, data.Assignment) objects
 def ReadFromExcelFile(filepath):
-    wb = openpyxl.load_workbook(filepath, read_only=True) 
+    wb = openpyxl.load_workbook(filepath) 
 
     ws = wb['Config']
     software_config = ReadSoftwareConfig(ws)

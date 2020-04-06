@@ -255,9 +255,9 @@ def ValidateTimetable(software_config, date_configs, person_configs, assignment_
     date_count = len(date_configs)
 
     # 7. Make sure that sum of minimum total workdays <= Number of non-off cells
-    ValidateMinimumTotalWorkSlots(person_configs, off_count, date_count, errors)
+    #ValidateMinimumTotalWorkSlots(person_configs, off_count, date_count, errors)
     
     # 8. Make sure number of non-off cells <= Sum of maximum total workdays
-    ValidateMaximumTotalWorkSlots(person_configs, off_count, date_count, errors)
+    #ValidateMaximumTotalWorkSlots(person_configs, off_count, date_count, errors)
 
     return errors
