@@ -1,6 +1,6 @@
 
 import tkinter as tk
-import util
+import gui_util as util
 
 
 class UpperFrame(tk.Frame):

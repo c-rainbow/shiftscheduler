@@ -2,7 +2,7 @@
 import barebone
 import new_schedule
 import update_schedule
-import util
+import gui_util as util
 import tkinter as tk
 
 
@@ -29,5 +29,5 @@ class LowerFrame(tk.LabelFrame):
         if self.displayed_frame is not None:
             self.displayed_frame.grid_forget()
         self.displayed_frame = frame_to_show
-        self.displayed_frame.grid(row=0, column=0, sticky=tk.NSEW, padx=5, pady=5)
+        util.SetGrid(self.displayed_frame, 0, 0)
         

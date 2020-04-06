@@ -1,7 +1,7 @@
 """GUI"""
 import lower_frame as lower
 import upper_frame as upper
-import util
+import gui_util as util
 
 import tkinter as tk
 from tkinter import messagebox
