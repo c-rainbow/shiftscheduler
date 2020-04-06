@@ -12,7 +12,7 @@ import tkcalendar as tkc
 
 from excel import constants
 
-
+_STICKY_NEWS = tk.N+tk.E+tk.W+tk.S
 
 class CustomWindow(tk.Tk):
     
@@ -80,12 +80,12 @@ class LowerFrame(tk.LabelFrame):
     def ShowBareboneExcelFrame(self):
         self.destroyInnerFrame()
         f = BareboneExcelFrame(self)
-        f.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+        f.grid(row=0, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
         return
         
 
         #label = tk.Label(self, text='새 엑셀 파일 라벨')
-        #label.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+        #label.grid(row=0, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
 
         frame = tk.Frame(self)
         frame.grid_columnconfigure(0, weight=1, uniform='group1')
@@ -94,25 +94,101 @@ class LowerFrame(tk.LabelFrame):
         # frame.pack()
 
         label1 = tk.Label(frame, text='여기는 간호사 이름들 넣기')
-        label1.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+        label1.grid(row=0, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
 
         label2 = tk.Label(frame, text='여기는 시작날짜 - 끝날짜 넣기')
-        label2.grid(row=0, column=1, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+        label2.grid(row=0, column=1, sticky=_STICKY_NEWS, padx=5, pady=5)
 
-        frame.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+        frame.grid(row=0, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
 
 
 
 
     def ShowNewScheduleFrame(self):
         self.destroyInnerFrame()
+
+        f = NewScheduleFrame(self)
+        f.grid(row=0, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+        return
+
         label = tk.Label(self, text='새 일정 라벨')
-        label.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+        label.grid(row=0, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
 
     def ShowUpdateExistingScheduleFrame(self):
         self.destroyInnerFrame()
         label = tk.Label(self, text='일정 수정 라벨')
-        label.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+        label.grid(row=0, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+
+class NewScheduleFrame(tk.Frame):
+    def __init__(self, master, *args, **kwargs):
+        super().__init__(master, *args, **kwargs)
+        
+        self.grid_columnconfigure(0, weight=1, uniform='group1')
+        self.grid_columnconfigure(1, weight=2, uniform='group1')
+        self.grid_rowconfigure(0, weight=1, uniform='group2')
+
+        
+        left_frame = tk.Frame(self)
+        left_frame.grid_rowconfigure(0, weight=1, uniform='group1')
+        left_frame.grid_rowconfigure(1, weight=1, uniform='group1')
+        left_frame.grid_rowconfigure(2, weight=1, uniform='group1')
+        left_frame.grid_rowconfigure(3, weight=1, uniform='group1')
+        left_frame.grid_rowconfigure(4, weight=1, uniform='group1')
+        left_frame.grid_rowconfigure(5, weight=5, uniform='group1')
+        left_frame.grid_rowconfigure(6, weight=1, uniform='group1')
+        left_frame.grid_rowconfigure(7, weight=2, uniform='group1')
+        left_frame.grid_rowconfigure(8, weight=1, uniform='group1')
+        left_frame.grid_columnconfigure(0, weight=1, uniform='group1')
+        left_frame.grid(row=0, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+        right_frame = tk.Frame(self)
+        right_frame.grid_rowconfigure(0, weight=1, uniform='group1')
+        right_frame.grid_rowconfigure(1, weight=9, uniform='group1')
+        right_frame.grid(row=0, column=1, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+        # Configure left-side
+        open_file_button = tk.Button(left_frame, text='기본 엑셀 파일 불러오기')
+        open_file_button.grid(row=0, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+        open_file_label = tk.Label(left_frame, text='현재 파일: sample.xlsx')
+        open_file_label.grid(row=1, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+        start_date_label = tk.Label(left_frame, text='일정 시작 날짜: 2020년 5월 1일')
+        start_date_label.grid(row=2, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+        end_date_label = tk.Label(left_frame, text='일정 종료 날짜: 2020년 5월 31일')
+        end_date_label.grid(row=3, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+        max_time_frame = tk.Frame(left_frame)
+        max_time_frame.grid_columnconfigure(0, weight=4, uniform='group1')
+        max_time_frame.grid_columnconfigure(1, weight=1, uniform='group1')
+        max_time_frame.grid_columnconfigure(2, weight=1, uniform='group1')
+        max_time_frame.grid(row=6, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+        max_time_label1 = tk.Label(max_time_frame, text='최대 검색 시간')
+        max_time_label1.grid(row=0, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+        spinbox = tk.Spinbox(max_time_frame, from_=1, to=30)
+        spinbox.grid(row=0, column=1, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+        max_time_label2 = tk.Label(max_time_frame, text='분')
+        max_time_label2.grid(row=0, column=2, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+
+        max_time_info_label = tk.Label(left_frame, text='시간 내로 조건에 맞는 일정을 찾을 수 없을 시\n작업을 중지합니다')
+        max_time_info_label.grid(row=7, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+        submit_button = tk.Button(left_frame, text='시작')
+        submit_button.grid(row=8, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+
+        # Configure right-side
+        label = tk.Label(right_frame, text='진행상황')
+        label.grid(row=0, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+        text_area = tk.Text(right_frame, state=tk.DISABLED)
+        text_area.grid(row=1, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+        
+
 
 
 class BareboneExcelFrame(tk.Frame):
@@ -126,7 +202,7 @@ class BareboneExcelFrame(tk.Frame):
         left_frame = tk.Frame(self)
         left_frame.grid_rowconfigure(0, weight=1, uniform='group1')
         left_frame.grid_rowconfigure(1, weight=9, uniform='group1')
-        left_frame.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+        left_frame.grid(row=0, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
 
 
         right_frame = tk.Frame(self)
@@ -137,25 +213,25 @@ class BareboneExcelFrame(tk.Frame):
         right_frame.grid_rowconfigure(4, weight=1, uniform='group1')
         right_frame.grid_rowconfigure(5, weight=4, uniform='group1')
         right_frame.grid_rowconfigure(6, weight=1, uniform='group1')
-        right_frame.grid(row=0, column=1, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+        right_frame.grid(row=0, column=1, sticky=_STICKY_NEWS, padx=5, pady=5)
 
         # Configure left-side
         label = tk.Label(left_frame, text='간호사 이름을 입력하세요')
         label.grid(row=0, column=0, sticky=tk.W, padx=5, pady=5)  # Why does 'NEWS' not work?
         text_area = tk.Text(left_frame)
-        text_area.grid(row=1, column=0, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+        text_area.grid(row=1, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
 
         # Configure right-side
         
         # date widgets
         label2 = tk.Label(right_frame, text='시작날짜')
-        label2.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+        label2.grid(row=0, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
         cal = tkc.DateEntry(right_frame, year=2020, month=5, day=1)
-        cal.grid(row=1, column=0, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+        cal.grid(row=1, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
         label3 = tk.Label(right_frame, text='끝날짜')
-        label3.grid(row=2, column=0, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+        label3.grid(row=2, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
         cal2 = tkc.DateEntry(right_frame, year=2020, month=5, day=31)
-        cal2.grid(row=3, column=0, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+        cal2.grid(row=3, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
 
         # Instruction label
         instruction = """
@@ -176,20 +252,20 @@ class BareboneExcelFrame(tk.Frame):
             filename = filedialog.asksaveasfilename(title='기본 엑셀 파일 저장하기')
             
         download_button = tk.Button(right_frame, text='기본 엑셀 파일 다운 받기', command=callback_func)
-        download_button.grid(row=6, column=0, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+        download_button.grid(row=6, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
 
 
 
 def CreateBareboneExcel(root, lower_frame, row_index, col_index):
     frame = tk.Frame(root)
 
-    frame.grid(row=row_index, column=col_index, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+    frame.grid(row=row_index, column=col_index, sticky=_STICKY_NEWS, padx=5, pady=5)
 
     def callback_func(): 
         lower_frame.ShowBareboneExcelFrame()
  
     button_label = tk.Button(frame, text='기본 엑셀 파일 받기', command=callback_func)
-    button_label.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S)
+    button_label.grid(row=0, column=0, sticky=_STICKY_NEWS)
     button_label.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
 def CreateBareboneExcelConfigFrame(root):
@@ -204,14 +280,14 @@ def CreateBareboneExcelConfigFrame(root):
 
 def CreateNewSchedule(root, lower_frame, row_index, col_index):
     frame = tk.Frame(root)
-    frame.grid(row=row_index, column=col_index, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+    frame.grid(row=row_index, column=col_index, sticky=_STICKY_NEWS, padx=5, pady=5)
 
 
     def callback_func(): 
         lower_frame.ShowNewScheduleFrame()
 
     button_label = tk.Button(frame, text='새 일정 넣기', command=callback_func)
-    button_label.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S)
+    button_label.grid(row=0, column=0, sticky=_STICKY_NEWS)
     button_label.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
 
@@ -219,13 +295,13 @@ def CreateNewSchedule(root, lower_frame, row_index, col_index):
 
 def UpdateExistingSchedule(root, lower_frame, row_index, col_index):
     frame = tk.Frame(root)
-    frame.grid(row=row_index, column=col_index, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+    frame.grid(row=row_index, column=col_index, sticky=_STICKY_NEWS, padx=5, pady=5)
 
     def callback_func(): 
         lower_frame.ShowUpdateExistingScheduleFrame()
 
     button_label = tk.Button(frame, text='기존 일정 수정하기', command=callback_func)
-    button_label.grid(row=0, column=0, sticky=tk.N+tk.E+tk.W+tk.S)
+    button_label.grid(row=0, column=0, sticky=_STICKY_NEWS)
     button_label.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
 
@@ -292,7 +368,7 @@ def CreateGUI():
     root.grid_columnconfigure(0, weight=1, uniform='group1')
 
     lower_frame = LowerFrame(root, text='내용')
-    lower_frame.grid(row=1, column=0, sticky=tk.N+tk.E+tk.W+tk.S, padx=5, pady=5)
+    lower_frame.grid(row=1, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
 
 
 
