@@ -116,6 +116,9 @@ class LowerFrame(tk.LabelFrame):
 
     def ShowUpdateExistingScheduleFrame(self):
         self.destroyInnerFrame()
+        f = UpdateScheduleFrame(self)
+        f.grid(row=0, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+        return
         label = tk.Label(self, text='일정 수정 라벨')
         label.grid(row=0, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
 
@@ -188,6 +191,79 @@ class NewScheduleFrame(tk.Frame):
         text_area.grid(row=1, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
 
         
+
+
+class UpdateScheduleFrame(tk.Frame):
+    def __init__(self, master, *args, **kwargs):
+        super().__init__(master, *args, **kwargs)
+        
+        self.grid_columnconfigure(0, weight=1, uniform='group1')
+        self.grid_columnconfigure(1, weight=2, uniform='group1')
+        self.grid_rowconfigure(0, weight=1, uniform='group2')
+
+        
+        left_frame = tk.Frame(self)
+        left_frame.grid_rowconfigure(0, weight=1, uniform='group1')
+        left_frame.grid_rowconfigure(1, weight=1, uniform='group1')
+        left_frame.grid_rowconfigure(2, weight=1, uniform='group1')
+        left_frame.grid_rowconfigure(3, weight=1, uniform='group1')
+        left_frame.grid_rowconfigure(4, weight=1, uniform='group1')
+        left_frame.grid_rowconfigure(5, weight=1, uniform='group1')
+        left_frame.grid_rowconfigure(6, weight=1, uniform='group1')
+        left_frame.grid_rowconfigure(7, weight=2, uniform='group1')
+        left_frame.grid_rowconfigure(8, weight=1, uniform='group1')
+        left_frame.grid_columnconfigure(0, weight=1, uniform='group1')
+        left_frame.grid(row=0, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+        right_frame = tk.Frame(self)
+        right_frame.grid_rowconfigure(0, weight=1, uniform='group1')
+        right_frame.grid_rowconfigure(1, weight=9, uniform='group1')
+        right_frame.grid(row=0, column=1, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+        # Configure left-side
+        open_file_button = tk.Button(left_frame, text='파일 불러오기')
+        open_file_button.grid(row=0, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+        open_file_label = tk.Label(left_frame, text='현재 파일: sample.xlsx')
+        open_file_label.grid(row=1, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+        # date widgets
+        label2 = tk.Label(left_frame, text='시작날짜')
+        label2.grid(row=2, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+        cal = tkc.DateEntry(left_frame, year=2020, month=5, day=1)
+        cal.grid(row=3, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+        label3 = tk.Label(left_frame, text='끝날짜')
+        label3.grid(row=4, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+        cal2 = tkc.DateEntry(left_frame, year=2020, month=5, day=31)
+        cal2.grid(row=5, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+        max_time_frame = tk.Frame(left_frame)
+        max_time_frame.grid_columnconfigure(0, weight=4, uniform='group1')
+        max_time_frame.grid_columnconfigure(1, weight=1, uniform='group1')
+        max_time_frame.grid_columnconfigure(2, weight=1, uniform='group1')
+        max_time_frame.grid(row=6, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+        max_time_label1 = tk.Label(max_time_frame, text='최대 검색 시간')
+        max_time_label1.grid(row=0, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+        spinbox = tk.Spinbox(max_time_frame, from_=1, to=30)
+        spinbox.grid(row=0, column=1, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+        max_time_label2 = tk.Label(max_time_frame, text='분')
+        max_time_label2.grid(row=0, column=2, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+
+        max_time_info_label = tk.Label(left_frame, text='시간 내로 조건에 맞는 일정을 찾을 수 없을 시\n작업을 중지합니다')
+        max_time_info_label.grid(row=7, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+        submit_button = tk.Button(left_frame, text='시작')
+        submit_button.grid(row=8, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+
+
+        # Configure right-side
+        label = tk.Label(right_frame, text='진행상황')
+        label.grid(row=0, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
+        text_area = tk.Text(right_frame, state=tk.DISABLED)
+        text_area.grid(row=1, column=0, sticky=_STICKY_NEWS, padx=5, pady=5)
 
 
 
