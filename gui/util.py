@@ -1,3 +1,9 @@
+import tkinter as tk
+
+
+# Set grid location with some default values
+def SetGrid(widget, row, column, sticky=tk.NSEW, padx=5, pady=5):
+    widget.grid(row=row, column=column, sticky=sticky, padx=padx, pady=pady)
 
 
 # Set grid weights in a frame

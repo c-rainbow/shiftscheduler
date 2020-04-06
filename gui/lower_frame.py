@@ -9,7 +9,7 @@ import tkinter as tk
 class LowerFrame(tk.LabelFrame):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        util.SetGridWeights(self)
+        util.SetGridWeights(self)  # single row, single column
 
         self.displayed_frame = None
         self.barebone_frame = barebone.BareboneExcelFrame(self)

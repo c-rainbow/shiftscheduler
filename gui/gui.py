@@ -24,16 +24,15 @@ def CreateMenuBar(root):
 
 def CreateGUI():
     root = tk.Tk()
-    root.minsize(800, 600)
-    root.maxsize(800, 600)
+    root.minsize(900, 600)
+    root.maxsize(900, 600)
     root.title('교대근무 일정 프로그램 v0.1')
-
     util.SetGridWeights(root, row_weights=(1, 4))
 
     lower_frame = lower.LowerFrame(root)
-    lower_frame.grid(row=1, column=0, sticky=tk.NSEW, padx=5, pady=5)
+    util.SetGrid(lower_frame, 1, 0)
     upper_frame = upper.UpperFrame(root, lower_frame)
-    upper_frame.grid(row=0, column=0, sticky=tk.NSEW, padx=5, pady=5)
+    util.SetGrid(upper_frame, 0, 0)
 
     CreateMenuBar(root)
 

@@ -2,16 +2,14 @@
 import tkcalendar as tkc 
 import tkinter as tk
 from tkinter import filedialog
+import util
 
 
 # TkInter frame for getting barebone Excel file
 class BareboneExcelFrame(tk.Frame):
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
-        
-        self.grid_columnconfigure(0, weight=1, uniform='group1')
-        self.grid_columnconfigure(1, weight=2, uniform='group1')
-        self.grid_rowconfigure(0, weight=1, uniform='group2')
+        util.SetGridWeights(self, column_weights=(1, 2))
 
         self.createLeftFrame()
         self.createRightFrame()
@@ -33,7 +31,7 @@ class BareboneExcelFrame(tk.Frame):
         right_frame = tk.Frame(self)
         right_frame.grid(row=0, column=1, sticky=tk.NSEW, padx=5, pady=5)
 
-        weights = (1, 1, 1, 1, 1, 4, 1)
+        weights = (1, 1, 1, 1, 1, 5, 1)
         for i, w in enumerate(weights):
             right_frame.grid_rowconfigure(i, weight=w, uniform='group1')
         
