@@ -2,6 +2,7 @@
 import tkcalendar as tkc 
 import tkinter as tk
 from tkinter import filedialog
+from tkinter import messagebox
 import string
 import gui_util as util
 import data
@@ -62,22 +63,58 @@ class BareboneExcelFrame(tk.Frame):
 
         # Download button
         def callback_func():
+            error = self.validateValues()
+            if error:
+                messagebox.showerror(message=error)
+                return
+
             filepath = filedialog.asksaveasfilename(title='기본 엑셀 파일 저장하기')
-            self.CreateExcel(filepath)
+            if filepath:
+                self.CreateExcel(filepath)
             
         download_button = tk.Button(right_frame, text='기본 엑셀 파일 다운 받기', command=callback_func)
         util.SetGrid(download_button, 6, 0)
 
-
-    def CreateExcel(self, filepath):
+    # Get values from GUI
+    def getValues(self):
         text_area_value = self.names_text_area.get('1.0', 'end').strip()
         names = text_area_value.split('\n')
+        # Filter out all empty names
+        names = [name.strip() for name in names if name and not name.isspace()]
         start_date = self.start_cal.get_date()
         end_date = self.end_cal.get_date()
+        return (names, start_date, end_date)
+
+    def validateValues(self):
+        names, start_date, end_date = self.getValues()
+
+        # No name input
+        if not names:
+            return '이름을 입력해 주세요'
+        
+        if start_date > end_date:
+            return '일정 시작날짜가 끝 날짜 후입니다'
+
+        # Check for duplicate names
+        nameset = set()
+        duplicates = set()
+        for name in names:
+            if name not in nameset:
+                nameset.add(name)
+            else:
+                duplicates.add(name)
+        
+        if duplicates:
+            return '중복되는 이름이 있습니다: %s' % ','.join(sorted(duplicates))
+
+        return ''  # No error
+
+    def CreateExcel(self, filepath):
+        names, start_date, end_date = self.getValues()
 
         sw_config = data.SoftwareConfig(start_date=start_date, end_date=end_date, num_person=len(names))
         person_configs = [
-            data.PersonConfig(name.strip(), None, None, None, None) for name in names]
+            data.PersonConfig(name, None, None, None, None) for name in names]
         barebone_schedule = data.TotalSchedule(
             software_config=sw_config, person_configs=person_configs, date_configs=[],
             assignment_dict=dict())
