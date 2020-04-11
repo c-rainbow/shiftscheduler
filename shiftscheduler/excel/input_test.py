@@ -1,9 +1,11 @@
 
-import data
 import datetime
-import openpyxl  
 import unittest
-import excel_input
+
+import openpyxl  
+
+from shiftscheduler.data_types import data_types
+from shiftscheduler.excel import input
 
 
 class ExcelOutputTest(unittest.TestCase):
@@ -21,7 +23,7 @@ class ExcelOutputTest(unittest.TestCase):
         self.ws = ExcelOutputTest.wb.create_sheet()
         self.test_start_date = datetime.date(2020, 1, 31)
         self.test_end_date = datetime.date(2020, 2, 1)
-        self.test_config = data.SoftwareConfig(
+        self.test_config = data_types.SoftwareConfig(
             start_date=self.test_start_date, end_date=self.test_end_date, num_person=2)
 
     def tearDown(self):
@@ -35,7 +37,7 @@ class ExcelOutputTest(unittest.TestCase):
         ws['A2'] = '간호사1'
         ws['A3'] = '간호사2'
 
-        assignment_dict = excel_input.ReadTimetable(ws, self.test_config)
+        assignment_dict = input.ReadTimetable(ws, self.test_config)
         self.assertEqual(len(assignment_dict), 4)
         
         self.assertIsNone(assignment_dict.get((self.test_start_date, '간호사1')))
@@ -55,14 +57,14 @@ class ExcelOutputTest(unittest.TestCase):
         # C2 is intentionally empty
         ws['C3'] = 'D'
 
-        assignment_dict = excel_input.ReadTimetable(ws, self.test_config)
+        assignment_dict = input.ReadTimetable(ws, self.test_config)
         self.assertEqual(len(assignment_dict), 4)
 
-        self.assertEqual(assignment_dict.get((self.test_start_date, '간호사1')), data.ShiftType.EVENING)
+        self.assertEqual(assignment_dict.get((self.test_start_date, '간호사1')), data_types.ShiftType.EVENING)
         self.assertIsNone(assignment_dict.get((self.test_end_date, '간호사1')))  # None for empty cell
 
-        self.assertEqual(assignment_dict.get((self.test_start_date, '간호사2')), data.ShiftType.OFF)
-        self.assertEqual(assignment_dict.get((self.test_end_date, '간호사2')), data.ShiftType.DAY)
+        self.assertEqual(assignment_dict.get((self.test_start_date, '간호사2')), data_types.ShiftType.OFF)
+        self.assertEqual(assignment_dict.get((self.test_end_date, '간호사2')), data_types.ShiftType.DAY)
 
     def testReadTimetable(self):
         ws = self.ws
@@ -76,14 +78,14 @@ class ExcelOutputTest(unittest.TestCase):
         ws['C2'] = 'I'  # Invalid
         ws['C3'] = 'invalid'  # Invalid
 
-        assignment_dict = excel_input.ReadTimetable(ws, self.test_config)
+        assignment_dict = input.ReadTimetable(ws, self.test_config)
         self.assertEqual(len(assignment_dict), 4)
 
-        self.assertEqual(assignment_dict.get((self.test_start_date, '간호사1')), data.ShiftType.NIGHT)
-        self.assertEqual(assignment_dict.get((self.test_end_date, '간호사1')), data.ShiftType.UNKNOWN)
+        self.assertEqual(assignment_dict.get((self.test_start_date, '간호사1')), data_types.ShiftType.NIGHT)
+        self.assertEqual(assignment_dict.get((self.test_end_date, '간호사1')), data_types.ShiftType.UNKNOWN)
 
-        self.assertEqual(assignment_dict.get((self.test_start_date, '간호사2')), data.ShiftType.OFF)
-        self.assertEqual(assignment_dict.get((self.test_end_date, '간호사2')), data.ShiftType.UNKNOWN)
+        self.assertEqual(assignment_dict.get((self.test_start_date, '간호사2')), data_types.ShiftType.OFF)
+        self.assertEqual(assignment_dict.get((self.test_end_date, '간호사2')), data_types.ShiftType.UNKNOWN)
         
     # Test ReadPersonConfig()
     def testReadPersonConfig(self):
@@ -99,7 +101,7 @@ class ExcelOutputTest(unittest.TestCase):
         ws['D3'] = 25
         ws['E3'] = 28
 
-        person_configs = excel_input.ReadPersonConfig(ws, self.test_config)
+        person_configs = input.ReadPersonConfig(ws, self.test_config)
         self.assertEqual(len(person_configs), 2)
 
         pc1 = person_configs[0]
@@ -128,7 +130,7 @@ class ExcelOutputTest(unittest.TestCase):
         ws['C3'] = 5
         ws['D3'] = 6
 
-        date_configs = excel_input.ReadDateConfig(ws, self.test_config)
+        date_configs = input.ReadDateConfig(ws, self.test_config)
         self.assertEqual(len(date_configs), 2)
 
         dc1 = date_configs[0]
@@ -155,7 +157,7 @@ class ExcelOutputTest(unittest.TestCase):
         ws['A3'] = 'end_date'
         ws['B3'] = self.test_end_date
 
-        config = excel_input.ReadSoftwareConfig(ws)
+        config = input.ReadSoftwareConfig(ws)
 
         self.assertEqual(config.start_date, self.test_start_date)
         self.assertEqual(config.end_date, self.test_end_date)
@@ -169,7 +171,7 @@ class ExcelOutputTest(unittest.TestCase):
         ws['A2'] = 'start_date'
         ws['B2'] =  self.test_start_date
 
-        self.assertRaises(TypeError, excel_input.ReadSoftwareConfig, ws)
+        self.assertRaises(TypeError, input.ReadSoftwareConfig, ws)
 
     # Test ReadSoftwareConfig() when the Excel file has extra config (likely version difference)
     def testReadSoftwareConfigExtraField(self):
@@ -183,7 +185,7 @@ class ExcelOutputTest(unittest.TestCase):
         ws['A4'] = 'extra field'
         ws['B4'] = 1
 
-        self.assertRaises(TypeError, excel_input.ReadSoftwareConfig, ws)
+        self.assertRaises(TypeError, input.ReadSoftwareConfig, ws)
 
 
 if __name__ == '__main__':

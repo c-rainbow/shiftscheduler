@@ -1,34 +1,15 @@
 
-import openpyxl  
-
-from openpyxl import styles
-from openpyxl.styles import fills
-
-from openpyxl.formatting import rule as xlrule
-from openpyxl.formatting.rule import ColorScaleRule, CellIsRule, FormulaRule
-from openpyxl.utils import cell as xlcell
-import date_util
-import datetime
-import data
 import collections
+import datetime
 
+import openpyxl  
+from openpyxl import styles as xlstyles
+from openpyxl.formatting import rule as xlrule
+from openpyxl.styles import fills as xlfills
+from openpyxl.utils import cell as xlcell
 
-
-# Config values for each person. The order must be preserved
-CONFIG_PERSON_HEADER_NAMES = (
-    '최대 근무일 (연속)',
-    '최대 나이트 (연속)',
-    '최소 근무일 (전체)',
-    '최대 근무일 (전체)',
-)
-
-
-# Config values for each date. The order must be preserved
-CONFIG_DATE_HEADER_NAMES = (
-    '데이 근무자 수',
-    '이브닝 근무자 수',
-    '나이트 근무자 수',
-)
+from shiftscheduler.excel import constants
+from shiftscheduler.util import date_util
 
 
 # Background colors to use for timetable
@@ -39,14 +20,14 @@ COLOR_LIGHT_GRAY = 'bbbbbb'
 
 
 # Background fills to user for timetable
-DAY_FILL = styles.PatternFill(
-    fill_type=fills.FILL_SOLID, start_color=COLOR_MELON, end_color=COLOR_MELON)
-EVENING_FILL = styles.PatternFill(
-    fill_type=fills.FILL_SOLID, start_color=COLOR_AERO_BLUE, end_color=COLOR_AERO_BLUE)
-NIGHT_FILL = styles.PatternFill(
-    fill_type=fills.FILL_SOLID, start_color=COLOR_PASTEL_YELLOW, end_color=COLOR_PASTEL_YELLOW)
-OFF_FILL = styles.PatternFill(
-    fill_type=fills.FILL_SOLID, start_color=COLOR_LIGHT_GRAY, end_color=COLOR_LIGHT_GRAY)
+DAY_FILL = xlstyles.PatternFill(
+    fill_type=xlfills.FILL_SOLID, start_color=COLOR_MELON, end_color=COLOR_MELON)
+EVENING_FILL = xlstyles.PatternFill(
+    fill_type=xlfills.FILL_SOLID, start_color=COLOR_AERO_BLUE, end_color=COLOR_AERO_BLUE)
+NIGHT_FILL = xlstyles.PatternFill(
+    fill_type=xlfills.FILL_SOLID, start_color=COLOR_PASTEL_YELLOW, end_color=COLOR_PASTEL_YELLOW)
+OFF_FILL = xlstyles.PatternFill(
+    fill_type=xlfills.FILL_SOLID, start_color=COLOR_LIGHT_GRAY, end_color=COLOR_LIGHT_GRAY)
 
 
 # If all names are unique. Prevents mistaken duplicate names
@@ -54,9 +35,6 @@ def AllNamesUnique(names):
     return len(names) == len(set(names))
 
 
-# ws: Excel sheet
-# schedule: data.Schedule, for start_date and end_date
-# assignment: data.Assignment, for assignment
 def WriteTimetable(ws, software_config, names, assignment_dict, start_row=1, start_col=1):
     start_date = software_config.start_date
     end_date = software_config.end_date
@@ -122,7 +100,7 @@ def WritePersonConfigs(ws, person_configs, start_row=1, start_col=1):
         c.value = person_config.name
 
     # Fill the head columns with config names
-    for i, config_display_name in enumerate(CONFIG_PERSON_HEADER_NAMES):
+    for i, config_display_name in enumerate(constants.CONFIG_PERSON_HEADER_NAMES):
         c = ws.cell(row=start_row, column=start_col+1+i)
         c.value = config_display_name
         # Adjust width
@@ -153,7 +131,7 @@ def WriteDateConfigs(ws, date_configs, config, start_row=1, start_col=1):
         c.value = work_date
 
     # Fill the head columns with config names
-    for i, config_display_name in enumerate(CONFIG_DATE_HEADER_NAMES):
+    for i, config_display_name in enumerate(constants.CONFIG_DATE_HEADER_NAMES):
         c = ws.cell(row=start_row, column=start_col+1+i)
         c.value = config_display_name
         # Adjust width

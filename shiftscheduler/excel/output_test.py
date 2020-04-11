@@ -1,9 +1,12 @@
 
-import data
 import datetime
-import openpyxl  
 import unittest
-import excel_output
+
+import openpyxl  
+
+from shiftscheduler.data_types import data_types
+from shiftscheduler.excel import output as excel_output
+
 
 
 class ExcelOutputTest(unittest.TestCase):
@@ -21,7 +24,7 @@ class ExcelOutputTest(unittest.TestCase):
         self.ws = ExcelOutputTest.wb.create_sheet()
         self.test_start_date = datetime.date(2020, 1, 31)
         self.test_end_date = datetime.date(2020, 2, 1)
-        self.test_config = data.SoftwareConfig(
+        self.test_config = data_types.SoftwareConfig(
             start_date=self.test_start_date, end_date=self.test_end_date, num_person=6)
 
     def tearDown(self):
@@ -52,12 +55,12 @@ class ExcelOutputTest(unittest.TestCase):
         ws = self.ws
         names = ('간호사1', '간호사2', '간호사3')
         assignment_dict = {
-            (self.test_start_date, '간호사1'): data.ShiftType.DAY,
-            (self.test_end_date, '간호사1'): data.ShiftType.DAY,
-            (self.test_start_date, '간호사2'): data.ShiftType.EVENING,
-            (self.test_end_date, '간호사2'): data.ShiftType.OFF,
+            (self.test_start_date, '간호사1'): data_types.ShiftType.DAY,
+            (self.test_end_date, '간호사1'): data_types.ShiftType.DAY,
+            (self.test_start_date, '간호사2'): data_types.ShiftType.EVENING,
+            (self.test_end_date, '간호사2'): data_types.ShiftType.OFF,
             # Shift of 간호사3 is undecided on the start date.
-            (self.test_end_date, '간호사3'): data.ShiftType.NIGHT,
+            (self.test_end_date, '간호사3'): data_types.ShiftType.NIGHT,
         }
         excel_output.WriteTimetable(ws, self.test_config, names, assignment_dict)
         
@@ -93,7 +96,7 @@ class ExcelOutputTest(unittest.TestCase):
     # Test WritePersonConfig() with empty constraints. Needed for barebone output
     def testWritePersonConfigEmptyConstraints(self):
         ws = self.ws
-        pc1 = data.PersonConfig('간호사1', None, None, None, None)
+        pc1 = data_types.PersonConfig('간호사1', None, None, None, None)
         excel_output.WritePersonConfigs(ws, [pc1])
 
         # Check header columns
@@ -116,8 +119,8 @@ class ExcelOutputTest(unittest.TestCase):
     # Test WritePersonConfig() with empty constraints. Needed for barebone output
     def testWritePersonConfig(self):
         ws = self.ws
-        pc1 = data.PersonConfig('간호사1', 5, 3, 25, 28)
-        pc2 = data.PersonConfig('간호사2', 6, 4, 22, 26)
+        pc1 = data_types.PersonConfig('간호사1', 5, 3, 25, 28)
+        pc2 = data_types.PersonConfig('간호사2', 6, 4, 22, 26)
         excel_output.WritePersonConfigs(ws, [pc1, pc2])
 
         # Check header columns
@@ -172,8 +175,8 @@ class ExcelOutputTest(unittest.TestCase):
      # Test WriteDateConfig()
     def testWriteDateConfig(self):
         ws = self.ws
-        dc1 = data.DateConfig(self.test_start_date, 3, 2, 1)
-        dc2 = data.DateConfig(self.test_end_date, 6, 5, 4)
+        dc1 = data_types.DateConfig(self.test_start_date, 3, 2, 1)
+        dc2 = data_types.DateConfig(self.test_end_date, 6, 5, 4)
         excel_output.WriteDateConfigs(ws, [dc1, dc2], self.test_config)
 
         # Check header columns
