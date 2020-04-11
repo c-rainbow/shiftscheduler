@@ -11,7 +11,7 @@ from shiftscheduler.solver import util
 _DAY_NAME = data_types.ShiftType.DAY.name
 _EVENING_NAME = data_types.ShiftType.EVENING.name
 _NIGHT_NAME = data_types.ShiftType.NIGHT.name
-_WORK_SHIFTS = data_types.ShiftType.WorkShiftTypes()
+_OFF_SHIFT = data_types.ShiftType.OFF
 _WORK_SHIFT_NAMES = data_types.ShiftType.WorkShiftNames()
 
 
@@ -131,7 +131,7 @@ def BuildAllConstraints(
     all_date_strs = list(date_util.GenerateAllDateStrs(software_config.start_date, software_config.end_date))   
 
     # When the schedule is to be updated partially
-    assignment_dict = clearAssignmentsToUpdate(assignment_dict, exclude_start, exclude_end, keep_offdates)
+    assignment_dict = getAssignmentsToFix(assignment_dict, exclude_start, exclude_end, keep_offdates)
 
     # Create variables
     for work_date in all_date_strs:
@@ -167,17 +167,17 @@ def BuildAllConstraints(
     return (solver, var_dict)
 
 
-def clearAssignmentsToUpdate(assignment_dict, exclude_start_date, exclude_end_date, keep_offdates):
+def getAssignmentsToFix(assignment_dict, exclude_start_date, exclude_end_date, keep_offdates):
     if exclude_start_date is not None and exclude_end_date is not None:
-        assignment_dict = dict(assignment_dict)
+        new_dict = {}
         for (work_date, name), shift_type in assignment_dict.items():
-            # The shift is within the date range to update
-            if exclude_start_date <= work_date and work_date <= exclude_end_date:
-                # The shift is a work shift, or (OFF and keep_offdates is False)
-                # Then delete the assignment so that it can be updated by the solver
-                if shift_type in _WORK_SHIFTS or not keep_offdates:
-                    del assignment_dict[work_date, name]
-    
+            # 1. The shift is NOT within the date range to update, or
+            # 2. Only keep the OFF shifts when keep_offdates is true and date is within update range.
+            if (work_date < exclude_start_date or work_date > exclude_end_date or
+                shift_type == _OFF_SHIFT and keep_offdates):
+                new_dict[work_date, name] = shift_type
+        return new_dict
+                
     return assignment_dict
 
 
