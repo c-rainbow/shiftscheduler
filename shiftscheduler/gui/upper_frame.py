@@ -1,6 +1,7 @@
 
 import tkinter as tk
-import gui_util as util
+
+from shiftscheduler.gui import util
 
 
 class UpperFrame(tk.Frame):
@@ -15,7 +16,6 @@ class UpperFrame(tk.Frame):
         self.CreateNewScheduleButton(2)
         self.CreateUpdateScheduleButton(3)
 
-
     def CreateBareboneExcelButton(self, col_index):
         frame = tk.Frame(self)
         util.SetGrid(frame, 0, col_index)
@@ -24,7 +24,6 @@ class UpperFrame(tk.Frame):
             frame, text='기본 엑셀 파일 받기', command=self._lower_frame.ShowBareboneFrame)
         button_label.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
 
-
     def CreateNewScheduleButton(self, col_index):
         frame = tk.Frame(self)
         util.SetGrid(frame, 0, col_index)
@@ -32,7 +31,6 @@ class UpperFrame(tk.Frame):
         button_label = tk.Button(
             frame, text='새 일정 넣기', command=self._lower_frame.ShowNewScheduleFrame)
         button_label.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
-
 
     def CreateUpdateScheduleButton(self, col_index):
         frame = tk.Frame(self)

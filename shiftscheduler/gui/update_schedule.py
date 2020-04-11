@@ -1,6 +1,10 @@
+
 import tkinter as tk
+
 import tkcalendar as tkc
-import gui_util as util
+
+from shiftscheduler.gui import util
+
 
 class UpdateScheduleFrame(tk.Frame):
     def __init__(self, master, *args, **kwargs):
@@ -9,7 +13,6 @@ class UpdateScheduleFrame(tk.Frame):
 
         self.createLeftFrame()
         self.createRightFrame()
-
 
     def createLeftFrame(self):
         left_frame = tk.Frame(self)

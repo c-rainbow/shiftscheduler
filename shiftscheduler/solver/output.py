@@ -1,14 +1,12 @@
 """From Solver variables to assignment dict."""
-import data
+
 import datetime
-import date_util
 
 from ortools.linear_solver import pywraplp
 
-
-# Variable name from nurse name, work date, and shift type name
-def GetVariableName(name, date_str, shift_type_str):
-    return 'x_%s_%s_%s' % (name, date_str, shift_type_str)
+from shiftscheduler.data_types import data_types
+from shiftscheduler.util import date_util
+from shiftscheduler.solver import util
 
 
 # all_dates: iterable of datetime.date
@@ -19,8 +17,8 @@ def ToAssignmentDict(all_dates, names, var_dict):
     for name in names:
         for work_date in all_dates:
             has_work = False
-            for work_shift_type in data.ShiftType.WorkShiftTypes():
-                variable = var_dict[GetVariableName(name, str(work_date), work_shift_type.name)]
+            for work_shift_type in data_types.ShiftType.WorkShiftTypes():
+                variable = var_dict[util.GetVariableName(name, str(work_date), work_shift_type.name)]
                 # A work shift is assigned to the person on this date.
                 if variable.solution_value() == 1:
                     assignment_dict[(work_date, name)] = work_shift_type
@@ -29,7 +27,7 @@ def ToAssignmentDict(all_dates, names, var_dict):
             
             # Mark as 'OFF' if no work is found that day
             if not has_work:
-                assignment_dict[(work_date, name)] = data.ShiftType.OFF
+                assignment_dict[(work_date, name)] = data_types.ShiftType.OFF
 
     return assignment_dict
 
@@ -42,7 +40,7 @@ def ToTotalSchedule(software_config, person_configs, date_configs, var_dict):
     names = [c.name for c in person_configs]
     assignment_dict = ToAssignmentDict(all_dates, names, var_dict)
 
-    return data.TotalSchedule(
+    return data_types.TotalSchedule(
         software_config=software_config,
         person_configs=person_configs,
         date_configs=date_configs,

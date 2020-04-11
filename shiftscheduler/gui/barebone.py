@@ -1,12 +1,13 @@
 
-import tkcalendar as tkc 
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
-import string
-import gui_util as util
-import data
-import excel_output
+
+import tkcalendar as tkc 
+
+from shiftscheduler.data_types import data_types
+from shiftscheduler.excel import output as excel_output
+from shiftscheduler.gui import util
 
 
 # TkInter frame for getting barebone Excel file
@@ -112,10 +113,10 @@ class BareboneExcelFrame(tk.Frame):
     def CreateExcel(self, filepath):
         names, start_date, end_date = self.getValues()
 
-        sw_config = data.SoftwareConfig(start_date=start_date, end_date=end_date, num_person=len(names))
+        sw_config = data_types.SoftwareConfig(start_date=start_date, end_date=end_date, num_person=len(names))
         person_configs = [
-            data.PersonConfig(name, None, None, None, None) for name in names]
-        barebone_schedule = data.TotalSchedule(
+            data_types.PersonConfig(name, None, None, None, None) for name in names]
+        barebone_schedule = data_types.TotalSchedule(
             software_config=sw_config, person_configs=person_configs, date_configs=[],
             assignment_dict=dict())
         excel_output.FromTotalSchedule(barebone_schedule, filepath)

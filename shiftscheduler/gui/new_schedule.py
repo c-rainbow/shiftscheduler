@@ -1,14 +1,15 @@
-import excel_input
-import excel_output
 
 import os
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
-import gui_util as util
-import solver_input
-import solver_output
-import validation_scheduling as validator
+
+from shiftscheduler.excel import input as excel_input
+from shiftscheduler.excel import output as excel_output
+from shiftscheduler.gui import util
+from shiftscheduler.solver import input as solver_input
+from shiftscheduler.solver import output as solver_output
+from shiftscheduler.validation import validator
 
 
 class NewScheduleFrame(tk.Frame):

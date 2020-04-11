@@ -1,9 +1,10 @@
 
-import barebone
-import new_schedule
-import update_schedule
-import gui_util as util
 import tkinter as tk
+
+from shiftscheduler.gui import barebone
+from shiftscheduler.gui import new_schedule
+from shiftscheduler.gui import update_schedule
+from shiftscheduler.gui import util
 
 
 class LowerFrame(tk.LabelFrame):

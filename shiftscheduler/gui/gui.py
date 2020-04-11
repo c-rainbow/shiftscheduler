@@ -1,10 +1,11 @@
 """GUI"""
-import lower_frame as lower
-import upper_frame as upper
-import gui_util as util
 
 import tkinter as tk
 from tkinter import messagebox
+
+from shiftscheduler.gui import lower_frame as lower
+from shiftscheduler.gui import upper_frame as upper
+from shiftscheduler.gui import util
 
 
 def CreateMenuBar(root):
@@ -37,8 +38,3 @@ def CreateGUI():
     CreateMenuBar(root)
 
     return root
-
-
-if __name__ == '__main__':
-    root = CreateGUI()
-    root.mainloop()
