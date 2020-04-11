@@ -114,16 +114,18 @@ class NewScheduleFrame(tk.Frame):
         if errors:
             self.addToTextArea('\n'.join(errors))
         else:
-            self.addToTextArea('시작합니다')
+            self.addToTextArea('시작합니다\n')
             solver, var_dict = solver_input.FromTotalSchedule(base_schedule)
-            self.addToTextArea('solve 시작')
+            self.addToTextArea('solve 시작\n')
             # TODO: Add total running time
             status = solver.Solve()
-            self.addToTextArea('solve 끝. 결과: %s' % status)
+            self.addToTextArea('solve 끝. 결과: %s\n' % status)
 
             if status == solver.INFEASIBLE:
-                messagebox.showerror('가능한 일정이 없습니다. 조건을 변경해 주세요')
+                messagebox.showerror(message='가능한 일정이 없습니다. 조건을 변경해 주세요')
                 return
+            else:
+                messagebox.showinfo(message='일정을 완성하였습니다. 저장할 파일 경로를 설정해 주세요')
 
             new_schedule = solver_output.ToTotalSchedule(
                 base_schedule.software_config, base_schedule.person_configs, base_schedule.date_configs,

@@ -11,6 +11,7 @@ from shiftscheduler.solver import util
 _DAY_NAME = data_types.ShiftType.DAY.name
 _EVENING_NAME = data_types.ShiftType.EVENING.name
 _NIGHT_NAME = data_types.ShiftType.NIGHT.name
+_WORK_SHIFTS = data_types.ShiftType.WorkShiftTypes()
 _WORK_SHIFT_NAMES = data_types.ShiftType.WorkShiftNames()
 
 
@@ -115,18 +116,22 @@ def BuildConstraint7(solver, person_configs, date_config, var_dict):
     solver.Add(util.VariableSum(vars_night) == date_config.num_workers_night)
 
 
-def BuildAllConstraints(software_config, person_configs, date_configs, assignment_dict):
+def BuildAllConstraints(
+    software_config, person_configs, date_configs, assignment_dict, exclude_start=None, exclude_end=None,
+    keep_offdates=False):
     """Returns (solver, var_dict)
     
     assignment_dict: dict of (datetime.date, str) -> data_types.ShiftType, assignment dict
     
     """
-
     solver = pywraplp.Solver(
             'scheduling_program', pywraplp.Solver.CBC_MIXED_INTEGER_PROGRAMMING)
 
     var_dict = dict()         
     all_date_strs = list(date_util.GenerateAllDateStrs(software_config.start_date, software_config.end_date))   
+
+    # When the schedule is to be updated partially
+    assignment_dict = clearAssignmentsToUpdate(assignment_dict, exclude_start, exclude_end, keep_offdates)
 
     # Create variables
     for work_date in all_date_strs:
@@ -162,10 +167,27 @@ def BuildAllConstraints(software_config, person_configs, date_configs, assignmen
     return (solver, var_dict)
 
 
+def clearAssignmentsToUpdate(assignment_dict, exclude_start_date, exclude_end_date, keep_offdates):
+    if exclude_start_date is not None and exclude_end_date is not None:
+        assignment_dict = dict(assignment_dict)
+        for (work_date, name), shift_type in assignment_dict.items():
+            # The shift is within the date range to update
+            if exclude_start_date <= work_date and work_date <= exclude_end_date:
+                # The shift is a work shift, or (OFF and keep_offdates is False)
+                # Then delete the assignment so that it can be updated by the solver
+                if shift_type in _WORK_SHIFTS or not keep_offdates:
+                    del assignment_dict[work_date, name]
+    
+    return assignment_dict
+
+
 # Wrapper function to convert from TotalSchedule to (solver, var_dict)
-def FromTotalSchedule(total_schedule):
+def FromTotalSchedule(total_schedule, exclude_start=None, exclude_end=None, keep_offdates=False):
     return BuildAllConstraints(
         total_schedule.software_config,
         total_schedule.person_configs, 
         total_schedule.date_configs,
-        total_schedule.assignment_dict)
+        total_schedule.assignment_dict,
+        exclude_start=exclude_start,
+        exclude_end=exclude_end,
+        keep_offdates=keep_offdates)
