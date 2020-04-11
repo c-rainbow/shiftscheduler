@@ -10,5 +10,6 @@ def GetVariableName(name, work_date, shift_type_str):
 
 
 # Sum of solver "variables". Works for both MIP and CP solvers
+# TODO: Check if this can be replaced with Python's built-in sum()
 def VariableSum(variables):
     return functools.reduce(lambda x, y: x + y, variables)

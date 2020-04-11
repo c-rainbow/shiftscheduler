@@ -134,7 +134,9 @@ class UpdateScheduleFrame(tk.Frame):
                 base_schedule, exclude_start=update_start_date, exclude_end=update_end_date,
                 keep_offdates=keep_offdates)
             self.addToTextArea('solve 시작\n')
-            # TODO: Add total running time
+            
+            max_time_ms = self.max_time_var.get() * 60 * 1000
+            solver.set_time_limit(max_time_ms)
             status = solver.Solve()
             self.addToTextArea('solve 끝. 결과: %s\n' % status)
 

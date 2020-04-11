@@ -20,6 +20,7 @@ class NewScheduleFrame(tk.Frame):
         self.open_filename_strv = tk.StringVar(value='')
         self.start_date_strv = tk.StringVar(value='')
         self.end_date_strv = tk.StringVar(value='')
+        self.max_time_var = tk.IntVar()
 
         self.createLeftFrame()
         self.createRightFrame()
@@ -50,7 +51,7 @@ class NewScheduleFrame(tk.Frame):
         max_time_label1 = tk.Label(max_time_frame, text='최대 검색 시간')
         util.SetGrid(max_time_label1, 0, 0)
 
-        spinbox = tk.Spinbox(max_time_frame, from_=1, to=30)
+        spinbox = tk.Spinbox(max_time_frame, from_=1, to=30, textvariable=self.max_time_var)
         util.SetGrid(spinbox, 0, 1)
 
         max_time_label2 = tk.Label(max_time_frame, text='분')
@@ -117,7 +118,9 @@ class NewScheduleFrame(tk.Frame):
             self.addToTextArea('시작합니다\n')
             solver, var_dict = solver_input.FromTotalSchedule(base_schedule)
             self.addToTextArea('solve 시작\n')
-            # TODO: Add total running time
+            
+            max_time_ms = self.max_time_var.get() * 60 * 1000
+            solver.set_time_limit(max_time_ms)
             status = solver.Solve()
             self.addToTextArea('solve 끝. 결과: %s\n' % status)
 
