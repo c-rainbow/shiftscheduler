@@ -1,21 +1,18 @@
 
-import data
 import datetime
 
-import date_util
+from shiftscheduler.data_types import data_types
+from shiftscheduler.util import date_util
+from shiftscheduler.validation import timetable
+from shiftscheduler.validation import util
 
-import functools
-
-
-import validation_util as util
-import validation_timetable 
 
 # TODO: For now, errors are simply string messages.
 # In the future, change these messages to structured error objects
 
-_DAY_NAME = data.ShiftType.DAY.name
-_EVENING_NAME = data.ShiftType.EVENING.name
-_NIGHT_NAME = data.ShiftType.NIGHT.name
+_DAY_NAME = data_types.ShiftType.DAY.name
+_EVENING_NAME = data_types.ShiftType.EVENING.name
+_NIGHT_NAME = data_types.ShiftType.NIGHT.name
 
 
 def ValidateSoftwareConfig(software_config):
@@ -93,7 +90,6 @@ def ValidateDateConfigs(software_config, date_configs, barebone=False):
     return errors
     
 
-
 def ValidatePersonConfigs(software_config, person_configs, barebone=False):
     # Person Config sheet
     # 1. All names unique
@@ -144,9 +140,6 @@ def ValidatePersonConfigs(software_config, person_configs, barebone=False):
             pc.max_total_workdays, pc.name)
 
     return errors
-
-
-
 
 
 def ValidateTotalScheduleFormat(total_schedule, barebone=False):

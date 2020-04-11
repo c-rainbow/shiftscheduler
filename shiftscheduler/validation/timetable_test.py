@@ -1,19 +1,20 @@
 """Test for timetable validation logic"""
-import data
+
 import datetime
 import unittest
 
-import validation_timetable as vt
+from shiftscheduler.data_types import data_types
+from shiftscheduler.validation import timetable as vt
 
 
 _START_DATE = datetime.date(2020, 4, 1)
 _END_DATE = datetime.date(2020, 4, 2)
 
-_UNKNOWN_SHIFT = data.ShiftType.UNKNOWN
-_DAY_SHIFT = data.ShiftType.DAY
-_EVENING_SHIFT = data.ShiftType.EVENING
-_NIGHT_SHIFT = data.ShiftType.NIGHT
-_OFF_SHIFT = data.ShiftType.OFF
+_UNKNOWN_SHIFT = data_types.ShiftType.UNKNOWN
+_DAY_SHIFT = data_types.ShiftType.DAY
+_EVENING_SHIFT = data_types.ShiftType.EVENING
+_NIGHT_SHIFT = data_types.ShiftType.NIGHT
+_OFF_SHIFT = data_types.ShiftType.OFF
 
 _DAY1 = datetime.date(2020, 4, 1)
 _DAY2 = datetime.date(2020, 4, 2)
@@ -30,9 +31,9 @@ class BaseTestClass(unittest.TestCase):
             (_START_DATE, 'name1'): _DAY_SHIFT, (_END_DATE, 'name1'): _EVENING_SHIFT,
             (_START_DATE, 'name2'): _OFF_SHIFT, (_END_DATE, 'name2'): _NIGHT_SHIFT}
         self.person_configs = [
-            data.PersonConfig('name1', 5, 3, 1, 30), data.PersonConfig('name2', 6, 4, 2, 20)]
+            data_types.PersonConfig('name1', 5, 3, 1, 30), data_types.PersonConfig('name2', 6, 4, 2, 20)]
         self.date_configs = [
-            data.DateConfig(_START_DATE, 1, 1, 1), data.DateConfig(_END_DATE, 1, 2, 1)]
+            data_types.DateConfig(_START_DATE, 1, 1, 1), data_types.DateConfig(_END_DATE, 1, 2, 1)]
         self.all_dates = [_START_DATE, _END_DATE]
         self.errors = []
 
@@ -128,7 +129,7 @@ class OverAssignmentValidationTest(BaseTestClass):
     def setUp(self):
         super().setUp()
         self.exact_match_date_configs = [
-            data.DateConfig(_START_DATE, 1, 0, 0), data.DateConfig(_END_DATE, 0, 1, 1)
+            data_types.DateConfig(_START_DATE, 1, 0, 0), data_types.DateConfig(_END_DATE, 0, 1, 1)
         ]
     
     def testBarebone(self):
@@ -152,7 +153,7 @@ class OverAssignmentValidationTest(BaseTestClass):
     def testNonBareboneUnderAssignment(self):
         # Under-assignment causes error for non-barebone
         date_configs = [
-            data.DateConfig(_START_DATE, 1, 1, 0), data.DateConfig(_END_DATE, 1, 1, 2)
+            data_types.DateConfig(_START_DATE, 1, 1, 0), data_types.DateConfig(_END_DATE, 1, 1, 2)
         ]
         vt.ValidateOverassignment(self.assignment_dict, date_configs, self.errors, barebone=False)
         self.assertEqual(len(self.errors), 3)
@@ -165,7 +166,7 @@ class OverAssignmentValidationTest(BaseTestClass):
 
     def testBareboneOverassignment(self):
         date_configs = [
-            data.DateConfig(_START_DATE, 0, 1, 1), data.DateConfig(_END_DATE, 1, 1, 2)
+            data_types.DateConfig(_START_DATE, 0, 1, 1), data_types.DateConfig(_END_DATE, 1, 1, 2)
         ]
         vt.ValidateOverassignment(self.assignment_dict, date_configs, self.errors, barebone=True)
         self.assertEqual(len(self.errors), 1)
@@ -174,7 +175,7 @@ class OverAssignmentValidationTest(BaseTestClass):
 
     def testNonBareboneOverassignment(self):
         date_configs = [
-            data.DateConfig(_START_DATE, 0, 0, 0), data.DateConfig(_END_DATE, 0, 0, 1)
+            data_types.DateConfig(_START_DATE, 0, 0, 0), data_types.DateConfig(_END_DATE, 0, 0, 1)
         ]
         vt.ValidateOverassignment(self.assignment_dict, date_configs, self.errors, barebone=False)
         self.assertEqual(len(self.errors), 2)
@@ -220,7 +221,7 @@ class ConstraintsValidationTest(BaseTestClass):
 
     def testConstraint3Exact(self):
         # Working exactly n days
-        config = data.PersonConfig('name4', 3, 2, 5, 5)
+        config = data_types.PersonConfig('name4', 3, 2, 5, 5)
         assignment_dict = {
             (_DAY1, 'name4'): _OFF_SHIFT, (_DAY2, 'name4'): _EVENING_SHIFT,
             (_DAY3, 'name4'): _EVENING_SHIFT, (_DAY4, 'name4'): _DAY_SHIFT}
@@ -230,7 +231,7 @@ class ConstraintsValidationTest(BaseTestClass):
 
     def testConstraint3Error(self):
         # Working more than n days
-        config = data.PersonConfig('name4', 3, 2, 5, 5)
+        config = data_types.PersonConfig('name4', 3, 2, 5, 5)
         assignment_dict = {
             (_DAY1, 'name4'): _DAY_SHIFT, (_DAY2, 'name4'): _EVENING_SHIFT,
             (_DAY3, 'name4'): _EVENING_SHIFT, (_DAY4, 'name4'): _DAY_SHIFT}
@@ -256,7 +257,7 @@ class ConstraintsValidationTest(BaseTestClass):
 
     def testConstraint3OffInTheMiddle(self):
         # Constraint3. Work not for more than n consecutive days, because OFF in the middle
-        config = data.PersonConfig('name4', 2, 2, 5, 5)
+        config = data_types.PersonConfig('name4', 2, 2, 5, 5)
         assignment_dict = {  # Person works on 1st & 2nd day, takes a break on 3rd day and works again
             (_DAY1, 'name4'): _DAY_SHIFT, (_DAY2, 'name4'): _EVENING_SHIFT,
             (_DAY3, 'name4'): _OFF_SHIFT, (_DAY4, 'name4'): _DAY_SHIFT}
@@ -266,7 +267,7 @@ class ConstraintsValidationTest(BaseTestClass):
 
     def testConstraint3MultipleErrors(self):
         # Constraint3. Multiple errors
-        config = data.PersonConfig('name4', 1, 1, 5, 5)  # Can work max 1 day at a time
+        config = data_types.PersonConfig('name4', 1, 1, 5, 5)  # Can work max 1 day at a time
         assignment_dict = {  # 2 days from 04-01, 3 days from 04-04
             (_DAY1, 'name4'): _DAY_SHIFT, (_DAY2, 'name4'): _NIGHT_SHIFT,
             (_DAY3, 'name4'): _OFF_SHIFT, (_DAY4, 'name4'): _DAY_SHIFT,
@@ -290,7 +291,7 @@ class ConstraintsValidationTest(BaseTestClass):
 
     def testConstraint4Exact(self):
         # Working exactly n nights
-        config = data.PersonConfig('name4', 3, 2, 5, 5)
+        config = data_types.PersonConfig('name4', 3, 2, 5, 5)
         assignment_dict = {
             (_DAY1, 'name4'): _DAY_SHIFT, (_DAY2, 'name4'): _NIGHT_SHIFT,
             (_DAY3, 'name4'): _NIGHT_SHIFT, (_DAY4, 'name4'): _OFF_SHIFT}
@@ -300,7 +301,7 @@ class ConstraintsValidationTest(BaseTestClass):
 
     def testConstraint4Error(self):
         # Working more than n nights
-        config = data.PersonConfig('name4', 3, 2, 5, 5)
+        config = data_types.PersonConfig('name4', 3, 2, 5, 5)
         assignment_dict = {
             (_DAY1, 'name4'): _NIGHT_SHIFT, (_DAY2, 'name4'): _NIGHT_SHIFT,
             (_DAY3, 'name4'): _NIGHT_SHIFT, (_DAY4, 'name4'): _NIGHT_SHIFT}
@@ -326,7 +327,7 @@ class ConstraintsValidationTest(BaseTestClass):
 
     def testConstraint4OffInTheMiddle(self):
         # Constraint4. Work not for more than n consecutive nights, because OFF in the middle
-        config = data.PersonConfig('name4', 2, 2, 5, 5)
+        config = data_types.PersonConfig('name4', 2, 2, 5, 5)
         assignment_dict = {  # Person works on 1st & 2nd day, takes a break on 3rd day and works again
             (_DAY1, 'name4'): _NIGHT_SHIFT, (_DAY2, 'name4'): _NIGHT_SHIFT,
             (_DAY3, 'name4'): _OFF_SHIFT, (_DAY4, 'name4'): _NIGHT_SHIFT}
@@ -336,7 +337,7 @@ class ConstraintsValidationTest(BaseTestClass):
 
     def testConstraint4MultipleErrors(self):
         # Constraint4. Multiple errors
-        config = data.PersonConfig('name4', 1, 1, 5, 5)  # Can work max 1 night at a time
+        config = data_types.PersonConfig('name4', 1, 1, 5, 5)  # Can work max 1 night at a time
         assignment_dict = {  # 2 nights from 04-01, 3 nights from 04-04
             (_DAY1, 'name4'): _NIGHT_SHIFT, (_DAY2, 'name4'): _NIGHT_SHIFT,
             (_DAY3, 'name4'): _OFF_SHIFT, (_DAY4, 'name4'): _NIGHT_SHIFT,

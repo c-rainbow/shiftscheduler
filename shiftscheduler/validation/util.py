@@ -77,7 +77,7 @@ def SanitizeDate(obj):
 # Get number of confirmed workers on the specific date in the specific shift
 def GetWorkerCount(assignment_dict, expected_date, expected_shift_type):
     count = 0
-    for (work_date, name), shift_type in assignment_dict.items():
+    for (work_date, _), shift_type in assignment_dict.items():
         if work_date == expected_date and shift_type == expected_shift_type:
             count += 1
 

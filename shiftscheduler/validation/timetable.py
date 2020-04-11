@@ -1,24 +1,22 @@
 
-import data
 import datetime
-
-import date_util
-
 import functools
 
-import validation_util as util
+from shiftscheduler.data_types import data_types
+from shiftscheduler.util import date_util
+from shiftscheduler.validation import util
 
 
-_UNKNOWN_SHIFT = data.ShiftType.UNKNOWN
-_DAY_SHIFT = data.ShiftType.DAY
-_EVENING_SHIFT = data.ShiftType.EVENING
-_NIGHT_SHIFT = data.ShiftType.NIGHT
-_OFF_SHIFT = data.ShiftType.OFF
-_WORK_SHIFTS = data.ShiftType.WorkShiftTypes()
+_UNKNOWN_SHIFT = data_types.ShiftType.UNKNOWN
+_DAY_SHIFT = data_types.ShiftType.DAY
+_EVENING_SHIFT = data_types.ShiftType.EVENING
+_NIGHT_SHIFT = data_types.ShiftType.NIGHT
+_OFF_SHIFT = data_types.ShiftType.OFF
+_WORK_SHIFTS = data_types.ShiftType.WorkShiftTypes()
 
-_DAY_NAME = data.ShiftType.DAY.name
-_EVENING_NAME = data.ShiftType.EVENING.name
-_NIGHT_NAME = data.ShiftType.NIGHT.name
+_DAY_NAME = data_types.ShiftType.DAY.name
+_EVENING_NAME = data_types.ShiftType.EVENING.name
+_NIGHT_NAME = data_types.ShiftType.NIGHT.name
 
 
 # 1. Basic checks on work dates
