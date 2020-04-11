@@ -3,6 +3,7 @@ import os
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
+from tkinter import scrolledtext
 
 import tkcalendar as tkc
 
@@ -74,7 +75,7 @@ class UpdateScheduleFrame(tk.Frame):
         util.SetGrid(max_time_info_label, 8, 0)
 
         # Start button
-        submit_button = tk.Button(left_frame, text='시작')
+        submit_button = tk.Button(left_frame, text='시작', command=self.updateSchedule)
         util.SetGrid(submit_button, 9, 0)
 
     def createRightFrame(self):
@@ -85,7 +86,7 @@ class UpdateScheduleFrame(tk.Frame):
 
         label = tk.Label(right_frame, text='진행상황')
         util.SetGrid(label, 0, 0)
-        self.status_text_area = tk.Text(right_frame, state=tk.DISABLED)
+        self.status_text_area = scrolledtext.ScrolledText(right_frame, state=tk.DISABLED)
         util.SetGrid(self.status_text_area, 1, 0)
         
 
@@ -106,56 +107,70 @@ class UpdateScheduleFrame(tk.Frame):
         self.status_text_area.insert(tk.END, text_to_add)
         self.status_text_area.configure(state=tk.DISABLED)
 
+    def updateSchedule(self):
+        update_start_date = self.start_date_cal.get_date()
+        update_end_date = self.end_date_cal.get_date()
+        keep_offdates = self.keep_offdate_var.get()
+
+        if update_start_date > update_end_date:
+            self.addToTextArea('수정 시작 날짜가 끝 날짜 이후입니다\n')
+            return
+
+        excel_start_date = self.base_schedule.software_config.start_date        
+        excel_end_date = self.base_schedule.software_config.end_date        
+        if update_start_date < excel_start_date:
+            self.addToTextArea('수정 시작 날짜가 일정표 시작 날짜 이전입니다\n')
+            return
+        if excel_end_date < update_end_date:
+            self.addToTextArea('수정 끝 날짜가 일정표 끝 날짜 이후입니다\n')
+            return
+
+        solver, var_dict = solver_input.FromTotalSchedule(
+            self.base_schedule, exclude_start=update_start_date, exclude_end=update_end_date,
+            keep_offdates=keep_offdates)
+        self.addToTextArea('solve 시작\n')
+        
+        max_time_ms = self.max_time_var.get() * 60 * 1000
+        solver.set_time_limit(max_time_ms)
+        status = solver.Solve()
+        self.addToTextArea('solve 끝. 결과: %s\n' % status)
+
+        if status == solver.INFEASIBLE:
+            messagebox.showerror(message='가능한 일정이 없습니다. 조건을 변경해 주세요')
+            return
+        else:
+            messagebox.showinfo(message='일정을 완성하였습니다. 저장할 파일 경로를 설정해 주세요')
+
+        new_schedule = solver_output.ToTotalSchedule(
+            base_schedule.software_config, base_schedule.person_configs, base_schedule.date_configs,
+            var_dict)
+
+        errors = validator.ValidateTotalScheduleFormat(new_schedule, barebone=False)
+        if errors:
+            self.addToTextArea('\n'.join(errors))
+            return
+    
+        # Save to Excel file
+        filepath = filedialog.asksaveasfilename(title='완성된 엑셀 파일 저장하기')
+        if filepath:
+            excel_output.FromTotalSchedule(new_schedule, filepath)
+
     def openExcelToUpdate(self):
         filepath = filedialog.askopenfilename(title='수정할 엑셀 파일 열기')
         if not filepath:
             return
 
-        base_schedule = excel_input.ReadFromExcelFile(filepath)
+        self.base_schedule = excel_input.ReadFromExcelFile(filepath)
 
         # Update labels
-        start_date = base_schedule.software_config.start_date
-        end_date = base_schedule.software_config.end_date
+        start_date = self.base_schedule.software_config.start_date
+        end_date = self.base_schedule.software_config.end_date
         self.updateLabels(filepath, start_date, end_date)
 
         # Validate
-        errors = validator.ValidateTotalScheduleFormat(base_schedule, barebone=True)
+        errors = validator.ValidateTotalScheduleFormat(self.base_schedule, barebone=True)
         
         if errors:
             self.addToTextArea('\n'.join(errors))
         else:
-            self.addToTextArea('시작합니다\n')
-
-            update_start_date = self.start_date_cal.get_date()
-            update_end_date = self.end_date_cal.get_date()
-            keep_offdates = self.keep_offdate_var.get()
-
-            solver, var_dict = solver_input.FromTotalSchedule(
-                base_schedule, exclude_start=update_start_date, exclude_end=update_end_date,
-                keep_offdates=keep_offdates)
-            self.addToTextArea('solve 시작\n')
-            
-            max_time_ms = self.max_time_var.get() * 60 * 1000
-            solver.set_time_limit(max_time_ms)
-            status = solver.Solve()
-            self.addToTextArea('solve 끝. 결과: %s\n' % status)
-
-            if status == solver.INFEASIBLE:
-                messagebox.showerror(message='가능한 일정이 없습니다. 조건을 변경해 주세요')
-                return
-            else:
-                messagebox.showinfo(message='일정을 완성하였습니다. 저장할 파일 경로를 설정해 주세요')
-
-            new_schedule = solver_output.ToTotalSchedule(
-                base_schedule.software_config, base_schedule.person_configs, base_schedule.date_configs,
-                var_dict)
-
-            errors = validator.ValidateTotalScheduleFormat(new_schedule, barebone=False)
-            if errors:
-                self.addToTextArea('\n'.join(errors))
-                return
-      
-            # Save to Excel file
-            filepath = filedialog.asksaveasfilename(title='완성된 엑셀 파일 저장하기')
-            if filepath:
-                excel_output.FromTotalSchedule(new_schedule, filepath)
+            self.addToTextArea('오류가 없습니다. "시작" 버튼을 눌러주세요\n')

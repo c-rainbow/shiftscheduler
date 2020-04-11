@@ -2,6 +2,7 @@
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
+from tkinter import scrolledtext
 
 import tkcalendar as tkc 
 
@@ -27,7 +28,8 @@ class BareboneExcelFrame(tk.Frame):
 
         label = tk.Label(left_frame, text='간호사 이름을 입력하세요')
         util.SetGrid(label, 0, 0) #, sticky=tk.W)  # For some reason, tk.NSEW does not work
-        self.names_text_area = tk.Text(left_frame)
+        #self.names_text_area = tk.Text(left_frame)
+        self.names_text_area = scrolledtext.ScrolledText(left_frame)
         util.SetGrid(self.names_text_area, 1, 0)
 
     # Create right side of the frame

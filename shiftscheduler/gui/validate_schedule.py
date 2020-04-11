@@ -2,6 +2,7 @@
 import os
 import tkinter as tk
 from tkinter import filedialog
+from tkinter import scrolledtext
 
 from shiftscheduler.excel import input as excel_input
 from shiftscheduler.gui import util
@@ -46,7 +47,7 @@ class ValidateScheduleFrame(tk.Frame):
         # Right side of the frame only displays status (of validation and solver run)
         label = tk.Label(right_frame, text='오류 확인창')
         util.SetGrid(label, 0, 0)
-        self.status_text_area = tk.Text(right_frame, state=tk.DISABLED)
+        self.status_text_area = scrolledtext.ScrolledText(right_frame, state=tk.DISABLED)
         util.SetGrid(self.status_text_area, 1, 0)
 
     def clearFields(self):
