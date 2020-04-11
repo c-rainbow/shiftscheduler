@@ -1,16 +1,24 @@
 import sys
 
-import excel_input
-import excel_output
-import solver_input
-import solver_output
+from shiftscheduler.excel import input as excel_input
+from shiftscheduler.excel import output as excel_output
+from shiftscheduler.solver import input as solver_input
+from shiftscheduler.solver import output as solver_output
+from shiftscheduler.validation import validator
 
-import validation_scheduling as validation
+
+_INPUT_FILE_PATH = 'shiftscheduler/tmp/sample.xlsx'
+_OUTPUT_FILE_PATH = 'shiftscheduler/tmp/updated.xlsx'
 
 
+# 1. Read input Excel file (pre-configured with values)
+# 2. Validate the input file
+# 3. Run the solver
+# 4. Validate solver output (just to make sure)
+# 5. Write to the output file
 if __name__ == '__main__':
-    base_schedule = excel_input.ReadFromExcelFile('tmp/sample.xlsx')
-    errors = validation.ValidateTotalScheduleFormat(base_schedule, barebone=True)
+    base_schedule = excel_input.ReadFromExcelFile(_INPUT_FILE_PATH)
+    errors = validator.ValidateTotalScheduleFormat(base_schedule, barebone=True)
     print('errors', errors)
     if errors:
         sys.exit(0)
@@ -22,8 +30,8 @@ if __name__ == '__main__':
     new_schedule = solver_output.ToTotalSchedule(
         base_schedule.software_config, base_schedule.person_configs, base_schedule.date_configs, var_dict)
     
-    errors = validation.ValidateTotalScheduleFormat(new_schedule, barebone=False)
+    errors = validator.ValidateTotalScheduleFormat(new_schedule, barebone=False)
     print('new errors', errors)
     if errors:
         sys.exit(0)
-    excel_output.FromTotalSchedule(new_schedule, 'tmp/updated.xlsx')
+    excel_output.FromTotalSchedule(new_schedule, _OUTPUT_FILE_PATH)

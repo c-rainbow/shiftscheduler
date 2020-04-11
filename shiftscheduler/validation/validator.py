@@ -157,7 +157,7 @@ def ValidateTotalScheduleFormat(total_schedule, barebone=False):
         return dc_errors + pc_errors
 
     # If no error is found in other sheets, validate the timetable
-    tt_errors = validation_timetable.ValidateTimetable(
+    tt_errors = timetable.ValidateTimetable(
         total_schedule.software_config, total_schedule.date_configs, total_schedule.person_configs,
         total_schedule.assignment_dict, barebone=barebone)
     return tt_errors
