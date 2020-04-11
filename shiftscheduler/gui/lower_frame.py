@@ -4,6 +4,7 @@ import tkinter as tk
 from shiftscheduler.gui import barebone
 from shiftscheduler.gui import new_schedule
 from shiftscheduler.gui import update_schedule
+from shiftscheduler.gui import validate_schedule
 from shiftscheduler.gui import util
 
 
@@ -16,6 +17,7 @@ class LowerFrame(tk.LabelFrame):
         self.barebone_frame = barebone.BareboneExcelFrame(self)
         self.new_schedule_frame = new_schedule.NewScheduleFrame(self)
         self.update_schedule_frame = update_schedule.UpdateScheduleFrame(self)
+        self.validate_schedule_frame = validate_schedule.ValidateScheduleFrame(self)
 
     def ShowBareboneFrame(self):
         self.showFrame(self.barebone_frame)
@@ -25,6 +27,9 @@ class LowerFrame(tk.LabelFrame):
 
     def ShowUpdateScheduleFrame(self):
         self.showFrame(self.update_schedule_frame)
+
+    def ShowValidateScheduleFrame(self):
+        self.showFrame(self.validate_schedule_frame)
 
     def showFrame(self, frame_to_show):
         if self.displayed_frame is not None:
