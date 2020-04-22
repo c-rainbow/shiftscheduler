@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import scrolledtext
+from tkinter import ttk
 
 from shiftscheduler.excel import input as excel_input
 from shiftscheduler.excel import output as excel_output
@@ -13,7 +14,7 @@ from shiftscheduler.solver import output as solver_output
 from shiftscheduler.validation import validator
 
 
-class NewScheduleFrame(tk.Frame):
+class NewScheduleFrame(ttk.Frame):
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         util.SetGridWeights(self, column_weights=(1, 2))
@@ -27,52 +28,52 @@ class NewScheduleFrame(tk.Frame):
         self.createRightFrame()
 
     def createLeftFrame(self):
-        left_frame = tk.Frame(self)
+        left_frame = ttk.Frame(self)
         util.SetGrid(left_frame, 0, 0)
         util.SetGridWeights(left_frame, row_weights=(1, 1, 1, 1, 1, 2, 1, 2, 1))
        
         # Button to open partially filled barebone filed
-        open_file_button = tk.Button(left_frame, text='기본 엑셀 파일 불러오기', command=self.openBareboneExcel)
+        open_file_button = ttk.Button(left_frame, text='기본 엑셀 파일 불러오기', command=self.openBareboneExcel)
         util.SetGrid(open_file_button, 0, 0)
         # Opened file name. Empty label if no file is loaded
-        open_file_label = tk.Label(left_frame, textvariable=self.open_filename_strv)
+        open_file_label = ttk.Label(left_frame, textvariable=self.open_filename_strv)
         util.SetGrid(open_file_label, 1, 0)
 
         # Start date, end date of new schedule
-        start_date_label = tk.Label(left_frame, textvariable=self.start_date_strv)
+        start_date_label = ttk.Label(left_frame, textvariable=self.start_date_strv)
         util.SetGrid(start_date_label, 2, 0)
-        end_date_label = tk.Label(left_frame, textvariable=self.end_date_strv)
+        end_date_label = ttk.Label(left_frame, textvariable=self.end_date_strv)
         util.SetGrid(end_date_label, 3, 0)
 
         # How long should the solver run?
-        max_time_frame = tk.Frame(left_frame)
+        max_time_frame = ttk.Frame(left_frame)
         util.SetGridWeights(max_time_frame, column_weights=(4, 1, 1))
         util.SetGrid(max_time_frame, 6, 0)
 
-        max_time_label1 = tk.Label(max_time_frame, text='최대 검색 시간')
+        max_time_label1 = ttk.Label(max_time_frame, text='최대 검색 시간')
         util.SetGrid(max_time_label1, 0, 0)
 
-        spinbox = tk.Spinbox(max_time_frame, from_=1, to=30, textvariable=self.max_time_var)
+        spinbox = ttk.Spinbox(max_time_frame, from_=1, to=30, textvariable=self.max_time_var)
         util.SetGrid(spinbox, 0, 1)
 
-        max_time_label2 = tk.Label(max_time_frame, text='분')
+        max_time_label2 = ttk.Label(max_time_frame, text='분')
         util.SetGrid(max_time_label2, 0, 2)
 
         # Notice that the solver will stop after the specific time
-        max_time_info_label = tk.Label(left_frame, text='시간 내로 조건에 맞는 일정을 찾을 수 없을 시\n작업을 중지합니다')
+        max_time_info_label = ttk.Label(left_frame, text='시간 내로 조건에 맞는 일정을 찾을 수 없을 시\n작업을 중지합니다')
         util.SetGrid(max_time_info_label, 7, 0)
 
         # Start button. Click will validate the input Excel and run the solver
-        submit_button = tk.Button(left_frame, text='시작')
+        submit_button = ttk.Button(left_frame, text='시작')
         util.SetGrid(submit_button, 8, 0)
 
     def createRightFrame(self):
-        right_frame = tk.Frame(self)
+        right_frame = ttk.Frame(self)
         util.SetGrid(right_frame, 0, 1)
         util.SetGridWeights(right_frame, row_weights=(1, 9))
 
         # Right side of the frame only displays status (of validation and solver run)
-        label = tk.Label(right_frame, text='진행상황')
+        label = ttk.Label(right_frame, text='진행상황')
         util.SetGrid(label, 0, 0)
         self.status_text_area = scrolledtext.ScrolledText(right_frame, state=tk.DISABLED)
         util.SetGrid(self.status_text_area, 1, 0)

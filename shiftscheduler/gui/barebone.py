@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import scrolledtext
+from tkinter import ttk
 
 import tkcalendar as tkc 
 
@@ -12,7 +13,7 @@ from shiftscheduler.gui import util
 
 
 # TkInter frame for getting barebone Excel file
-class BareboneExcelFrame(tk.Frame):
+class BareboneExcelFrame(ttk.Frame):
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         util.SetGridWeights(self, column_weights=(1, 2))
@@ -22,30 +23,30 @@ class BareboneExcelFrame(tk.Frame):
 
     # Create left side of the frame
     def createLeftFrame(self):
-        left_frame = tk.Frame(self)
+        left_frame = ttk.Frame(self)
         util.SetGrid(left_frame, 0, 0)
         util.SetGridWeights(left_frame, row_weights=(1, 9))  
 
-        label = tk.Label(left_frame, text='간호사 이름을 입력하세요')
-        util.SetGrid(label, 0, 0) #, sticky=tk.W)  # For some reason, tk.NSEW does not work
-        #self.names_text_area = tk.Text(left_frame)
+        label = ttk.Label(left_frame, text='간호사 이름을 입력하세요')
+        util.SetGrid(label, 0, 0) #, sticky=ttk.W)  # For some reason, ttk.NSEW does not work
+        #self.names_text_area = ttk.Text(left_frame)
         self.names_text_area = scrolledtext.ScrolledText(left_frame)
         util.SetGrid(self.names_text_area, 1, 0)
 
     # Create right side of the frame
     def createRightFrame(self):
-        right_frame = tk.Frame(self)
+        right_frame = ttk.Frame(self)
         util.SetGrid(right_frame, 0, 1)
         util.SetGridWeights(right_frame, row_weights=(1, 1, 1, 1, 1, 5, 1))
         
         # Start date widgets
-        start_date_label = tk.Label(right_frame, text='시작날짜')
+        start_date_label = ttk.Label(right_frame, text='시작날짜')
         util.SetGrid(start_date_label, 0, 0)
         self.start_cal = tkc.DateEntry(right_frame, year=2020, month=5, day=1)
         util.SetGrid(self.start_cal, 1, 0)
 
         # End date widgets
-        end_date_label = tk.Label(right_frame, text='끝날짜')
+        end_date_label = ttk.Label(right_frame, text='끝날짜')
         util.SetGrid(end_date_label, 2, 0)
         self.end_cal = tkc.DateEntry(right_frame, year=2020, month=5, day=31)
         util.SetGrid(self.end_cal, 3, 0)
@@ -61,7 +62,7 @@ class BareboneExcelFrame(tk.Frame):
         6."일정표"에서 기존에 정해진 일정을 입력합니다
         7."새 일정" 탭에서 다음 단계를 진행해 주세요
         """
-        instruction_label = tk.Label(right_frame, text=instruction, justify=tk.LEFT)
+        instruction_label = ttk.Label(right_frame, text=instruction, justify=tk.LEFT)
         util.SetGrid(instruction_label,5, 0)
 
         # Download button
@@ -75,7 +76,7 @@ class BareboneExcelFrame(tk.Frame):
             if filepath:
                 self.CreateExcel(filepath)
             
-        download_button = tk.Button(right_frame, text='기본 엑셀 파일 다운 받기', command=callback_func)
+        download_button = ttk.Button(right_frame, text='기본 엑셀 파일 다운 받기', command=callback_func)
         util.SetGrid(download_button, 6, 0)
 
     # Get values from GUI

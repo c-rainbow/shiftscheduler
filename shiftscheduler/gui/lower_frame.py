@@ -1,5 +1,5 @@
 
-import tkinter as tk
+from tkinter import ttk
 
 from shiftscheduler.gui import barebone
 from shiftscheduler.gui import new_schedule
@@ -8,7 +8,7 @@ from shiftscheduler.gui import validate_schedule
 from shiftscheduler.gui import util
 
 
-class LowerFrame(tk.LabelFrame):
+class LowerFrame(ttk.LabelFrame):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         util.SetGridWeights(self)  # single row, single column

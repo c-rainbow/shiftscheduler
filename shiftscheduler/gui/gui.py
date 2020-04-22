@@ -1,7 +1,9 @@
 """GUI"""
 
+#import tkinter as tk
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import ttk
 
 from shiftscheduler.gui import lower_frame as lower
 from shiftscheduler.gui import upper_frame as upper
@@ -14,7 +16,7 @@ def CreateMenuBar(root):
     filemenu = tk.Menu(menu, tearoff=0)
     filemenu.add_command(
         label='아무것도 안하는 버튼',
-        command=lambda: tk.messagebox.showinfo(message='사실 이거 보여주기 위해 어그로 끌었다'))
+        command=lambda: ttk.messagebox.showinfo(message='사실 이거 보여주기 위해 어그로 끌었다'))
     filemenu.add_command(label='무언가 할 것 같은 버튼')
     filemenu.add_command(label='종료')
 

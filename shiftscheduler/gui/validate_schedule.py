@@ -3,6 +3,7 @@ import os
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import scrolledtext
+from tkinter import ttk
 
 from shiftscheduler.excel import input as excel_input
 from shiftscheduler.gui import util
@@ -22,30 +23,30 @@ class ValidateScheduleFrame(tk.Frame):
         self.createRightFrame()
 
     def createLeftFrame(self):
-        left_frame = tk.Frame(self)
+        left_frame = ttk.Frame(self)
         util.SetGrid(left_frame, 0, 0)
         util.SetGridWeights(left_frame, row_weights=(1, 1, 1, 1, 1, 2, 1, 2, 1))
        
         # Button to open updated Excel file
-        open_file_button = tk.Button(left_frame, text='완성된 엑셀 파일 불러오기', command=self.openUpdatedExcel)
+        open_file_button = ttk.Button(left_frame, text='완성된 엑셀 파일 불러오기', command=self.openUpdatedExcel)
         util.SetGrid(open_file_button, 0, 0)
         # Opened file name. Empty label if no file is loaded
-        open_file_label = tk.Label(left_frame, textvariable=self.open_filename_strv)
+        open_file_label = ttk.Label(left_frame, textvariable=self.open_filename_strv)
         util.SetGrid(open_file_label, 1, 0)
 
         # Start date, end date of new schedule
-        start_date_label = tk.Label(left_frame, textvariable=self.start_date_strv)
+        start_date_label = ttk.Label(left_frame, textvariable=self.start_date_strv)
         util.SetGrid(start_date_label, 2, 0)
-        end_date_label = tk.Label(left_frame, textvariable=self.end_date_strv)
+        end_date_label = ttk.Label(left_frame, textvariable=self.end_date_strv)
         util.SetGrid(end_date_label, 3, 0)
 
     def createRightFrame(self):
-        right_frame = tk.Frame(self)
+        right_frame = ttk.Frame(self)
         util.SetGrid(right_frame, 0, 1)
         util.SetGridWeights(right_frame, row_weights=(1, 9))
 
         # Right side of the frame only displays status (of validation and solver run)
-        label = tk.Label(right_frame, text='오류 확인창')
+        label = ttk.Label(right_frame, text='오류 확인창')
         util.SetGrid(label, 0, 0)
         self.status_text_area = scrolledtext.ScrolledText(right_frame, state=tk.DISABLED)
         util.SetGrid(self.status_text_area, 1, 0)
