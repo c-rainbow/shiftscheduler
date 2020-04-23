@@ -16,6 +16,10 @@ from shiftscheduler.solver import output as solver_output
 from shiftscheduler.validation import validator
 
 
+DATE_PATTERN = 'y년 m월 d일'
+LOCALE_CODE = 'ko'
+
+
 class UpdateScheduleFrame(ttk.Frame):
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
@@ -44,12 +48,14 @@ class UpdateScheduleFrame(ttk.Frame):
         # Select date range to update
         start_date_label = ttk.Label(left_frame, text='수정 시작 날짜')
         util.SetGrid(start_date_label, 2, 0)
-        self.start_date_cal = tkc.DateEntry(left_frame, year=2020, month=5, day=1)
+        self.start_date_cal = tkc.DateEntry(
+            left_frame, year=2020, month=5, day=1, date_pattern=DATE_PATTERN, locale=LOCALE_CODE)
         util.SetGrid(self.start_date_cal, 3, 0)
         # End date to update
         end_date_label = ttk.Label(left_frame, text='수정 끝 날짜')
         util.SetGrid(end_date_label, 4, 0)
-        self.end_date_cal = tkc.DateEntry(left_frame, year=2020, month=5, day=31)
+        self.end_date_cal = tkc.DateEntry(
+            left_frame, year=2020, month=5, day=31, date_pattern=DATE_PATTERN, locale=LOCALE_CODE)
         util.SetGrid(self.end_date_cal, 5, 0)
 
         # Checkbox to keep the off dates
@@ -66,6 +72,7 @@ class UpdateScheduleFrame(ttk.Frame):
         max_time_label1 = ttk.Label(max_time_frame, text='최대 검색 시간')
         util.SetGrid(max_time_label1, 0, 0)
 
+        self.max_time_var.set(1)
         max_time_spinbox = ttk.Spinbox(max_time_frame, from_=1, to=30, textvariable=self.max_time_var)
         util.SetGrid(max_time_spinbox, 0, 1)
 

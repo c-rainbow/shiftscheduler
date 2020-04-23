@@ -9,6 +9,11 @@ def ToInt(cell_value):
     return s
 
 
+def AddError(errors, message, **kwargs):
+    formatted = message.format(**kwargs)
+    errors.append(formatted)
+
+
 def ErrorIfNone(value, errors, message, *args):
     if value is None:
         errors.append(message % args)

@@ -1,0 +1,81 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2020-04-22 19:30-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=cp949\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: validator.py:38
+msgid "Start date {start_date} is not a valid date"
+msgstr ""
+
+#: validator.py:41
+msgid "End date is empty"
+msgstr ""
+
+#: validator.py:43
+msgid "End date {end_date} is not a valid date"
+msgstr ""
+
+#: validator.py:49
+msgid "Start date is later than the end date"
+msgstr ""
+
+#: validator.py:64
+msgid "Empty work date is found"
+msgstr ""
+
+#: validator.py:75 validator.py:78 validator.py:81
+msgid "No number of {shift_type} workers on {work_date}"
+msgstr ""
+
+#: validator.py:87 validator.py:91 validator.py:95
+msgid "\"{num_worker}\" is invalid number of {shift_type} workers on {work_date}"
+msgstr ""
+
+#: validator.py:100
+msgid "{date_count} dates do not have date configs: {dates}"
+msgstr ""
+
+#: validator.py:104
+msgid "{date_count} dates are missing in date configs, {dates}"
+msgstr ""
+
+#: validator.py:121
+msgid "All person names should be unique in {person_sheet} sheet"
+msgstr ""
+
+#: validator.py:127
+msgid "There should be {num_person} people, but there are rows for {num_configs} people in {person_sheet} sheet"
+msgstr ""
+
+#: validator.py:133
+msgid "No number for max consecutive workdays for {person_name}"
+msgstr ""
+
+#: validator.py:136
+msgid "No number for max consecutive nights for {person_name}"
+msgstr ""
+
+#: validator.py:139
+msgid "No number for min total workdays for {person_name}"
+msgstr ""
+
+#: validator.py:142
+msgid "No number for max total workdays for {person_name}"
+msgstr ""
+
+#: validator.py:148 validator.py:157
+msgid "\"{number}\" is invalid number for {person_name}"
+msgstr ""
+

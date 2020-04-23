@@ -53,6 +53,7 @@ class NewScheduleFrame(ttk.Frame):
         max_time_label1 = ttk.Label(max_time_frame, text='최대 검색 시간')
         util.SetGrid(max_time_label1, 0, 0)
 
+        self.max_time_var.set(1)
         spinbox = ttk.Spinbox(max_time_frame, from_=1, to=30, textvariable=self.max_time_var)
         util.SetGrid(spinbox, 0, 1)
 
