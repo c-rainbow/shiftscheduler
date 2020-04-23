@@ -12,6 +12,10 @@ from shiftscheduler.excel import output as excel_output
 from shiftscheduler.gui import util
 
 
+DATE_PATTERN = 'y년 m월 d일'
+LOCALE_CODE = 'ko'
+
+
 # TkInter frame for getting barebone Excel file
 class BareboneExcelFrame(ttk.Frame):
     def __init__(self, master, *args, **kwargs):
@@ -42,13 +46,15 @@ class BareboneExcelFrame(ttk.Frame):
         # Start date widgets
         start_date_label = ttk.Label(right_frame, text='시작날짜')
         util.SetGrid(start_date_label, 0, 0)
-        self.start_cal = tkc.DateEntry(right_frame, year=2020, month=5, day=1)
+        self.start_cal = tkc.DateEntry(
+            right_frame, year=2020, month=5, day=1, date_pattern=DATE_PATTERN, locale=LOCALE_CODE)
         util.SetGrid(self.start_cal, 1, 0)
 
         # End date widgets
         end_date_label = ttk.Label(right_frame, text='끝날짜')
         util.SetGrid(end_date_label, 2, 0)
-        self.end_cal = tkc.DateEntry(right_frame, year=2020, month=5, day=31)
+        self.end_cal = tkc.DateEntry(
+            right_frame, year=2020, month=5, day=31, date_pattern=DATE_PATTERN, locale=LOCALE_CODE)
         util.SetGrid(self.end_cal, 3, 0)
 
         # Instruction label
