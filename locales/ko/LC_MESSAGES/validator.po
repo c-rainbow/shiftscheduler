@@ -10,14 +10,14 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=cp949\n"
+"Content-Type: text/plain; charset=utf8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
 
 #: validator.py:38
 msgid "Start date {start_date} is not a valid date"
-msgstr ""
+msgstr "시작 날짜 {start_date} 가 이상합니다"
 
 #: validator.py:41
 msgid "End date is empty"
@@ -29,53 +29,53 @@ msgstr ""
 
 #: validator.py:49
 msgid "Start date is later than the end date"
-msgstr ""
+msgstr "으afasf쌰"
 
 #: validator.py:64
 msgid "Empty work date is found"
-msgstr ""
+msgstr "ㄴㅇ롱ㄴ로"
 
 #: validator.py:75 validator.py:78 validator.py:81
 msgid "No number of {shift_type} workers on {work_date}"
-msgstr ""
+msgstr "ㅇ롱롤온"
 
 #: validator.py:87 validator.py:91 validator.py:95
 msgid "\"{num_worker}\" is invalid number of {shift_type} workers on {work_date}"
-msgstr ""
+msgstr "너서서서"
 
 #: validator.py:100
 msgid "{date_count} dates do not have date configs: {dates}"
-msgstr ""
+msgstr "ㄹㄴㅇ렆ㅎㅊ"
 
 #: validator.py:104
 msgid "{date_count} dates are missing in date configs, {dates}"
-msgstr ""
+msgstr "ㅇㄹ넝ㄴ런ㅇ러"
 
 #: validator.py:121
 msgid "All person names should be unique in {person_sheet} sheet"
-msgstr ""
+msgstr "ㄴㅇ렁ㄴ렁ㄹ너"
 
 #: validator.py:127
 msgid "There should be {num_person} people, but there are rows for {num_configs} people in {person_sheet} sheet"
-msgstr ""
+msgstr "ㄴㅇ렁ㄴ러"
 
 #: validator.py:133
 msgid "No number for max consecutive workdays for {person_name}"
-msgstr ""
+msgstr "ㄱ더걷거"
 
 #: validator.py:136
 msgid "No number for max consecutive nights for {person_name}"
-msgstr ""
+msgstr "ㅇㄷㄹㅇㅍ"
 
 #: validator.py:139
 msgid "No number for min total workdays for {person_name}"
-msgstr ""
+msgstr "ㄱㄱㄱㄱㄱㄷ"
 
 #: validator.py:142
 msgid "No number for max total workdays for {person_name}"
-msgstr ""
+msgstr "ㄷㄷ덕ㄷ"
 
 #: validator.py:148 validator.py:157
 msgid "\"{number}\" is invalid number for {person_name}"
-msgstr ""
+msgstr "ㄷ걱더"
 

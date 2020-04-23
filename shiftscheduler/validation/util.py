@@ -41,7 +41,7 @@ def ErrorIfNaNOrNegative(value, errors, message, **kwargs):
 # Error if 'value' is less than 'to_compare'
 # Not an error if at least one of them are None
 def ErrorIfLess(value, to_compare, errors, message, **kwargs):
-    return ErrorIfGreater(to_compare, value, errors, message, *args)
+    return ErrorIfGreater(to_compare, value, errors, message, **kwargs)
 
 
 # Error if 'value' is greater than 'to_compare'

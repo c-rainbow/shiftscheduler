@@ -17,8 +17,8 @@ _EVENING_NAME = data_types.ShiftType.EVENING.name
 _NIGHT_NAME = data_types.ShiftType.NIGHT.name
 
 
-_ = gettext.gettext 
-
+language = gettext.translation('validator', localedir='locales', languages=['ko'])
+_ = language.gettext
 
 
 def ValidateSoftwareConfig(software_config):
