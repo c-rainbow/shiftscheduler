@@ -14,9 +14,10 @@ def AddError(errors, message, **kwargs):
     errors.append(formatted)
 
 
-def ErrorIfNone(value, errors, message, *args):
+def ErrorIfNone(value, errors, message, **kwargs):
     if value is None:
-        errors.append(message % args)
+        formatted = message.format(**kwargs)
+        errors.append(formatted)
         return True
     return False
 
@@ -24,13 +25,14 @@ def ErrorIfNone(value, errors, message, *args):
 # Error if not a number or negative.
 # Not an error if None.
 # Returns True if error is found, False otherwise
-def ErrorIfNaNOrNegative(value, errors, message, *args):
+def ErrorIfNaNOrNegative(value, errors, message, **kwargs):
     if value is None:
         return False
 
     int_value = ToInt(value) 
     if int_value is None or int_value < 0:
-        errors.append(message % args)
+        formatted = message.format(**kwargs)
+        errors.append(formatted)
         return True
     return False
 
@@ -38,30 +40,32 @@ def ErrorIfNaNOrNegative(value, errors, message, *args):
 
 # Error if 'value' is less than 'to_compare'
 # Not an error if at least one of them are None
-def ErrorIfLess(value, to_compare, errors, message, *args):
+def ErrorIfLess(value, to_compare, errors, message, **kwargs):
     return ErrorIfGreater(to_compare, value, errors, message, *args)
 
 
 # Error if 'value' is greater than 'to_compare'
 # Not an error if at least one of them are None
-def ErrorIfGreater(value, to_compare, errors, message, *args):
+def ErrorIfGreater(value, to_compare, errors, message, **kwargs):
     if value is None or to_compare is None:
         return False
 
     if value > to_compare:
-        errors.append(message % args)
+        formatted = message.format(**kwargs)
+        errors.append(formatted)
         return True
     return False
 
 
 # Error if 'value' is not equal to 'to_compare'
 # Not an error if at least one of them are None
-def ErrorIfNotEqual(value, to_compare, errors, message, *args):
+def ErrorIfNotEqual(value, to_compare, errors, message, **kwargs):
     if value is None or to_compare is None:
         return False
         
     if value != to_compare:
-        errors.append(message % args)
+        formatted = message.format(**kwargs)
+        errors.append(formatted)
         return True
     return False
 
