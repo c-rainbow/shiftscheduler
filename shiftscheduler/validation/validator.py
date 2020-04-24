@@ -13,7 +13,7 @@ _EVENING_NAME = data_types.ShiftType.EVENING.name
 _NIGHT_NAME = data_types.ShiftType.NIGHT.name
 
 
-_ = gettext.GetTextFn('validator')
+_ = gettext.GetTextFn('valdiation/validator')
 
 
 def ValidateSoftwareConfig(software_config):
@@ -143,10 +143,10 @@ def ValidatePersonConfigs(software_config, person_configs, barebone=False):
             pc.max_consecutive_workdays, errors, _('"{number}" is invalid number for {person_name}'),
             number=pc.max_consecutive_workdays, person_name=pc.name)
         util.ErrorIfNaNOrNegative(
-            pc.max_consecutive_nights, errors, '"{number}" is invalid number for {person_name}',
+            pc.max_consecutive_nights, errors, _('"{number}" is invalid number for {person_name}'),
             number=pc.max_consecutive_nights, person_name=pc.name)
         util.ErrorIfNaNOrNegative(
-            pc.min_total_workdays, errors, '"{number}" is invalid number for {person_name}',
+            pc.min_total_workdays, errors, _('"{number}" is invalid number for {person_name}'),
             number=pc.min_total_workdays, person_name=pc.name)
         util.ErrorIfNaNOrNegative(
             pc.max_total_workdays, errors, _('"{number}" is invalid number for {person_name}'),

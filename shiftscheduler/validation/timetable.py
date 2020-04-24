@@ -1,9 +1,9 @@
 
 import datetime
 import functools
-import gettext
 
 from shiftscheduler.data_types import data_types
+from shiftscheduler.i18n import gettext
 from shiftscheduler.util import date_util
 from shiftscheduler.validation import util
 
@@ -20,7 +20,7 @@ _EVENING_NAME = data_types.ShiftType.EVENING.name
 _NIGHT_NAME = data_types.ShiftType.NIGHT.name
 
 
-_ = gettext.gettext
+_ = gettext.GetTextFn('validation/timetable')
 
 
 # 1. Basic checks on work dates

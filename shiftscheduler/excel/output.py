@@ -9,7 +9,11 @@ from openpyxl.styles import fills as xlfills
 from openpyxl.utils import cell as xlcell
 
 from shiftscheduler.excel import constants
+from shiftscheduler.i18n import gettext
 from shiftscheduler.util import date_util
+
+
+_ = gettext.GetTextFn('excel/output')
 
 
 # Background fills to user for timetable
@@ -38,9 +42,9 @@ def WriteTimetable(ws, software_config, names, assignment_dict, start_row=1, sta
     
     # TODO: Create custom exceptions
     if not AllNamesUnique(names):
-        raise Exception('Duplicate names')
+        raise Exception(_('Duplicate names'))
     if start_date > end_date:
-        raise Exception('Start date is later than end date')
+        raise Exception(_('Start date is later than end date'))
     
     # Fill the head rows with people's names
     for i, name in enumerate(names):
@@ -159,17 +163,17 @@ def CreateWorkbook(software_config, person_configs, date_configs, assignment_dic
     wb = openpyxl.Workbook()
     
     ws = wb.active
-    ws.title = '일정표'
+    ws.title = constants.SHEET_TIMETABLE
     names = [c.name for c in person_configs]
     WriteTimetable(wb.active, software_config, names, assignment_dict)
 
-    ws = wb.create_sheet(title='간호사별 설정')
+    ws = wb.create_sheet(title=constants.SHEET_PERSON_CONFIG)
     WritePersonConfigs(ws, person_configs)
 
-    ws = wb.create_sheet(title='날짜별 설정')
+    ws = wb.create_sheet(title=constants.SHEET_DATE_CONFIG)
     WriteDateConfigs(ws, date_configs, software_config)
 
-    ws = wb.create_sheet(title='Config')
+    ws = wb.create_sheet(title=constants.SHEET_SOFTWARE_CONFIG)
     WriteSoftwareConfig(ws, software_config)
 
     return wb
