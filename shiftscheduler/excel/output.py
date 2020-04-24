@@ -12,22 +12,15 @@ from shiftscheduler.excel import constants
 from shiftscheduler.util import date_util
 
 
-# Background colors to use for timetable
-COLOR_MELON = 'fdbcb4'  # Peach-like soft red
-COLOR_PASTEL_YELLOW = 'fdfd96'
-COLOR_AERO_BLUE = 'c9ffe5'
-COLOR_LIGHT_GRAY = 'bbbbbb'
-
-
 # Background fills to user for timetable
 DAY_FILL = xlstyles.PatternFill(
-    fill_type=xlfills.FILL_SOLID, start_color=COLOR_MELON, end_color=COLOR_MELON)
+    fill_type=xlfills.FILL_SOLID, start_color=constants.COLOR_DAY, end_color=constants.COLOR_DAY)
 EVENING_FILL = xlstyles.PatternFill(
-    fill_type=xlfills.FILL_SOLID, start_color=COLOR_AERO_BLUE, end_color=COLOR_AERO_BLUE)
+    fill_type=xlfills.FILL_SOLID, start_color=constants.COLOR_EVENING, end_color=constants.COLOR_EVENING)
 NIGHT_FILL = xlstyles.PatternFill(
-    fill_type=xlfills.FILL_SOLID, start_color=COLOR_PASTEL_YELLOW, end_color=COLOR_PASTEL_YELLOW)
+    fill_type=xlfills.FILL_SOLID, start_color=constants.COLOR_NIGHT, end_color=constants.COLOR_NIGHT)
 OFF_FILL = xlstyles.PatternFill(
-    fill_type=xlfills.FILL_SOLID, start_color=COLOR_LIGHT_GRAY, end_color=COLOR_LIGHT_GRAY)
+    fill_type=xlfills.FILL_SOLID, start_color=constants.COLOR_OFF, end_color=constants.COLOR_OFF)
 
 
 # If all names are unique. Prevents mistaken duplicate names

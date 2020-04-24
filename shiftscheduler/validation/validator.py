@@ -1,24 +1,19 @@
 
 import datetime
-import gettext
 
 from shiftscheduler.data_types import data_types
+from shiftscheduler.i18n import gettext
 from shiftscheduler.util import date_util
-from shiftscheduler.validation import constants_kr as constants
 from shiftscheduler.validation import timetable
 from shiftscheduler.validation import util
 
-
-# TODO: For now, errors are simply string messages.
-# In the future, change these messages to structured error objects
 
 _DAY_NAME = data_types.ShiftType.DAY.name
 _EVENING_NAME = data_types.ShiftType.EVENING.name
 _NIGHT_NAME = data_types.ShiftType.NIGHT.name
 
 
-language = gettext.translation('validator', localedir='locales', languages=['ko'])
-_ = language.gettext
+_ = gettext.GetTextFn('validator')
 
 
 def ValidateSoftwareConfig(software_config):
@@ -32,7 +27,7 @@ def ValidateSoftwareConfig(software_config):
 
     errors = []
     if start_date is None:
-        errors.append(constants.EMPTY_START_DATE)
+        errors.append(_('Start date is empty'))
     elif type(start_date) is not datetime.date:        
         util.AddError(
             errors, _('Start date {start_date} is not a valid date'), start_date=start_date)
@@ -46,9 +41,9 @@ def ValidateSoftwareConfig(software_config):
         return errors
 
     if start_date > end_date:
-        return [_('Start date is later than the end date')]
+        return util.AddError(errors, _('Start date is later than the end date'))
 
-    return []
+    return errors
 
 
 def ValidateDateConfigs(software_config, date_configs, barebone=False):

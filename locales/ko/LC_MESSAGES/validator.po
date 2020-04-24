@@ -41,7 +41,7 @@ msgstr "ㅇ롱롤온"
 
 #: validator.py:87 validator.py:91 validator.py:95
 msgid "\"{num_worker}\" is invalid number of {shift_type} workers on {work_date}"
-msgstr "너서서서"
+msgstr "Translation here"
 
 #: validator.py:100
 msgid "{date_count} dates do not have date configs: {dates}"

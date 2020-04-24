@@ -4,6 +4,7 @@ import datetime
 import openpyxl  
 
 from shiftscheduler.data_types import data_types
+from shiftscheduler.excel import constants
 from shiftscheduler.excel import util as excel_util
 from shiftscheduler.util import date_util
 
@@ -92,16 +93,16 @@ def ReadSoftwareConfig(ws, start_row=1, start_col=1):
 def ReadFromExcelFile(filepath):
     wb = openpyxl.load_workbook(filepath) 
 
-    ws = wb['Config']
+    ws = wb[constants.SHEET_SOFTWARE_CONFIG]
     software_config = ReadSoftwareConfig(ws)
     
-    ws= wb['간호사별 설정']
+    ws= wb[constants.SHEET_PERSON_CONFIG]
     person_configs = ReadPersonConfig(ws, software_config)
     
-    ws = wb['날짜별 설정'] 
+    ws = wb[constants.SHEET_DATE_CONFIG] 
     date_configs = ReadDateConfig(ws, software_config)
 
-    ws = wb['일정표']
+    ws = wb[constants.SHEET_TIMETABLE]
     assignment_dict = ReadTimetable(ws, software_config)
 
     # Crate schedule object

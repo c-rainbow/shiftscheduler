@@ -7,7 +7,12 @@ from tkinter import ttk
 
 from shiftscheduler.excel import input as excel_input
 from shiftscheduler.gui import util
+from shiftscheduler.i18n import gettext
+
 from shiftscheduler.validation import validator
+
+
+_ = gettext.GetTextFn('gui/validate_schedule')
 
 
 class ValidateScheduleFrame(tk.Frame): 
@@ -28,7 +33,7 @@ class ValidateScheduleFrame(tk.Frame):
         util.SetGridWeights(left_frame, row_weights=(1, 1, 1, 1, 1, 2, 1, 2, 1))
        
         # Button to open updated Excel file
-        open_file_button = ttk.Button(left_frame, text='완성된 엑셀 파일 불러오기', command=self.openUpdatedExcel)
+        open_file_button = ttk.Button(left_frame, text=_('완성된 엑셀 파일 불러오기'), command=self.openUpdatedExcel)
         util.SetGrid(open_file_button, 0, 0)
         # Opened file name. Empty label if no file is loaded
         open_file_label = ttk.Label(left_frame, textvariable=self.open_filename_strv)
@@ -46,7 +51,7 @@ class ValidateScheduleFrame(tk.Frame):
         util.SetGridWeights(right_frame, row_weights=(1, 9))
 
         # Right side of the frame only displays status (of validation and solver run)
-        label = ttk.Label(right_frame, text='오류 확인창')
+        label = ttk.Label(right_frame, text=_('오류 확인창'))
         util.SetGrid(label, 0, 0)
         self.status_text_area = scrolledtext.ScrolledText(right_frame, state=tk.DISABLED)
         util.SetGrid(self.status_text_area, 1, 0)
@@ -63,9 +68,9 @@ class ValidateScheduleFrame(tk.Frame):
     def updateLabels(self, filepath, start_date, end_date):
         self.clearFields()
         filename = os.path.basename(filepath)
-        self.open_filename_strv.set('선택한 파일: %s' % filename)
-        self.start_date_strv.set('일정 시작 날짜: %s' % start_date)
-        self.end_date_strv.set('일정 끝 날짜: %s' % end_date)
+        self.open_filename_strv.set(_('선택한 파일: {filename}') % filename)
+        self.start_date_strv.set(_('일정 시작 날짜: {start_date}') % start_date)
+        self.end_date_strv.set(_('일정 끝 날짜: {end_date}') % end_date)
 
     def addToTextArea(self, text_to_add):
         self.status_text_area.configure(state=tk.NORMAL)
@@ -73,7 +78,7 @@ class ValidateScheduleFrame(tk.Frame):
         self.status_text_area.configure(state=tk.DISABLED)
 
     def openUpdatedExcel(self):
-        filepath = filedialog.askopenfilename(title='수정된 엑셀 파일 열기')
+        filepath = filedialog.askopenfilename(title=_('수정된 엑셀 파일 열기'))
         if not filepath:
             return
 
@@ -90,4 +95,4 @@ class ValidateScheduleFrame(tk.Frame):
         if errors:
             self.addToTextArea('\n'.join(errors))
         else:
-            self.addToTextArea('오류가 없습니다\n')  # TODO: Add output time
+            self.addToTextArea(_('오류가 없습니다\n'))  # TODO: Add output time

@@ -3,6 +3,10 @@ import tkinter as tk
 from tkinter import ttk
 
 from shiftscheduler.gui import util
+from shiftscheduler.i18n import gettext
+
+
+_ = gettext.GetTextFn('gui/upper_frame')
 
 
 class UpperFrame(ttk.Frame):
@@ -23,7 +27,7 @@ class UpperFrame(ttk.Frame):
         util.SetGrid(frame, 0, col_index)
 
         button_label = ttk.Button(
-            frame, text='기본 엑셀 파일 받기', command=self._lower_frame.ShowBareboneFrame)
+            frame, text=_('기본 엑셀 파일 받기'), command=self._lower_frame.ShowBareboneFrame)
         button_label.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
 
     def CreateNewScheduleButton(self, col_index):
@@ -31,7 +35,7 @@ class UpperFrame(ttk.Frame):
         util.SetGrid(frame, 0, col_index)
 
         button_label = ttk.Button(
-            frame, text='새 일정 넣기', command=self._lower_frame.ShowNewScheduleFrame)
+            frame, text=_('새 일정 넣기'), command=self._lower_frame.ShowNewScheduleFrame)
         button_label.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
 
     def CreateUpdateScheduleButton(self, col_index):
@@ -39,7 +43,7 @@ class UpperFrame(ttk.Frame):
         util.SetGrid(frame, 0, col_index)
 
         button_label = ttk.Button(
-            frame, text='기존 일정 수정하기', command=self._lower_frame.ShowUpdateScheduleFrame)
+            frame, text=_('기존 일정 수정하기'), command=self._lower_frame.ShowUpdateScheduleFrame)
         button_label.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
 
     def CreateValidateScheduleButton(self, col_index):
@@ -47,6 +51,6 @@ class UpperFrame(ttk.Frame):
         util.SetGrid(frame, 0, col_index)
 
         button_label = ttk.Button(
-            frame, text='일정 오류 검사', command=self._lower_frame.ShowValidateScheduleFrame)
+            frame, text=_('일정 오류 검사'), command=self._lower_frame.ShowValidateScheduleFrame)
         button_label.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         
