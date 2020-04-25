@@ -1,0 +1,53 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2020-04-24 18:26-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=cp949\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: barebone.py:19
+msgid "y/m/d"
+msgstr ""
+
+#: barebone.py:37
+msgid "Please enter name of workers"
+msgstr ""
+
+#: barebone.py:50
+msgid "Start Date"
+msgstr ""
+
+#: barebone.py:57
+msgid "End Date"
+msgstr ""
+
+#: barebone.py:84
+msgid "Save the barebone Excel file"
+msgstr ""
+
+#: barebone.py:89
+msgid "Download barebone Excel"
+msgstr ""
+
+#: barebone.py:107
+msgid "Please enter names"
+msgstr ""
+
+#: barebone.py:110
+msgid "The start date is after the end date"
+msgstr ""
+
+#: barebone.py:122
+msgid "Duplicate names: {names}"
+msgstr ""
+

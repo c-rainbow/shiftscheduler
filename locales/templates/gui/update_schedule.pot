@@ -1,0 +1,107 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2020-04-24 18:27-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=cp949\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: update_schedule.py:21
+msgid "y/m/d"
+msgstr ""
+
+#: update_schedule.py:46
+msgid "Load file"
+msgstr ""
+
+#: update_schedule.py:52
+msgid "Update start date"
+msgstr ""
+
+#: update_schedule.py:58
+msgid "Update end date"
+msgstr ""
+
+#: update_schedule.py:66
+msgid "Keep the OFF dates"
+msgstr ""
+
+#: update_schedule.py:75
+msgid "Maximum search time"
+msgstr ""
+
+#: update_schedule.py:82
+msgid "minutes"
+msgstr ""
+
+#: update_schedule.py:86
+msgid "Search will stop after this time"
+msgstr ""
+
+#: update_schedule.py:90
+msgid "Start"
+msgstr ""
+
+#: update_schedule.py:99
+msgid "Progress"
+msgstr ""
+
+#: update_schedule.py:115
+msgid "Selected file: {filename}"
+msgstr ""
+
+#: update_schedule.py:128
+msgid ""
+"The start date is after the end date\n"
+msgstr ""
+
+#: update_schedule.py:134
+msgid ""
+"Update start date is before the schedule start date\n"
+msgstr ""
+
+#: update_schedule.py:137
+msgid ""
+"Update end date is after the schedule end date\n"
+msgstr ""
+
+#: update_schedule.py:143
+msgid ""
+"Starting the solver...\n"
+msgstr ""
+
+#: update_schedule.py:148
+msgid ""
+"The solver stopped. Result: {status}\n"
+msgstr ""
+
+#: update_schedule.py:151
+msgid "No solution is found. Please check the conditions"
+msgstr ""
+
+#: update_schedule.py:154
+msgid "Completed the schedule. Please choose the location to save it"
+msgstr ""
+
+#: update_schedule.py:166
+msgid "Save to.."
+msgstr ""
+
+#: update_schedule.py:171
+msgid "Open schedule file to update"
+msgstr ""
+
+#: update_schedule.py:188
+msgid ""
+"No error is found. Please click Start button\n"
+msgstr ""
+
