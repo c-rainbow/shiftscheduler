@@ -1,4 +1,4 @@
-
+﻿
 import os
 import tkinter as tk
 from tkinter import filedialog
@@ -6,6 +6,7 @@ from tkinter import scrolledtext
 from tkinter import ttk
 
 from shiftscheduler.excel import input as excel_input
+from shiftscheduler.gui import constants
 from shiftscheduler.gui import util
 from shiftscheduler.i18n import gettext
 
@@ -26,8 +27,8 @@ class ValidateScheduleFrame(tk.Frame):
 
         self.createLeftFrame()
         self.createRightFrame()
-
-    def createLeftFrame(self):
+ 
+    def createLeftFrame(self): 
         left_frame = ttk.Frame(self)
         util.SetGrid(left_frame, 0, 0)
         util.SetGridWeights(left_frame, row_weights=(1, 1, 1, 1, 1, 2, 1, 2, 1))
@@ -44,6 +45,10 @@ class ValidateScheduleFrame(tk.Frame):
         util.SetGrid(start_date_label, 2, 0)
         end_date_label = ttk.Label(left_frame, textvariable=self.end_date_strv)
         util.SetGrid(end_date_label, 3, 0)
+
+        # Re-check for error button
+        self.recheck_error_button = ttk.Button(
+            left_frame, text=_('Re-check'), command=self.validateExcel)
 
     def createRightFrame(self):
         right_frame = ttk.Frame(self)
@@ -68,9 +73,9 @@ class ValidateScheduleFrame(tk.Frame):
     def updateLabels(self, filepath, start_date, end_date):
         self.clearFields()
         filename = os.path.basename(filepath)
-        self.open_filename_strv.set(_('Selected file: {filename}') % filename)
-        self.start_date_strv.set(_('Start date: {start_date}') % start_date)
-        self.end_date_strv.set(_('End date: {end_date}') % end_date)
+        self.open_filename_strv.set(_('Selected file: {filename}').format(filename=filename))
+        self.start_date_strv.set(_('Start date: {start_date}').format(start_date=start_date))
+        self.end_date_strv.set(_('End date: {end_date}').format(end_date=end_date))
 
     def addToTextArea(self, text_to_add):
         self.status_text_area.configure(state=tk.NORMAL)
@@ -78,9 +83,18 @@ class ValidateScheduleFrame(tk.Frame):
         self.status_text_area.configure(state=tk.DISABLED)
 
     def openUpdatedExcel(self):
-        filepath = filedialog.askopenfilename(title=_(''))
+        filepath = filedialog.askopenfilename(title=_(''), filetypes=constants.EXCEL_FILE_TYPE)
         if not filepath:
             return
+        self.filepath = filepath
+        self.validateExcel()
+
+    def validateExcel(self):
+        filepath = self.filepath
+        if not filepath:
+            return
+
+        util.SetGrid(self.recheck_error_button, 4, 0)
 
         base_schedule = excel_input.ReadFromExcelFile(filepath)
 

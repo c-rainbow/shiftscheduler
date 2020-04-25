@@ -9,6 +9,7 @@ import tkcalendar as tkc
 
 from shiftscheduler.data_types import data_types
 from shiftscheduler.excel import output as excel_output
+from shiftscheduler.gui import constants
 from shiftscheduler.gui import util
 from shiftscheduler.i18n import gettext
 
@@ -81,7 +82,8 @@ class BareboneExcelFrame(ttk.Frame):
                 messagebox.showerror(message=error)
                 return
 
-            filepath = filedialog.asksaveasfilename(title=_('Save the barebone Excel file'))
+            filepath = filedialog.asksaveasfilename(
+                title=_('Save the barebone Excel file'), filetypes=constants.EXCEL_FILE_TYPE)
             if filepath:
                 self.CreateExcel(filepath)
             

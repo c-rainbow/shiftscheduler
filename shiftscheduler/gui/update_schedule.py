@@ -10,6 +10,7 @@ import tkcalendar as tkc
 
 from shiftscheduler.excel import input as excel_input
 from shiftscheduler.excel import output as excel_output
+from shiftscheduler.gui import constants
 from shiftscheduler.gui import util
 from shiftscheduler.i18n import gettext
 from shiftscheduler.solver import input as solver_input
@@ -112,7 +113,7 @@ class UpdateScheduleFrame(ttk.Frame):
     def updateLabels(self, filepath, start_date, end_date):
         self.clearFields()
         filename = os.path.basename(filepath)
-        self.open_filename_strv.set(_('Selected file: {filename}') % filename)
+        self.open_filename_strv.set(_('Selected file: {filename}').format(filename=filename))
 
     def addToTextArea(self, text_to_add):
         self.status_text_area.configure(state=tk.NORMAL)
@@ -145,7 +146,7 @@ class UpdateScheduleFrame(ttk.Frame):
         max_time_ms = self.max_time_var.get() * 60 * 1000
         solver.set_time_limit(max_time_ms)
         status = solver.Solve()
-        self.addToTextArea(_('The solver stopped. Result: {status}\n') % status)
+        self.addToTextArea(_('The solver stopped. Result: {status}\n').format(status=status))
 
         if status == solver.INFEASIBLE:
             messagebox.showerror(message=_('No solution is found. Please check the conditions'))
@@ -163,12 +164,13 @@ class UpdateScheduleFrame(ttk.Frame):
             return
     
         # Save to Excel file
-        filepath = filedialog.asksaveasfilename(title=_('Save to..'))
+        filepath = filedialog.asksaveasfilename(title=_('Save to..'), filetypes=constants.EXCEL_FILE_TYPE)
         if filepath:
             excel_output.FromTotalSchedule(new_schedule, filepath)
 
     def openExcelToUpdate(self):
-        filepath = filedialog.askopenfilename(title=_('Open schedule file to update'))
+        filepath = filedialog.askopenfilename(
+            title=_('Open schedule file to update'), filetypes=constants.EXCEL_FILE_TYPE)
         if not filepath:
             return
 

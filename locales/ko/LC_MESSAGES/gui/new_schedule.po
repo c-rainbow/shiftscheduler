@@ -17,7 +17,7 @@ msgstr ""
 
 #: new_schedule.py:41 new_schedule.py:110
 msgid "Load barebone Excel file"
-msgstr ""
+msgstr "새 엑셀 파일 열기"
 
 #: new_schedule.py:58
 msgid "Maximum search time"
