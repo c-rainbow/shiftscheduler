@@ -1,6 +1,7 @@
 
 import configparser
 import gettext
+import os
 
 
 _LOCALE_DIR = 'locales'

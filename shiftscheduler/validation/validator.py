@@ -13,7 +13,7 @@ _EVENING_NAME = data_types.ShiftType.EVENING.name
 _NIGHT_NAME = data_types.ShiftType.NIGHT.name
 
 
-_ = gettext.GetTextFn('valdiation/validator')
+_ = gettext.GetTextFn('validation/validator')
 
 
 def ValidateSoftwareConfig(software_config):

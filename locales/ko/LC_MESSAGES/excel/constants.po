@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2020-04-24 18:22-0700\n"
+"POT-Creation-Date: 2020-04-24 18:28-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -57,13 +57,5 @@ msgstr ""
 
 #: constants.py:36
 msgid "Software Config"
-msgstr ""
-
-#: output.py:45
-msgid "Duplicate names"
-msgstr ""
-
-#: output.py:47
-msgid "Start date is later than end date"
 msgstr ""
 
