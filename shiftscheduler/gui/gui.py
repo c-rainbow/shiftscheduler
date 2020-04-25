@@ -17,7 +17,7 @@ def CreateGUI():
     root = tk.Tk()
     root.minsize(900, 600)
     root.maxsize(900, 600)
-    root.title(_('교대근무 일정 프로그램 v0.1'))
+    root.title(_('Shift Scheduler v0.1'))
     util.SetGridWeights(root, row_weights=(1, 4))
 
     lower_frame = lower.LowerFrame(root)

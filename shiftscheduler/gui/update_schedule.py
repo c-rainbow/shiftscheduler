@@ -42,19 +42,20 @@ class UpdateScheduleFrame(ttk.Frame):
         util.SetGridWeights(left_frame, row_weights=(1, 1, 1, 1, 1, 1, 1, 1, 2, 1))
 
         # Open modified schedule
-        open_file_button = ttk.Button(left_frame, text=_('파일 불러오기'), command=self.openExcelToUpdate)
+        open_file_button = ttk.Button(
+            left_frame, text=_('Load file'), command=self.openExcelToUpdate)
         util.SetGrid(open_file_button, 0, 0)
         open_file_label = ttk.Label(left_frame, textvariable=self.open_filename_strv)
         util.SetGrid(open_file_label, 1, 0)
 
         # Select date range to update
-        start_date_label = ttk.Label(left_frame, text=_('수정 시작 날짜'))
+        start_date_label = ttk.Label(left_frame, text=_('Update start date'))
         util.SetGrid(start_date_label, 2, 0)
         self.start_date_cal = tkc.DateEntry(
             left_frame, year=2020, month=5, day=1, date_pattern=DATE_PATTERN, locale=LOCALE_CODE)
         util.SetGrid(self.start_date_cal, 3, 0)
         # End date to update
-        end_date_label = ttk.Label(left_frame, text=_('수정 끝 날짜'))
+        end_date_label = ttk.Label(left_frame, text=_('Update end date'))
         util.SetGrid(end_date_label, 4, 0)
         self.end_date_cal = tkc.DateEntry(
             left_frame, year=2020, month=5, day=31, date_pattern=DATE_PATTERN, locale=LOCALE_CODE)
@@ -62,7 +63,7 @@ class UpdateScheduleFrame(ttk.Frame):
 
         # Checkbox to keep the off dates
         keep_offdate_checkbox = ttk.Checkbutton(
-            left_frame, text=_('기존의 오프날짜 유지'), variable=self.keep_offdate_var,
+            left_frame, text=_('Keep the OFF dates'), variable=self.keep_offdate_var,
             onvalue=True, offvalue=False)
         util.SetGrid(keep_offdate_checkbox, 6, 0)
 
@@ -71,21 +72,22 @@ class UpdateScheduleFrame(ttk.Frame):
         util.SetGrid(max_time_frame, 7, 0)
         util.SetGridWeights(max_time_frame, column_weights=(4, 1, 1))
         
-        max_time_label1 = ttk.Label(max_time_frame, text=_('최대 검색 시간'))
+        max_time_label1 = ttk.Label(max_time_frame, text=_('Maximum search time'))
         util.SetGrid(max_time_label1, 0, 0)
 
         self.max_time_var.set(1)
         max_time_spinbox = ttk.Spinbox(max_time_frame, from_=1, to=30, textvariable=self.max_time_var)
         util.SetGrid(max_time_spinbox, 0, 1)
 
-        max_time_label2 = ttk.Label(max_time_frame, text=_('분'))
+        max_time_label2 = ttk.Label(max_time_frame, text=_('minutes'))
         util.SetGrid(max_time_label2, 0, 2)
 
-        max_time_info_label = ttk.Label(left_frame, text=_('시간 내로 조건에 맞는 일정을 찾을 수 없을 시\n작업을 중지합니다'))
+        max_time_info_label = ttk.Label(
+            left_frame, text=_('Search will stop after this time'))
         util.SetGrid(max_time_info_label, 8, 0)
 
         # Start button
-        submit_button = ttk.Button(left_frame, text=_('시작'), command=self.updateSchedule)
+        submit_button = ttk.Button(left_frame, text=_('Start'), command=self.updateSchedule)
         util.SetGrid(submit_button, 9, 0)
 
     def createRightFrame(self):
@@ -94,7 +96,7 @@ class UpdateScheduleFrame(ttk.Frame):
         util.SetGrid(right_frame, 0, 1)
         util.SetGridWeights(right_frame, row_weights=(1, 9))
 
-        label = ttk.Label(right_frame, text=_('진행상황'))
+        label = ttk.Label(right_frame, text=_('Progress'))
         util.SetGrid(label, 0, 0)
         self.status_text_area = scrolledtext.ScrolledText(right_frame, state=tk.DISABLED)
         util.SetGrid(self.status_text_area, 1, 0)
@@ -110,7 +112,7 @@ class UpdateScheduleFrame(ttk.Frame):
     def updateLabels(self, filepath, start_date, end_date):
         self.clearFields()
         filename = os.path.basename(filepath)
-        self.open_filename_strv.set(_('선택한 파일: {filename}') % filename)
+        self.open_filename_strv.set(_('Selected file: {filename}') % filename)
 
     def addToTextArea(self, text_to_add):
         self.status_text_area.configure(state=tk.NORMAL)
@@ -123,33 +125,33 @@ class UpdateScheduleFrame(ttk.Frame):
         keep_offdates = self.keep_offdate_var.get()
 
         if update_start_date > update_end_date:
-            self.addToTextArea(_('수정 시작 날짜가 끝 날짜 이후입니다\n'))
+            self.addToTextArea(_('The start date is after the end date\n'))
             return
 
         excel_start_date = self.base_schedule.software_config.start_date        
         excel_end_date = self.base_schedule.software_config.end_date        
         if update_start_date < excel_start_date:
-            self.addToTextArea(_('수정 시작 날짜가 일정표 시작 날짜 이전입니다\n'))
+            self.addToTextArea(_('Update start date is before the schedule start date\n'))
             return
         if excel_end_date < update_end_date:
-            self.addToTextArea(_('수정 끝 날짜가 일정표 끝 날짜 이후입니다\n'))
+            self.addToTextArea(_('Update end date is after the schedule end date\n'))
             return
 
         solver, var_dict = solver_input.FromTotalSchedule(
             self.base_schedule, exclude_start=update_start_date, exclude_end=update_end_date,
             keep_offdates=keep_offdates)
-        self.addToTextArea(_('solve 시작\n'))
+        self.addToTextArea(_('Starting the solver...\n'))
         
         max_time_ms = self.max_time_var.get() * 60 * 1000
         solver.set_time_limit(max_time_ms)
         status = solver.Solve()
-        self.addToTextArea(_('solve 끝. 결과: {status}\n') % status)
+        self.addToTextArea(_('The solver stopped. Result: {status}\n') % status)
 
         if status == solver.INFEASIBLE:
-            messagebox.showerror(message=_('가능한 일정이 없습니다. 조건을 변경해 주세요'))
+            messagebox.showerror(message=_('No solution is found. Please check the conditions'))
             return
         else:
-            messagebox.showinfo(message=_('일정을 완성하였습니다. 저장할 파일 경로를 설정해 주세요'))
+            messagebox.showinfo(message=_('Completed the schedule. Please choose the location to save it'))
 
         new_schedule = solver_output.ToTotalSchedule(
             base_schedule.software_config, base_schedule.person_configs, base_schedule.date_configs,
@@ -161,12 +163,12 @@ class UpdateScheduleFrame(ttk.Frame):
             return
     
         # Save to Excel file
-        filepath = filedialog.asksaveasfilename(title=_('완성된 엑셀 파일 저장하기'))
+        filepath = filedialog.asksaveasfilename(title=_('Save to..'))
         if filepath:
             excel_output.FromTotalSchedule(new_schedule, filepath)
 
     def openExcelToUpdate(self):
-        filepath = filedialog.askopenfilename(title=_('수정할 엑셀 파일 열기'))
+        filepath = filedialog.askopenfilename(title=_('Open schedule file to update'))
         if not filepath:
             return
 
@@ -183,4 +185,4 @@ class UpdateScheduleFrame(ttk.Frame):
         if errors:
             self.addToTextArea('\n'.join(errors))
         else:
-            self.addToTextArea(_('오류가 없습니다. "시작" 버튼을 눌러주세요\n'))
+            self.addToTextArea(_('No error is found. Please click Start button\n'))

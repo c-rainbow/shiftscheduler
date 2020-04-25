@@ -37,7 +37,8 @@ class NewScheduleFrame(ttk.Frame):
         util.SetGridWeights(left_frame, row_weights=(1, 1, 1, 1, 1, 2, 1, 2, 1))
        
         # Button to open partially filled barebone filed
-        open_file_button = ttk.Button(left_frame, text=_('기본 엑셀 파일 불러오기'), command=self.openBareboneExcel)
+        open_file_button = ttk.Button(
+            left_frame, text=_('Load barebone Excel file'), command=self.openBareboneExcel)
         util.SetGrid(open_file_button, 0, 0)
         # Opened file name. Empty label if no file is loaded
         open_file_label = ttk.Label(left_frame, textvariable=self.open_filename_strv)
@@ -54,22 +55,23 @@ class NewScheduleFrame(ttk.Frame):
         util.SetGridWeights(max_time_frame, column_weights=(4, 1, 1))
         util.SetGrid(max_time_frame, 6, 0)
 
-        max_time_label1 = ttk.Label(max_time_frame, text=_('최대 검색 시간'))
+        max_time_label1 = ttk.Label(max_time_frame, text=_('Maximum search time'))
         util.SetGrid(max_time_label1, 0, 0)
 
         self.max_time_var.set(1)
         spinbox = ttk.Spinbox(max_time_frame, from_=1, to=30, textvariable=self.max_time_var)
         util.SetGrid(spinbox, 0, 1)
 
-        max_time_label2 = ttk.Label(max_time_frame, text=_('분'))
+        max_time_label2 = ttk.Label(max_time_frame, text=_('minutes'))
         util.SetGrid(max_time_label2, 0, 2)
 
         # Notice that the solver will stop after the specific time
-        max_time_info_label = ttk.Label(left_frame, text=_('시간 내로 조건에 맞는 일정을 찾을 수 없을 시\n작업을 중지합니다'))
+        max_time_info_label = ttk.Label(
+            left_frame, text=_('Search will stop after this time'))
         util.SetGrid(max_time_info_label, 7, 0)
 
         # Start button. Click will validate the input Excel and run the solver
-        submit_button = ttk.Button(left_frame, text=_('시작'))
+        submit_button = ttk.Button(left_frame, text=_('Start Search'))
         util.SetGrid(submit_button, 8, 0)
 
     def createRightFrame(self):
@@ -78,7 +80,7 @@ class NewScheduleFrame(ttk.Frame):
         util.SetGridWeights(right_frame, row_weights=(1, 9))
 
         # Right side of the frame only displays status (of validation and solver run)
-        label = ttk.Label(right_frame, text=_('진행상황'))
+        label = ttk.Label(right_frame, text=_('Progress'))
         util.SetGrid(label, 0, 0)
         self.status_text_area = scrolledtext.ScrolledText(right_frame, state=tk.DISABLED)
         util.SetGrid(self.status_text_area, 1, 0)
@@ -95,9 +97,9 @@ class NewScheduleFrame(ttk.Frame):
     def updateLabels(self, filepath, start_date, end_date):
         self.clearFields()
         filename = os.path.basename(filepath)
-        self.open_filename_strv.set(_('선택한 파일: %s') % filename)
-        self.start_date_strv.set(_('일정 시작 날짜: %s') % start_date)
-        self.end_date_strv.set(_('일정 끝 날짜: %s') % end_date)
+        self.open_filename_strv.set(_('Selected file: {filename}') % filename)
+        self.start_date_strv.set(_('Start date: {start_date}') % start_date)
+        self.end_date_strv.set(_('End date: {end_date}') % end_date)
 
     def addToTextArea(self, text_to_add):
         self.status_text_area.configure(state=tk.NORMAL)
@@ -105,7 +107,7 @@ class NewScheduleFrame(ttk.Frame):
         self.status_text_area.configure(state=tk.DISABLED)
 
     def openBareboneExcel(self):
-        filepath = filedialog.askopenfilename(title=_('기본 엑셀 파일 열기'))
+        filepath = filedialog.askopenfilename(title=_('Load barebone Excel file'))
         if not filepath:
             return
 
@@ -122,20 +124,20 @@ class NewScheduleFrame(ttk.Frame):
         if errors:
             self.addToTextArea('\n'.join(errors))
         else:
-            self.addToTextArea(_('시작합니다\n'))
+            self.addToTextArea(_('Starting..\n'))
             solver, var_dict = solver_input.FromTotalSchedule(base_schedule)
-            self.addToTextArea(_('solve 시작\n'))
+            self.addToTextArea(_('Starting the solver\n'))
             
             max_time_ms = self.max_time_var.get() * 60 * 1000
             solver.set_time_limit(max_time_ms)
             status = solver.Solve()
-            self.addToTextArea(_('solve 끝. 결과: %s\n') % status)
+            self.addToTextArea(_('The solver stopped. Result: {status}\n') % status)
 
             if status == solver.INFEASIBLE:
-                messagebox.showerror(message=_('가능한 일정이 없습니다. 조건을 변경해 주세요'))
+                messagebox.showerror(message=_('No solution is found. Please check the conditions'))
                 return
             else:
-                messagebox.showinfo(message=_('일정을 완성하였습니다. 저장할 파일 경로를 설정해 주세요'))
+                messagebox.showinfo(message=_('Completed the schedule. Please choose the location to save it'))
 
             new_schedule = solver_output.ToTotalSchedule(
                 base_schedule.software_config, base_schedule.person_configs, base_schedule.date_configs,
@@ -147,6 +149,6 @@ class NewScheduleFrame(ttk.Frame):
                 return
       
             # Save to Excel file
-            filepath = filedialog.asksaveasfilename(title=_('완성된 엑셀 파일 저장하기'))
+            filepath = filedialog.asksaveasfilename(title=_('Save to..'))
             if filepath:
                 excel_output.FromTotalSchedule(new_schedule, filepath)

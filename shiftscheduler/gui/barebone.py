@@ -34,7 +34,7 @@ class BareboneExcelFrame(ttk.Frame):
         util.SetGrid(left_frame, 0, 0)
         util.SetGridWeights(left_frame, row_weights=(1, 9))  
 
-        label = ttk.Label(left_frame, text=_('간호사 이름을 입력하세요'))
+        label = ttk.Label(left_frame, text=_('Please enter name of workers'))
         util.SetGrid(label, 0, 0) #, sticky=ttk.W)  # For some reason, ttk.NSEW does not work
         #self.names_text_area = ttk.Text(left_frame)
         self.names_text_area = scrolledtext.ScrolledText(left_frame)
@@ -47,14 +47,14 @@ class BareboneExcelFrame(ttk.Frame):
         util.SetGridWeights(right_frame, row_weights=(1, 1, 1, 1, 1, 5, 1))
         
         # Start date widgets
-        start_date_label = ttk.Label(right_frame, text=_('시작날짜'))
+        start_date_label = ttk.Label(right_frame, text=_('Start Date'))
         util.SetGrid(start_date_label, 0, 0)
         self.start_cal = tkc.DateEntry(
             right_frame, year=2020, month=5, day=1, date_pattern=DATE_PATTERN, locale=LOCALE_CODE)
         util.SetGrid(self.start_cal, 1, 0)
 
         # End date widgets
-        end_date_label = ttk.Label(right_frame, text=_('끝날짜'))
+        end_date_label = ttk.Label(right_frame, text=_('End Date'))
         util.SetGrid(end_date_label, 2, 0)
         self.end_cal = tkc.DateEntry(
             right_frame, year=2020, month=5, day=31, date_pattern=DATE_PATTERN, locale=LOCALE_CODE)
@@ -81,11 +81,12 @@ class BareboneExcelFrame(ttk.Frame):
                 messagebox.showerror(message=error)
                 return
 
-            filepath = filedialog.asksaveasfilename(title=_('기본 엑셀 파일 저장하기'))
+            filepath = filedialog.asksaveasfilename(title=_('Save the barebone Excel file'))
             if filepath:
                 self.CreateExcel(filepath)
             
-        download_button = ttk.Button(right_frame, text=_('기본 엑셀 파일 다운 받기'), command=callback_func)
+        download_button = ttk.Button(
+            right_frame, text=_('Download barebone Excel'), command=callback_func)
         util.SetGrid(download_button, 6, 0)
 
     # Get values from GUI
@@ -103,10 +104,10 @@ class BareboneExcelFrame(ttk.Frame):
 
         # No name input
         if not names:
-            return _('이름을 입력해 주세요')
+            return _('Please enter names')
         
         if start_date > end_date:
-            return _('일정 시작날짜가 끝 날짜 후입니다')
+            return _('The start date is after the end date')
 
         # Check for duplicate names
         nameset = set()
@@ -118,7 +119,7 @@ class BareboneExcelFrame(ttk.Frame):
                 duplicates.add(name)
         
         if duplicates:
-            return _('중복되는 이름이 있습니다: {names}').format(','.join(sorted(duplicates)))
+            return _('Duplicate names: {names}').format(','.join(sorted(duplicates)))
 
         return ''  # No error
 
