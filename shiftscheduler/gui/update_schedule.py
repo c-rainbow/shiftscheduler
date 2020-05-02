@@ -124,13 +124,14 @@ class UpdateScheduleFrame(ttk.Frame):
         update_start_date = self.start_date_cal.get_date()
         update_end_date = self.end_date_cal.get_date()
         keep_offdates = self.keep_offdate_var.get()
+        base_schedule = self.base_schedule
 
         if update_start_date > update_end_date:
             self.addToTextArea(_('The start date is after the end date\n'))
             return
 
-        excel_start_date = self.base_schedule.software_config.start_date        
-        excel_end_date = self.base_schedule.software_config.end_date        
+        excel_start_date = base_schedule.software_config.start_date        
+        excel_end_date = base_schedule.software_config.end_date        
         if update_start_date < excel_start_date:
             self.addToTextArea(_('Update start date is before the schedule start date\n'))
             return
@@ -139,7 +140,7 @@ class UpdateScheduleFrame(ttk.Frame):
             return
 
         solver, var_dict = solver_input.FromTotalSchedule(
-            self.base_schedule, exclude_start=update_start_date, exclude_end=update_end_date,
+            base_schedule, exclude_start=update_start_date, exclude_end=update_end_date,
             keep_offdates=keep_offdates)
         self.addToTextArea(_('Starting the solver...\n'))
         
