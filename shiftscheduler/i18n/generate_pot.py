@@ -10,9 +10,6 @@ ROOT_DIRECTORY = '../'
 TEMPLATES_DIRECTORY = '../../locales/templates'
 
 
-#def GetMatchingPotFile
-
-
 def GeneratePotFiles():
     root_path = os.path.abspath(ROOT_DIRECTORY)
     root_path = pathlib.Path(root_path)
@@ -35,13 +32,8 @@ def GeneratePotFiles():
 
     filepaths = zip(py_filepaths, pot_filepaths)
     for py_path, pot_path in filepaths:
-        #print(py_path)
-        #print(pot_path)
-        #print()
         pygettext.main(py_path, pot_path)
 
-
-    
 
 if __name__ == '__main__':
     GeneratePotFiles()
