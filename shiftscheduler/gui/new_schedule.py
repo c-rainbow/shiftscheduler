@@ -128,7 +128,7 @@ class NewScheduleFrame(ttk.Frame):
         else:
             self.addToTextArea(_('Starting..\n'))
             solver, var_dict = solver_input.FromTotalSchedule(base_schedule)
-            self.addToTextArea(_('Starting the solver\n'))
+            self.addToTextArea(_('Starting the solver'))
             
             max_time_ms = self.max_time_var.get() * 60 * 1000
             solver.set_time_limit(max_time_ms)

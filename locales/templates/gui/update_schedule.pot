@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2020-04-24 18:27-0700\n"
+"POT-Creation-Date: 2020-05-02 00:06-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,92 +15,92 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: update_schedule.py:21
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:22
 msgid "y/m/d"
 msgstr ""
 
-#: update_schedule.py:46
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:47
 msgid "Load file"
 msgstr ""
 
-#: update_schedule.py:52
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:53
 msgid "Update start date"
 msgstr ""
 
-#: update_schedule.py:58
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:59
 msgid "Update end date"
 msgstr ""
 
-#: update_schedule.py:66
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:67
 msgid "Keep the OFF dates"
 msgstr ""
 
-#: update_schedule.py:75
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:76
 msgid "Maximum search time"
 msgstr ""
 
-#: update_schedule.py:82
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:83
 msgid "minutes"
 msgstr ""
 
-#: update_schedule.py:86
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:87
 msgid "Search will stop after this time"
 msgstr ""
 
-#: update_schedule.py:90
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:91
 msgid "Start"
 msgstr ""
 
-#: update_schedule.py:99
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:100
 msgid "Progress"
 msgstr ""
 
-#: update_schedule.py:115
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:116
 msgid "Selected file: {filename}"
 msgstr ""
 
-#: update_schedule.py:128
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:130
 msgid ""
 "The start date is after the end date\n"
 msgstr ""
 
-#: update_schedule.py:134
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:136
 msgid ""
 "Update start date is before the schedule start date\n"
 msgstr ""
 
-#: update_schedule.py:137
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:139
 msgid ""
 "Update end date is after the schedule end date\n"
 msgstr ""
 
-#: update_schedule.py:143
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:145
 msgid ""
 "Starting the solver...\n"
 msgstr ""
 
-#: update_schedule.py:148
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:150
 msgid ""
 "The solver stopped. Result: {status}\n"
 msgstr ""
 
-#: update_schedule.py:151
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:153
 msgid "No solution is found. Please check the conditions"
 msgstr ""
 
-#: update_schedule.py:154
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:156
 msgid "Completed the schedule. Please choose the location to save it"
 msgstr ""
 
-#: update_schedule.py:166
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:168
 msgid "Save to.."
 msgstr ""
 
-#: update_schedule.py:171
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:174
 msgid "Open schedule file to update"
 msgstr ""
 
-#: update_schedule.py:188
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\update_schedule.py:191
 msgid ""
 "No error is found. Please click Start button\n"
 msgstr ""

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2020-04-24 18:30-0700\n"
+"POT-Creation-Date: 2020-05-02 00:06-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,71 +15,78 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: validator.py:30
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:30
 msgid "Start date is empty"
 msgstr ""
 
-#: validator.py:33
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:33
 msgid "Start date {start_date} is not a valid date"
 msgstr ""
 
-#: validator.py:36
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:36
 msgid "End date is empty"
 msgstr ""
 
-#: validator.py:38
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:38
 msgid "End date {end_date} is not a valid date"
 msgstr ""
 
-#: validator.py:44
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:44
 msgid "Start date is later than the end date"
 msgstr ""
 
-#: validator.py:59
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:59
 msgid "Empty work date is found"
 msgstr ""
 
-#: validator.py:70 validator.py:73 validator.py:76
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:70
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:73
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:76
 msgid "No number of {shift_type} workers on {work_date}"
 msgstr ""
 
-#: validator.py:82 validator.py:86 validator.py:90
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:82
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:86
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:90
 msgid "\"{num_worker}\" is invalid number of {shift_type} workers on {work_date}"
 msgstr ""
 
-#: validator.py:95
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:95
 msgid "{date_count} dates do not have date configs: {dates}"
 msgstr ""
 
-#: validator.py:99
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:99
 msgid "{date_count} dates are missing in date configs, {dates}"
 msgstr ""
 
-#: validator.py:116
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:116
 msgid "All person names should be unique in {person_sheet} sheet"
 msgstr ""
 
-#: validator.py:122
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:122
 msgid "There should be {num_person} people, but there are rows for {num_configs} people in {person_sheet} sheet"
 msgstr ""
 
-#: validator.py:128
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:128
 msgid "No number for max consecutive workdays for {person_name}"
 msgstr ""
 
-#: validator.py:131
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:131
 msgid "No number for max consecutive nights for {person_name}"
 msgstr ""
 
-#: validator.py:134
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:134
 msgid "No number for min total workdays for {person_name}"
 msgstr ""
 
-#: validator.py:137
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:137
 msgid "No number for max total workdays for {person_name}"
 msgstr ""
 
-#: validator.py:143 validator.py:146 validator.py:149 validator.py:152
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:143
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:146
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:149
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\validator.py:152
 msgid "\"{number}\" is invalid number for {person_name}"
 msgstr ""
 

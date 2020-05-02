@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2020-04-24 18:28-0700\n"
+"POT-Creation-Date: 2020-05-02 00:06-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,47 +15,47 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: constants.py:10
+#: C:\Code\Python\shiftscheduler\shiftscheduler\excel\constants.py:10
 msgid "Max consecutive workdays"
 msgstr ""
 
-#: constants.py:11
+#: C:\Code\Python\shiftscheduler\shiftscheduler\excel\constants.py:11
 msgid "Max consecutive nights"
 msgstr ""
 
-#: constants.py:12
+#: C:\Code\Python\shiftscheduler\shiftscheduler\excel\constants.py:12
 msgid "Min total workdays"
 msgstr ""
 
-#: constants.py:13
+#: C:\Code\Python\shiftscheduler\shiftscheduler\excel\constants.py:13
 msgid "Max total workdays"
 msgstr ""
 
-#: constants.py:19
+#: C:\Code\Python\shiftscheduler\shiftscheduler\excel\constants.py:19
 msgid "Number of day workers"
 msgstr ""
 
-#: constants.py:20
+#: C:\Code\Python\shiftscheduler\shiftscheduler\excel\constants.py:20
 msgid "Number of evening workers"
 msgstr ""
 
-#: constants.py:21
+#: C:\Code\Python\shiftscheduler\shiftscheduler\excel\constants.py:21
 msgid "Number of night workers"
 msgstr ""
 
-#: constants.py:33
+#: C:\Code\Python\shiftscheduler\shiftscheduler\excel\constants.py:33
 msgid "Timetable"
 msgstr ""
 
-#: constants.py:34
+#: C:\Code\Python\shiftscheduler\shiftscheduler\excel\constants.py:34
 msgid "Person Config"
 msgstr ""
 
-#: constants.py:35
+#: C:\Code\Python\shiftscheduler\shiftscheduler\excel\constants.py:35
 msgid "Date Config"
 msgstr ""
 
-#: constants.py:36
+#: C:\Code\Python\shiftscheduler\shiftscheduler\excel\constants.py:36
 msgid "Software Config"
 msgstr ""
 

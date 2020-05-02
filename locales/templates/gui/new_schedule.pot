@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2020-04-24 18:27-0700\n"
+"POT-Creation-Date: 2020-05-02 00:06-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,66 +15,66 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: new_schedule.py:41 new_schedule.py:110
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:42
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:112
 msgid "Load barebone Excel file"
 msgstr ""
 
-#: new_schedule.py:58
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:59
 msgid "Maximum search time"
 msgstr ""
 
-#: new_schedule.py:65
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:66
 msgid "minutes"
 msgstr ""
 
-#: new_schedule.py:70
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:71
 msgid "Search will stop after this time"
 msgstr ""
 
-#: new_schedule.py:74
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:75
 msgid "Start Search"
 msgstr ""
 
-#: new_schedule.py:83
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:84
 msgid "Progress"
 msgstr ""
 
-#: new_schedule.py:100
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:101
 msgid "Selected file: {filename}"
 msgstr ""
 
-#: new_schedule.py:101
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:102
 msgid "Start date: {start_date}"
 msgstr ""
 
-#: new_schedule.py:102
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:103
 msgid "End date: {end_date}"
 msgstr ""
 
-#: new_schedule.py:127
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:129
 msgid ""
 "Starting..\n"
 msgstr ""
 
-#: new_schedule.py:129
-msgid ""
-"Starting the solver\n"
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:131
+msgid "Starting the solver"
 msgstr ""
 
-#: new_schedule.py:134
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:136
 msgid ""
 "The solver stopped. Result: {status}\n"
 msgstr ""
 
-#: new_schedule.py:137
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:139
 msgid "No solution is found. Please check the conditions"
 msgstr ""
 
-#: new_schedule.py:140
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:142
 msgid "Completed the schedule. Please choose the location to save it"
 msgstr ""
 
-#: new_schedule.py:152
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:155
 msgid "Save to.."
 msgstr ""
 

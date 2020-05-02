@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2020-04-24 18:30-0700\n"
+"POT-Creation-Date: 2020-05-02 00:06-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,67 +15,69 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: timetable.py:30
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\timetable.py:30
 msgid "\"{work_date}\" is not a valid date"
 msgstr ""
 
-#: timetable.py:32
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\timetable.py:32
 msgid "Work date {work_date} is before the start date"
 msgstr ""
 
-#: timetable.py:34
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\timetable.py:34
 msgid "Work date {work_date} is after the end date"
 msgstr ""
 
-#: timetable.py:43
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\timetable.py:43
 msgid "Cannot find person config for {person_name}"
 msgstr ""
 
-#: timetable.py:48
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\timetable.py:48
 msgid "Timetable does not have following names: {names}"
 msgstr ""
 
-#: timetable.py:55
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\timetable.py:55
 msgid "Invalid shift code for {person_name} on {work_date}"
 msgstr ""
 
-#: timetable.py:59
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\timetable.py:59
 msgid "Shift code is empty for {person_name} on {work_date}"
 msgstr ""
 
-#: timetable.py:78 timetable.py:85 timetable.py:92
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\timetable.py:78
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\timetable.py:85
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\timetable.py:92
 msgid "{assign_count} workers are assigned for {shift_type} on {work_date}, when there should be {expected_count} workers"
 msgstr ""
 
-#: timetable.py:105
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\timetable.py:105
 msgid "Day/evening work after night shift for {person_name} on {work_date}"
 msgstr ""
 
-#: timetable.py:128
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\timetable.py:128
 msgid "Worker {person_name} should work no more than {max_consecutive_workdays} consecutive days, but worked for {actual_consecutive_workdays} days from {start_date}"
 msgstr ""
 
-#: timetable.py:151
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\timetable.py:151
 msgid "Worker {person_name} should work no more than {max_consecutive_nights} consecutive nights, but worked for {actual_consecutive_nights} nights from {start_date}"
 msgstr ""
 
-#: timetable.py:173
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\timetable.py:173
 msgid "Worker {person_name} should work for at least {min_total_workdays} days, but is already scheduled to off for {total_off_days} days out of {total_calendar_days} days"
 msgstr ""
 
-#: timetable.py:179
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\timetable.py:179
 msgid "Worker {person_name} should work no more than {max_total_workdays} days, but is already scheduled to work for {fixed_total_workdays} days"
 msgstr ""
 
-#: timetable.py:192
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\timetable.py:192
 msgid "{required_count} workers are required on {work_date}, but {off_worker_count} out of {total_worker_count} people already scheduled to off that day"
 msgstr ""
 
-#: timetable.py:202
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\timetable.py:202
 msgid "Sum of total minimum workdays of all people are {sum_min_total_workdays}, but there are only {total_available_slot_count} available slots to work"
 msgstr ""
 
-#: timetable.py:212
+#: C:\Code\Python\shiftscheduler\shiftscheduler\validation\timetable.py:212
 msgid "There are {total_available_slot_count} slots to fill, but the sum of total maximum workdays of all people are {sum_max_total_workdays}"
 msgstr ""
 

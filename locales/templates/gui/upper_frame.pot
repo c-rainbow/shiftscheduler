@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2020-04-24 18:27-0700\n"
+"POT-Creation-Date: 2020-05-02 00:06-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,19 +15,19 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: upper_frame.py:30
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\upper_frame.py:30
 msgid "Create barebone Excel"
 msgstr ""
 
-#: upper_frame.py:38
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\upper_frame.py:38
 msgid "Create a new schedule"
 msgstr ""
 
-#: upper_frame.py:46
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\upper_frame.py:46
 msgid "Update existing schedule"
 msgstr ""
 
-#: upper_frame.py:54
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\upper_frame.py:54
 msgid "Check for errors"
 msgstr ""
 

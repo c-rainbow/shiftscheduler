@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2020-04-24 20:20-0700\n"
+"POT-Creation-Date: 2020-05-02 00:06-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,35 +15,35 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: validate_schedule.py:36
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\validate_schedule.py:37
 msgid "Load schedule"
 msgstr ""
 
-#: validate_schedule.py:50
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\validate_schedule.py:51
 msgid "Re-check"
 msgstr ""
 
-#: validate_schedule.py:58
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\validate_schedule.py:59
 msgid "Errors"
 msgstr ""
 
-#: validate_schedule.py:75
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\validate_schedule.py:76
 msgid "Selected file: {filename}"
 msgstr ""
 
-#: validate_schedule.py:76
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\validate_schedule.py:77
 msgid "Start date: {start_date}"
 msgstr ""
 
-#: validate_schedule.py:77
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\validate_schedule.py:78
 msgid "End date: {end_date}"
 msgstr ""
 
-#: validate_schedule.py:85
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\validate_schedule.py:86
 msgid ""
 msgstr ""
 
-#: validate_schedule.py:111
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\validate_schedule.py:112
 msgid ""
 "No error is found.\n"
 msgstr ""

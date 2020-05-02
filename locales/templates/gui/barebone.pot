@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2020-04-24 18:26-0700\n"
+"POT-Creation-Date: 2020-05-02 00:06-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,39 +15,39 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: barebone.py:19
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\barebone.py:20
 msgid "y/m/d"
 msgstr ""
 
-#: barebone.py:37
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\barebone.py:38
 msgid "Please enter name of workers"
 msgstr ""
 
-#: barebone.py:50
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\barebone.py:51
 msgid "Start Date"
 msgstr ""
 
-#: barebone.py:57
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\barebone.py:58
 msgid "End Date"
 msgstr ""
 
-#: barebone.py:84
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\barebone.py:86
 msgid "Save the barebone Excel file"
 msgstr ""
 
-#: barebone.py:89
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\barebone.py:91
 msgid "Download barebone Excel"
 msgstr ""
 
-#: barebone.py:107
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\barebone.py:109
 msgid "Please enter names"
 msgstr ""
 
-#: barebone.py:110
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\barebone.py:112
 msgid "The start date is after the end date"
 msgstr ""
 
-#: barebone.py:122
+#: C:\Code\Python\shiftscheduler\shiftscheduler\gui\barebone.py:124
 msgid "Duplicate names: {names}"
 msgstr ""
 

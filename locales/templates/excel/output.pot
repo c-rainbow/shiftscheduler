@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2020-04-24 18:29-0700\n"
+"POT-Creation-Date: 2020-05-02 00:06-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,11 +15,11 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: output.py:45
+#: C:\Code\Python\shiftscheduler\shiftscheduler\excel\output.py:45
 msgid "Duplicate names"
 msgstr ""
 
-#: output.py:47
+#: C:\Code\Python\shiftscheduler\shiftscheduler\excel\output.py:47
 msgid "Start date is later than end date"
 msgstr ""
 
