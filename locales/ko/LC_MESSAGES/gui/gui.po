@@ -17,5 +17,5 @@ msgstr ""
 
 #: gui.py:20
 msgid "Shift Scheduler v0.1"
-msgstr ""
+msgstr "일정표 만들기 v0.1"
 

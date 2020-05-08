@@ -17,91 +17,91 @@ msgstr ""
 
 #: update_schedule.py:21
 msgid "y/m/d"
-msgstr ""
+msgstr "y년 m월 d일"
 
 #: update_schedule.py:46
 msgid "Load file"
-msgstr ""
+msgstr "기존 일정 엑셀 파일 불러오기"
 
 #: update_schedule.py:52
 msgid "Update start date"
-msgstr ""
+msgstr "수정 시작 날짜"
 
 #: update_schedule.py:58
 msgid "Update end date"
-msgstr ""
+msgstr "수정 마지막 날짜"
 
 #: update_schedule.py:66
 msgid "Keep the OFF dates"
-msgstr ""
+msgstr "오프 날짜를 그대로 유지"
 
 #: update_schedule.py:75
 msgid "Maximum search time"
-msgstr ""
+msgstr "최대 작동 시간"
 
 #: update_schedule.py:82
 msgid "minutes"
-msgstr ""
+msgstr "분"
 
 #: update_schedule.py:86
 msgid "Search will stop after this time"
-msgstr ""
+msgstr "시간 내 답을 찾을 수 없을 시 검색을 중지합니다"
 
 #: update_schedule.py:90
 msgid "Start"
-msgstr ""
+msgstr "시작"
 
 #: update_schedule.py:99
 msgid "Progress"
-msgstr ""
+msgstr "진행 상황"
 
 #: update_schedule.py:115
 msgid "Selected file: {filename}"
-msgstr ""
+msgstr "선택한 파일: {filename}"
 
 #: update_schedule.py:128
 msgid ""
 "The start date is after the end date\n"
-msgstr ""
+msgstr "시작 날짜가 마지막 날짜 이후입니다"
 
 #: update_schedule.py:134
 msgid ""
 "Update start date is before the schedule start date\n"
-msgstr ""
+msgstr "수정 시작 날짜가 일정 시작 날짜 전입니다"
 
 #: update_schedule.py:137
 msgid ""
 "Update end date is after the schedule end date\n"
-msgstr ""
+msgstr "수정 마지막 날짜가 일정 마지막 날짜 후입니다"
 
 #: update_schedule.py:143
 msgid ""
 "Starting the solver...\n"
-msgstr ""
+msgstr "Solver를 시작합니다\n"
 
 #: update_schedule.py:148
 msgid ""
 "The solver stopped. Result: {status}\n"
-msgstr ""
+msgstr "Solver를 중지합니다. 결과: {status}\n"
 
 #: update_schedule.py:151
 msgid "No solution is found. Please check the conditions"
-msgstr ""
+msgstr "일정을 찾지 못하였습니다. 조건을 다시 확인해 주세요."
 
 #: update_schedule.py:154
 msgid "Completed the schedule. Please choose the location to save it"
-msgstr ""
+msgstr "일정을 수정하였습니다. 완성된 엑셀 파일을 저장할 장소를 선택해 주세요."
 
 #: update_schedule.py:166
 msgid "Save to.."
-msgstr ""
+msgstr "저장하기"
 
 #: update_schedule.py:171
 msgid "Open schedule file to update"
-msgstr ""
+msgstr "수정할 일정 파일을 불러오기"
 
 #: update_schedule.py:188
 msgid ""
 "No error is found. Please click Start button\n"
-msgstr ""
+msgstr "오류가 없습니다. 시작 버튼을 눌러 작업을 실행 해 주세요"
 

@@ -17,37 +17,37 @@ msgstr ""
 
 #: barebone.py:19
 msgid "y/m/d"
-msgstr ""
+msgstr "y년 m월 d일"
 
 #: barebone.py:37
 msgid "Please enter name of workers"
-msgstr ""
+msgstr "간호사 이름을 한줄에 한 명씩 입력하세요"
 
 #: barebone.py:50
 msgid "Start Date"
-msgstr ""
+msgstr "일정 시작 날짜"
 
 #: barebone.py:57
 msgid "End Date"
-msgstr ""
+msgstr "일정 마지막 날짜"
 
 #: barebone.py:84
 msgid "Save the barebone Excel file"
-msgstr ""
+msgstr "기본 엑셀 파일 저장하기"
 
 #: barebone.py:89
 msgid "Download barebone Excel"
-msgstr ""
+msgstr "기본 엑셀 파일 만들기"
 
 #: barebone.py:107
 msgid "Please enter names"
-msgstr ""
+msgstr "간호사 이름을 입력해 주세요"
 
 #: barebone.py:110
 msgid "The start date is after the end date"
-msgstr ""
+msgstr "시작 날짜가 마지막 날짜 이후입니다"
 
 #: barebone.py:122
 msgid "Duplicate names: {names}"
-msgstr ""
+msgstr "중복되는 이름이 있습니다: {names}"
 

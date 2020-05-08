@@ -17,17 +17,17 @@ msgstr ""
 
 #: upper_frame.py:30
 msgid "Create barebone Excel"
-msgstr ""
+msgstr "기본 엑셀 파일 만들기"
 
 #: upper_frame.py:38
 msgid "Create a new schedule"
-msgstr ""
+msgstr "새 일정 짜기"
 
 #: upper_frame.py:46
 msgid "Update existing schedule"
-msgstr ""
+msgstr "기존 일정 수정하기"
 
 #: upper_frame.py:54
 msgid "Check for errors"
-msgstr ""
+msgstr "오류 확인"
 

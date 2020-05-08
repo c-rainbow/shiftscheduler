@@ -18,64 +18,64 @@ msgstr ""
 #: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:42
 #: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:112
 msgid "Load barebone Excel file"
-msgstr ""
+msgstr "기본 엑셀 파일 불러오기"
 
 #: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:59
 msgid "Maximum search time"
-msgstr ""
+msgstr "최대 작동 시간"
 
 #: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:66
 msgid "minutes"
-msgstr ""
+msgstr "분"
 
 #: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:71
 msgid "Search will stop after this time"
-msgstr ""
+msgstr "시간 내 답을 찾을 수 없을 시 검색을 중지합니다"
 
 #: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:75
 msgid "Start Search"
-msgstr ""
+msgstr "시작"
 
 #: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:84
 msgid "Progress"
-msgstr ""
+msgstr "진행 상황"
 
 #: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:101
 msgid "Selected file: {filename}"
-msgstr ""
+msgstr "선택한 파일: {filename}"
 
 #: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:102
 msgid "Start date: {start_date}"
-msgstr ""
+msgstr "시작 날짜: {start_date}"
 
 #: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:103
 msgid "End date: {end_date}"
-msgstr ""
+msgstr "마지막 날짜: {end_date}"
 
 #: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:129
 msgid ""
 "Starting..\n"
-msgstr ""
+msgstr "조건에 맞는 일정 찾기를 시작합니다.."
 
 #: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:131
 msgid ""
 "Starting the solver\n"
-msgstr "시작하자\n"
+msgstr "Solver를 시작합니다\n"
 
 #: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:136
 msgid ""
 "The solver stopped. Result: {status}\n"
-msgstr ""
+msgstr "Solver를 중지합니다. 결과: {status}\n"
 
 #: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:139
 msgid "No solution is found. Please check the conditions"
-msgstr ""
+msgstr "일정을 찾지 못하였습니다. 조건을 다시 확인해 주세요."
 
 #: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:142
 msgid "Completed the schedule. Please choose the location to save it"
-msgstr ""
+msgstr "일정을 완성하였습니다. 완성된 엑셀 파일을 저장할 장소를 선택해 주세요."
 
 #: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:155
 msgid "Save to.."
-msgstr ""
+msgstr "저장하기"
 
