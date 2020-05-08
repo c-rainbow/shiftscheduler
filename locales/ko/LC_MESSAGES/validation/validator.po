@@ -17,31 +17,31 @@ msgstr ""
 
 #: validator.py:30
 msgid "Start date is empty"
-msgstr ""
+msgstr "시작 날짜가 없습니다"
 
 #: validator.py:33
 msgid "Start date {start_date} is not a valid date"
-msgstr ""
+msgstr "{start_date}는 가능한 시작 날짜가 아닙니다"
 
 #: validator.py:36
 msgid "End date is empty"
-msgstr ""
+msgstr "일정 마지막 날짜가 없습니다"
 
 #: validator.py:38
 msgid "End date {end_date} is not a valid date"
-msgstr ""
+msgstr "{end_date}는 가능한 마지막 날짜가 아닙니다"
 
 #: validator.py:44
 msgid "Start date is later than the end date"
-msgstr ""
+msgstr "시작 날짜가 마지막 날짜 이후입니다"
 
 #: validator.py:59
 msgid "Empty work date is found"
-msgstr ""
+msgstr "날짜별 설정에 빈 날짜가 있습니다"
 
 #: validator.py:70 validator.py:73 validator.py:76
 msgid "No number of {shift_type} workers on {work_date}"
-msgstr ""
+msgstr "{work_date}의 {shift_type}에 근무자 수가 빈칸입니다"
 
 #: validator.py:82 validator.py:86 validator.py:90
 msgid "\"{num_worker}\" is invalid number of {shift_type} workers on {work_date}"

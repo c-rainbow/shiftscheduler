@@ -17,34 +17,34 @@ msgstr ""
 
 #: validate_schedule.py:36
 msgid "Load schedule"
-msgstr ""
+msgstr "일정 불러오기"
 
 #: validate_schedule.py:50
 msgid "Re-check"
-msgstr ""
+msgstr "파일 재확인"
 
 #: validate_schedule.py:58
 msgid "Errors"
-msgstr ""
+msgstr "오류"
 
 #: validate_schedule.py:75
 msgid "Selected file: {filename}"
-msgstr ""
+msgstr "선택한 파일: {filename}"
 
 #: validate_schedule.py:76
 msgid "Start date: {start_date}"
-msgstr ""
+msgstr "검사 시작 날짜: {start_date}"
 
 #: validate_schedule.py:77
 msgid "End date: {end_date}"
-msgstr ""
+msgstr "검사 마지막 날짜: {end_date}"
 
 #: validate_schedule.py:85
-msgid ""
-msgstr ""
+msgid "Load Excel file"
+msgstr "일정 파일 불러오기"
 
 #: validate_schedule.py:111
 msgid ""
 "No error is found.\n"
-msgstr ""
+msgstr "오류가 없습니다"
 

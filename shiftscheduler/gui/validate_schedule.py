@@ -83,7 +83,7 @@ class ValidateScheduleFrame(tk.Frame):
         self.status_text_area.configure(state=tk.DISABLED)
 
     def openUpdatedExcel(self):
-        filepath = filedialog.askopenfilename(title=_(''), filetypes=constants.EXCEL_FILE_TYPE)
+        filepath = filedialog.askopenfilename(title=_('Load Excel file'), filetypes=constants.EXCEL_FILE_TYPE)
         if not filepath:
             return
         self.filepath = filepath

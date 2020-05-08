@@ -33,15 +33,15 @@ msgstr ""
 
 #: constants.py:19
 msgid "Number of day workers"
-msgstr ""
+msgstr "데이 근무자 수"
 
 #: constants.py:20
 msgid "Number of evening workers"
-msgstr ""
+msgstr "이브닝 근무자 수"
 
 #: constants.py:21
 msgid "Number of night workers"
-msgstr ""
+msgstr "나이트 근무자 수"
 
 #: constants.py:33
 msgid "Timetable"

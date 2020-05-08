@@ -17,9 +17,9 @@ msgstr ""
 
 #: output.py:45
 msgid "Duplicate names"
-msgstr ""
+msgstr "중복된 이름이 있습니다"
 
 #: output.py:47
 msgid "Start date is later than end date"
-msgstr ""
+msgstr "일정 시작날짜가 마지막 날짜 이후입니다"
 

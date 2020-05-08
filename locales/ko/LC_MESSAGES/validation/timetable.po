@@ -17,59 +17,59 @@ msgstr ""
 
 #: timetable.py:30
 msgid "\"{work_date}\" is not a valid date"
-msgstr ""
+msgstr "{work_date}는 잘못된 날짜입니다 "
 
 #: timetable.py:32
 msgid "Work date {work_date} is before the start date"
-msgstr ""
+msgstr "{work_date}이 일정 시작 날짜 전입니다"
 
 #: timetable.py:34
 msgid "Work date {work_date} is after the end date"
-msgstr ""
+msgstr "{work_date}이 일정 마지막 날짜 후입니다"
 
 #: timetable.py:43
 msgid "Cannot find person config for {person_name}"
-msgstr ""
+msgstr "간호사 '{person_name}'의 설정을 찾을 수 없습니다"
 
 #: timetable.py:48
 msgid "Timetable does not have following names: {names}"
-msgstr ""
+msgstr "일정표에 이름이 없습니다: {names}"
 
 #: timetable.py:55
 msgid "Invalid shift code for {person_name} on {work_date}"
-msgstr ""
+msgstr "{person_name} 간호사의 {work_date}에 일정 코드가 잘못되었습니다. D, E, N, O 중 하나를 입력해 주세요."
 
 #: timetable.py:59
 msgid "Shift code is empty for {person_name} on {work_date}"
-msgstr ""
+msgstr "{person_name} 간호사의 {work_date}에 일정 코드가 없습니다"
 
 #: timetable.py:78 timetable.py:85 timetable.py:92
 msgid "{assign_count} workers are assigned for {shift_type} on {work_date}, when there should be {expected_count} workers"
-msgstr ""
+msgstr "{work_date}에 {expected_count}명이 {shift_type}근무를 해야 하지만 {assign_count}명밖에 없습니다"
 
 #: timetable.py:105
 msgid "Day/evening work after night shift for {person_name} on {work_date}"
-msgstr ""
+msgstr "{person_name} 간호사가 {work_date}에 나이트 근무 후 다음 날 데이/이브닝 근무가 있습니다"
 
 #: timetable.py:128
 msgid "Worker {person_name} should work no more than {max_consecutive_workdays} consecutive days, but worked for {actual_consecutive_workdays} days from {start_date}"
-msgstr ""
+msgstr "{person_name} 간호사가 {work_date}부터 {actual_consecutive_workdays}일간 연속 근무합니다 (최대 연속 근무일: {max_consecutive_workdays})"
 
 #: timetable.py:151
 msgid "Worker {person_name} should work no more than {max_consecutive_nights} consecutive nights, but worked for {actual_consecutive_nights} nights from {start_date}"
-msgstr ""
+msgstr "{person_name} 간호사가 {work_date}부터 {actual_consecutive_nights}일간 연속으로 나이트 근무합니다 (최대 연속 나이트: {max_consecutive_nights})"
 
 #: timetable.py:173
 msgid "Worker {person_name} should work for at least {min_total_workdays} days, but is already scheduled to off for {total_off_days} days out of {total_calendar_days} days"
-msgstr ""
+msgstr "{person_name} 간호사의 최소 근무일수는 {min_total_workdays}지만 이미 {total_calendar_days}일 중 {total_off_days}일이 오프입니다"
 
 #: timetable.py:179
 msgid "Worker {person_name} should work no more than {max_total_workdays} days, but is already scheduled to work for {fixed_total_workdays} days"
-msgstr ""
+msgstr "{person_name} 간호사의 최대 근무일수는 {max_total_workdays}지만 이미 {fixed_total_workdays}일 동안 근무일정이 있습니다"
 
 #: timetable.py:192
 msgid "{required_count} workers are required on {work_date}, but {off_worker_count} out of {total_worker_count} people already scheduled to off that day"
-msgstr ""
+msgstr "{work_date}에 {required_count}명이 근무해야 하지만 이미 {total_worker_count}명 중 {off_worker_count}명이 오프입니다"
 
 #: timetable.py:202
 msgid "Sum of total minimum workdays of all people are {sum_min_total_workdays}, but there are only {total_available_slot_count} available slots to work"
