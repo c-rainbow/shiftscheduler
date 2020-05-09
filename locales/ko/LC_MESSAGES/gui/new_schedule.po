@@ -55,7 +55,7 @@ msgstr "마지막 날짜: {end_date}"
 #: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:129
 msgid ""
 "Starting..\n"
-msgstr "조건에 맞는 일정 찾기를 시작합니다.."
+msgstr "조건에 맞는 일정 찾기를 시작합니다..\n"
 
 #: C:\Code\Python\shiftscheduler\shiftscheduler\gui\new_schedule.py:131
 msgid ""

@@ -62,17 +62,17 @@ msgstr "선택한 파일: {filename}"
 #: update_schedule.py:128
 msgid ""
 "The start date is after the end date\n"
-msgstr "시작 날짜가 마지막 날짜 이후입니다"
+msgstr "시작 날짜가 마지막 날짜 이후입니다\n"
 
 #: update_schedule.py:134
 msgid ""
 "Update start date is before the schedule start date\n"
-msgstr "수정 시작 날짜가 일정 시작 날짜 전입니다"
+msgstr "수정 시작 날짜가 일정 시작 날짜 전입니다\n"
 
 #: update_schedule.py:137
 msgid ""
 "Update end date is after the schedule end date\n"
-msgstr "수정 마지막 날짜가 일정 마지막 날짜 후입니다"
+msgstr "수정 마지막 날짜가 일정 마지막 날짜 후입니다\n"
 
 #: update_schedule.py:143
 msgid ""

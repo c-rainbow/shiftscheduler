@@ -73,9 +73,9 @@ msgstr "{work_date}에 {required_count}명이 근무해야 하지만 이미 {tot
 
 #: timetable.py:202
 msgid "Sum of total minimum workdays of all people are {sum_min_total_workdays}, but there are only {total_available_slot_count} available slots to work"
-msgstr ""
+msgstr "간호사 최소 근무일을 모두 더하면 {sum_min_total_workdays}이지만 일할수 있는 슬롯이 {total_available_slot_count}개밖에 없습니다"
 
 #: timetable.py:212
 msgid "There are {total_available_slot_count} slots to fill, but the sum of total maximum workdays of all people are {sum_max_total_workdays}"
-msgstr ""
+msgstr "일할 수 있는 슬롯이 {total_available_slot_count}개 있지만 간호사 최대 근무일을 모두 더하면 {sum_max_total_workdays}입니다"
 

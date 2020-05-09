@@ -17,19 +17,19 @@ msgstr ""
 
 #: constants.py:10
 msgid "Max consecutive workdays"
-msgstr ""
+msgstr "최대 연속 근무일"
 
 #: constants.py:11
 msgid "Max consecutive nights"
-msgstr ""
+msgstr "최대 연속 나이트"
 
 #: constants.py:12
 msgid "Min total workdays"
-msgstr ""
+msgstr "최소 전체 근무일"
 
 #: constants.py:13
 msgid "Max total workdays"
-msgstr ""
+msgstr "최대 전체 근무일"
 
 #: constants.py:19
 msgid "Number of day workers"

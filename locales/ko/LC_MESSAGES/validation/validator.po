@@ -45,41 +45,41 @@ msgstr "{work_date}의 {shift_type}에 근무자 수가 빈칸입니다"
 
 #: validator.py:82 validator.py:86 validator.py:90
 msgid "\"{num_worker}\" is invalid number of {shift_type} workers on {work_date}"
-msgstr ""
+msgstr "{work_date} {shift_type}의 {num_worker}는 가능한 인원 수가 아닙니다"
 
 #: validator.py:95
 msgid "{date_count} dates do not have date configs: {dates}"
-msgstr ""
+msgstr "{date_count}개의 날짜별 설정이 없습니다: {dates}"
 
 #: validator.py:99
 msgid "{date_count} dates are missing in date configs, {dates}"
-msgstr ""
+msgstr "날짜별 설정에 다음 {date_count}개의 날짜가 없습니다: {dates}"
 
 #: validator.py:116
 msgid "All person names should be unique in {person_sheet} sheet"
-msgstr ""
+msgstr "{person_sheet}에 중복된 이름이 있습니다"
 
 #: validator.py:122
 msgid "There should be {num_person} people, but there are rows for {num_configs} people in {person_sheet} sheet"
-msgstr ""
+msgstr "총 {num_person}명의 사람 중 {person_sheet}에 {num_configs}명의 설정만 있습니다"
 
 #: validator.py:128
 msgid "No number for max consecutive workdays for {person_name}"
-msgstr ""
+msgstr "{person_name} 간호사의 최대 연속 근무일이 지정되지 않았습니다"
 
 #: validator.py:131
 msgid "No number for max consecutive nights for {person_name}"
-msgstr ""
+msgstr "{person_name} 간호사의 최대 연속 나이트 근무일이 지정되지 않았습니다"
 
 #: validator.py:134
 msgid "No number for min total workdays for {person_name}"
-msgstr ""
+msgstr "{person_name} 간호사의 최소 전체 근무일이 지정되지 않았습니다"
 
 #: validator.py:137
 msgid "No number for max total workdays for {person_name}"
-msgstr ""
+msgstr "{person_name} 간호사의 최대 전체 근무일이 지정되지 않았습니다"
 
 #: validator.py:143 validator.py:146 validator.py:149 validator.py:152
 msgid "\"{number}\" is invalid number for {person_name}"
-msgstr ""
+msgstr "{person_name} 간호사의 설정이 잘못되었습니다: {number}"
 
